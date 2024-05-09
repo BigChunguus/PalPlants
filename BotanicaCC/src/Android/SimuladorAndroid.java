@@ -22,6 +22,7 @@ public class SimuladorAndroid {
     public static void main(String[] args) {
         try{
             BotanicaCC c = new BotanicaCC();
+            System.out.println(c.leerUsuario("BigChungus"));
             //Usuario u = new Usuario(22, "BigChuunguus", "Prueba", "ApellidoPrueba", "Apellido2Prueba", "alexcruzz267@gmail.com", "21141790Y", new InteresBotanico(1,"a"));
             //System.out.println(c.insertarUsuario(u));
 //            ArrayList<Usuario> arr = c.leerUsuarios();

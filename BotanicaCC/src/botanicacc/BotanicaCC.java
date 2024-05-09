@@ -41,7 +41,7 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            String equipoServidor = "172.16.206.69";
+            String equipoServidor = "192.168.30.207";
             int puertoServidor = 30500;
             socketCliente = new Socket(equipoServidor, puertoServidor);
             socketCliente.setSoTimeout(5000);
@@ -179,10 +179,10 @@ public int modificarUsuario(Usuario u) throws ExcepcionBotanica {
     return cambios;
 }
 
-public Usuario leerUsuario(int idUsuario) throws ExcepcionBotanica {
+public Usuario leerUsuario(String nombreUsuario) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.LEER_USUARIO);
-    p.setIdEntidad(idUsuario);
+    p.setEntidad(nombreUsuario);
     
     Respuesta r = null;
     Usuario usuario = null;
