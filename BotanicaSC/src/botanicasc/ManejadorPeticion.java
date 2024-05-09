@@ -300,13 +300,12 @@ public class ManejadorPeticion extends Thread{
     private void leerUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Usuario u = (Usuario) p.getEntidad();
-            String emailUsuario = u.getEmail();
+            String nombreUsuario = (String) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
 
-            Usuario usuario = cad.leerUsuario(emailUsuario);
+            Usuario usuario = cad.leerUsuario(nombreUsuario);
             r.setEntidad(usuario);
 
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
