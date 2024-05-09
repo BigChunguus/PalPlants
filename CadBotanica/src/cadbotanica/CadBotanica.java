@@ -252,36 +252,40 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
     * @return devuelve el usuario que coincide con el email dado.
     * @throws ExcepcionHr La excepción se produce cuando hay un problema con la conexión de la base de datos.
    */
-   public Usuario leerUsuario(String email) throws ExcepcionBotanica {
+   public Usuario leerUsuario(String nombreUsuario) throws ExcepcionBotanica {
        conectar();
-       String dml = "SELECT U.USUARIOID, U.NOMBREUSUARIO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.DNI, U.CONTRASEÑA, U.INTERESBOTANICOINTERESID, I.NOMBREINTERES " +
-             "FROM USUARIO U " +
-             "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID " +
-             "WHERE U.CORREO = ?";
-
-       Usuario lu = null;
+       String dml = "SELECT U.USUARIOID, U.CORREO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.DNI, U.CONTRASEÑA, U.INTERESBOTANICOINTERESID, I.NOMBREINTERES " +
+            "FROM USUARIO U " +
+            "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID " +
+            "WHERE U.NOMBREUSUARIO = '" + nombreUsuario + "'";
+       
+       Usuario lu = new Usuario();
+       
        try {
-           PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
-           sentenciaPreparada.setString(1, email);
-           ResultSet resultSet = sentenciaPreparada.executeQuery();
-
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(dml);
+            System.out.println(dml);
            if (resultSet.next()) {
                Integer usuarioID = resultSet.getInt("USUARIOID");
-               String nombreUsuario = resultSet.getString("NOMBREUSUARIO");
+               
                String nombre = resultSet.getString("NOMBRE");
                String apellido1 = resultSet.getString("APELLIDO1");
                String apellido2 = resultSet.getString("APELLIDO2");
                String dni = resultSet.getString("DNI");
+               String correo = resultSet.getString("CORREO");
                String contraseña = resultSet.getString("CONTRASEÑA");
                Integer interesId = resultSet.getInt("INTERESBOTANICOINTERESID");
                String nombreInteres = resultSet.getString("NOMBREINTERES");
+               
+               System.out.println("Resultados");
                InteresBotanico interesBotanico = new InteresBotanico(interesId, nombreInteres);
-               lu = new Usuario(usuarioID, nombreUsuario, nombre, apellido1, apellido2, email, dni, contraseña, interesBotanico);
+               lu = new Usuario(usuarioID, nombreUsuario, nombre, apellido1, apellido2, correo, dni, contraseña, interesBotanico);
 
-               sentenciaPreparada.close();
+               statement.close();
                resultSet.close();
                conexion.close();
-           }
+           } else 
+               System.out.println("Sin resultados");
 
        } catch (SQLException ex) {
            ExcepcionBotanica eh = new ExcepcionBotanica();
@@ -302,7 +306,7 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
        conectar();
        ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 
-       String dml = "SELECT U.USUARIOID, U.NOMBREUSUARIO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.EMAIL, U.DNI, U.CONTRASEÑA, U.INTERESBOTANICOINTERESID, I.NOMBREINTERES " +
+       String dml = "SELECT U.USUARIOID, U.NOMBREUSUARIO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.CORREO, U.DNI, U.CONTRASEÑA, U.INTERESBOTANICOINTERESID, I.NOMBREINTERES " +
                     "FROM USUARIO U " +
                     "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID";
 
@@ -316,12 +320,13 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
                String nombre = resultSet.getString("NOMBRE");
                String apellido1 = resultSet.getString("APELLIDO1");
                String apellido2 = resultSet.getString("APELLIDO2");
-               String email = resultSet.getString("EMAIL");
+               String email = resultSet.getString("CORREO");
                String dni = resultSet.getString("DNI");
                String contraseña = resultSet.getString("CONTRASEÑA");
                Integer interesId = resultSet.getInt("INTERESBOTANICOINTERESID");
+               String nombreInteres = resultSet.getString("NOMBREINTERES");
 
-               InteresBotanico interesBotanico = new InteresBotanico(interesId, "");
+               InteresBotanico interesBotanico = new InteresBotanico(interesId, nombreInteres);
                Usuario usuario = new Usuario(usuarioId, nombreUsuario, nombre, apellido1, apellido2, email, dni, contraseña, interesBotanico);
                listaUsuarios.add(usuario);
            }
