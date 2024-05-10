@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BotanicaCC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/BotanicaCC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

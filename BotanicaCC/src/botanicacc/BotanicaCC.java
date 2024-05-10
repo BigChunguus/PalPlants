@@ -41,9 +41,10 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            String equipoServidor = "192.168.30.207";
+            String ip = "192.168.31.176";
+            //String ip = "192.168.11.207";
             int puertoServidor = 30500;
-            socketCliente = new Socket(equipoServidor, puertoServidor);
+            socketCliente = new Socket(ip, puertoServidor);
             socketCliente.setSoTimeout(5000);
         } catch (IOException ex) {
             manejadorIOException(ex);
@@ -907,38 +908,6 @@ public int eliminarInsectoPlanta(int idInsectoPlanta) throws ExcepcionBotanica {
     return cambios;
 }
 
-public InsectoPlanta leerInsectoPlanta(int idInsectoPlanta) throws ExcepcionBotanica {
-    Peticion peticion = new Peticion();
-    peticion.setIdOperacion(Operaciones.LEER_INSECTO_PLANTA);
-    peticion.setIdEntidad(idInsectoPlanta);
-    
-    Respuesta respuesta = null;
-    InsectoPlanta insectoPlanta = null;
-    
-    try {
-        ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
-        oos.writeObject(peticion);
-        ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
-        respuesta = (Respuesta) ois.readObject();
-        
-        ois.close();
-        oos.close();
-        socketCliente.close();
-        
-        if (respuesta.getEntidad() != null)
-            insectoPlanta = (InsectoPlanta) respuesta.getEntidad();
-        else if (respuesta.getEh() != null)
-            throw respuesta.getEh();
-        
-    } catch (ClassNotFoundException ex) {
-        manejadorClassNotFoundException(ex);
-    } catch (IOException ex) {
-        manejadorIOException(ex);
-    }
-    
-    return insectoPlanta;
-}
-
 public ArrayList<InsectoPlanta> leerInsectosPlanta() throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.LEER_INSECTOS_PLANTA);
@@ -1034,44 +1003,13 @@ public int eliminarUsuarioPlanta(int idUsuarioPlanta) throws ExcepcionBotanica {
     return cambios;
 }
 
-public UsuarioPlanta leerUsuarioPlanta(int idUsuarioPlanta) throws ExcepcionBotanica {
-    Peticion peticion = new Peticion();
-    peticion.setIdOperacion(Operaciones.LEER_USUARIO_PLANTA);
-    peticion.setIdEntidad(idUsuarioPlanta);
-    
-    Respuesta respuesta = null;
-    UsuarioPlanta usuarioPlanta = null;
-    
-    try {
-        ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
-        oos.writeObject(peticion);
-        ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
-        respuesta = (Respuesta) ois.readObject();
-        
-        ois.close();
-        oos.close();
-        socketCliente.close();
-        
-        if (respuesta.getEntidad() != null)
-            usuarioPlanta = (UsuarioPlanta) respuesta.getEntidad();
-        else if (respuesta.getEh() != null)
-            throw respuesta.getEh();
-        
-    } catch (ClassNotFoundException ex) {
-        manejadorClassNotFoundException(ex);
-    } catch (IOException ex) {
-        manejadorIOException(ex);
-    }
-    
-    return usuarioPlanta;
-}
-
-public ArrayList<UsuarioPlanta> leerUsuariosPlanta() throws ExcepcionBotanica {
+public ArrayList<Planta> leerUsuariosPlantas(String nombreUsuario) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.LEER_USUARIOS_PLANTA);
+    peticion.setEntidad(nombreUsuario);
     
     Respuesta respuesta = null;
-    ArrayList<UsuarioPlanta> listaUsuariosPlanta = null;
+    ArrayList<Planta> listaPlantas = null;
     
     try {
         ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
@@ -1084,7 +1022,7 @@ public ArrayList<UsuarioPlanta> leerUsuariosPlanta() throws ExcepcionBotanica {
         socketCliente.close();
         
         if (respuesta.getEntidad() != null)
-            listaUsuariosPlanta = (ArrayList<UsuarioPlanta>) respuesta.getEntidad();
+            listaPlantas = (ArrayList<Planta>) respuesta.getEntidad();
         else if (respuesta.getEh() != null)
             throw respuesta.getEh();
         
@@ -1094,7 +1032,7 @@ public ArrayList<UsuarioPlanta> leerUsuariosPlanta() throws ExcepcionBotanica {
         manejadorIOException(ex);
     }
     
-    return listaUsuariosPlanta;
+    return listaPlantas;
 }
 
 }

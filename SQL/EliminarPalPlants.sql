@@ -1,0 +1,25 @@
+-- Eliminar tabla PLANTA_INSECTO
+DROP TABLE PLANTA_INSECTO;
+
+-- Eliminar tabla USUARIO_PLANTA
+DROP TABLE USUARIO_PLANTA;
+
+-- Eliminar tabla GUIA
+DROP TABLE GUIA;
+
+-- Eliminar tabla RESEÑA
+DROP TABLE RESEÑA;
+
+-- Eliminar tabla USUARIO
+DROP TABLE USUARIO;
+
+-- Eliminar tabla PLANTA
+DROP TABLE PLANTA;
+
+-- Eliminar tabla INSECTO
+DROP TABLE INSECTO;
+
+-- Eliminar tabla INTERESBOTANICO
+DROP TABLE INTERESBOTANICO;
+
+

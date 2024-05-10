@@ -33,8 +33,6 @@ public class BotanicaSC {
                 ManejadorPeticion mp = new ManejadorPeticion(clienteConectado);
                 mp.start();
             }
-            
-
 //            socketServidor.close();
         } catch (IOException ex) {
              System.out.println(ex);

@@ -956,12 +956,11 @@ private void eliminarUsuarioPlanta(Peticion p) {
 private void leerUsuariosPlantas(Peticion p) {
     ObjectOutputStream oos = null;
     try {
-        Usuario usuario = (Usuario) p.getEntidad();
-        int usuarioId = usuario.getUsuarioID();
+        String nombreUsuario = (String) p.getEntidad();
         CadBotanica cad = new CadBotanica();
         Respuesta r = new Respuesta();
         r.setIdOperacion(p.getIdOperacion());
-        r.setEntidad(cad.leerUsuariosPlantas(usuarioId));
+        r.setEntidad(cad.leerUsuariosPlantas(nombreUsuario));
         oos = new ObjectOutputStream(clienteConectado.getOutputStream());
         oos.writeObject(r);
 

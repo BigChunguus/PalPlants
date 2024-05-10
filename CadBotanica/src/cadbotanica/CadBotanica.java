@@ -71,7 +71,7 @@ public class CadBotanica {
     public int insertarUsuario(Usuario u) throws ExcepcionBotanica {
     conectar();
     int registrosAfectados = 0;
-    String dml = "INSERT INTO USUARIO (NOMBREUSUARIO, CONTRASEÑA, EMAIL) VALUES (?, ?, ?)";
+    String dml = "INSERT INTO USUARIO (NOMBREUSUARIO, CONTRASEÑA, CORREO, INTERESBOTANICOINTERESID) VALUES (?, ?, ?, ?)";
 
     try {
         PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
@@ -79,6 +79,7 @@ public class CadBotanica {
         sentenciaPreparada.setString(1, u.getNombreUsuario());
         sentenciaPreparada.setString(2, u.getContrasena());
         sentenciaPreparada.setString(3, u.getEmail());
+        sentenciaPreparada.setInt(4, 1);
      
         registrosAfectados = sentenciaPreparada.executeUpdate();
         
@@ -95,7 +96,7 @@ public class CadBotanica {
                 eh.setMensajeUsuario("Error: El interés seleccionado no existe");
                 break;
             case 1407:
-                eh.setMensajeUsuario("Error: Los siguientes datos son obligatorios: \nNombre\nApellido1\nDNI\nEmail");
+                eh.setMensajeUsuario("Error: Los siguientes datos son obligatorios: Nombre, Contraseña y Correo");
                 break;
             case 2290:
                 eh.setMensajeUsuario("Error: La dirección debe ser '@gmail.com'");
@@ -121,7 +122,7 @@ public class CadBotanica {
  * @return devuelve la cantidad de campos modificados en la tabla.
  * @throws ExcepcionHr La excepción se produce cuando hay un problema con la conexión de la base de datos.
 */
-public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotanica {
+public int modificarUsuario(String nombreUsuario, Usuario usuario) throws ExcepcionBotanica {
     conectar();
     int registrosAfectados = 0;
     String dml = "UPDATE USUARIO SET ";
@@ -151,7 +152,7 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
         dml += (primerCampo ? "" : ", ") + "INTERESBOTANICOINTERESID=? ";
     }
     
-    dml += " WHERE EMAIL=?";
+    dml += " WHERE NOMBREUSUARIO=?";
 
     try {
         PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
@@ -175,7 +176,7 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
         if (usuario.getInteres() != null) {
             sentenciaPreparada.setInt(contador++, usuario.getInteres().getInteresId());
         }
-        sentenciaPreparada.setString(contador, email);
+        sentenciaPreparada.setString(contador, nombreUsuario);
 
         registrosAfectados = sentenciaPreparada.executeUpdate();
         
@@ -215,14 +216,14 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
     * @return devuelve la cantidad de campos eliminados en la tabla.
     * @throws ExcepcionHr La excepción se produce cuando hay un problema con la conexión de la base de datos.
    */
-   public int eliminarUsuario(String email) throws ExcepcionBotanica {
+   public int eliminarUsuario(String nombreUsuario) throws ExcepcionBotanica {
        conectar();
        int registrosAfectados = 0;
-       String dml = "DELETE FROM USUARIO WHERE EMAIL = ?";
+       String dml = "DELETE FROM USUARIO WHERE NOMBREUSUARIO = ?";
 
        try {
            PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
-           sentenciaPreparada.setString(1, email);
+           sentenciaPreparada.setString(1, nombreUsuario);
 
            registrosAfectados = sentenciaPreparada.executeUpdate();
 
@@ -587,12 +588,49 @@ public int modificarUsuario(String email, Usuario usuario) throws ExcepcionBotan
         desconectar();
         return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
-    public ArrayList<UsuarioPlanta> leerUsuariosPlantas(Integer usuarioId) throws ExcepcionBotanica {
+    public ArrayList<Planta> leerUsuariosPlantas(String nombreUsuario) throws ExcepcionBotanica {
         conectar();
-        ArrayList<UsuarioPlanta> listaInsectosPlantas = new ArrayList<>();
-        // Código para leer todas las relaciones InsectoPlanta de la base de datos
+        ArrayList<Planta> listaPlantas = new ArrayList<>();
+
+        String query = "SELECT PLANTA.PLANTAID, PLANTA.NOMBRECIENTIFICOPLANTA, PLANTA.NOMBRECOMUNPLANTA , PLANTA.DESCRIPCION, PLANTA.TIPOPLANTA, PLANTA.CUIDADOSESPECIFICOS, PLANTA.IMAGEN " +
+                       "FROM USUARIO " +
+                       "JOIN USUARIO_PLANTA ON USUARIO.USUARIOID = USUARIO_PLANTA.USUARIOUSUARIOID " +
+                       "JOIN PLANTA ON USUARIO_PLANTA.PLANTAPLANTAID = PLANTA.PLANTAID " +
+                       "WHERE USUARIO.NOMBREUSUARIO = '" + nombreUsuario + "'";
+
+        try {
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            System.out.println(query);
+            while (resultSet.next()) {
+                
+                Integer plantaId = resultSet.getInt("PLANTAID");
+                String nombreCientifico = resultSet.getString("NOMBRECIENTIFICOPLANTA");
+                String nombreComun = resultSet.getString("NOMBRECOMUNPLANTA");
+                String descripcion = resultSet.getString("DESCRIPCION");
+                String tipoPlanta = resultSet.getString("TIPOPLANTA");
+                String cuidadosEspecificos = resultSet.getString("CUIDADOSESPECIFICOS");
+                String imagen = resultSet.getString("IMAGEN");
+
+                Planta planta = new Planta(plantaId, nombreCientifico, nombreComun, descripcion, tipoPlanta, cuidadosEspecificos, imagen);
+                listaPlantas.add(planta);
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(query);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
+
         desconectar();
-        return listaInsectosPlantas; // Cambiar el valor de retorno según corresponda
+        System.out.println(listaPlantas);
+        return listaPlantas;
     }
+
 
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="max_image_width">10dp</dimen>
+    <dimen name="max_image_height">10dp</dimen>
+    <dimen name="card_padding">10dp</dimen>
+    <dimen name="left_corner_radius">25dp</dimen>
+</resources>
