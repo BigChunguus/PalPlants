@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupTabFragment">
+
+    <LinearLayout
+        android:layout_width="360dp"
+        android:layout_height="620dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+
+        <EditText
+            android:id="@+id/usernameRegister"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/custom_edittext"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:drawablePadding="8dp"
+            android:hint="Nombre de usuario"
+            android:padding="8dp"
+            android:textColor="@color/cyan"
+            android:textColorHint="@color/cyan" />
+
+        <EditText
+            android:id="@+id/emailRegister"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_edittext"
+            android:drawableLeft="@drawable/baseline_alternate_email_24"
+            android:drawablePadding="8dp"
+            android:hint="Correo electrónico"
+            android:padding="8dp"
+            android:textColor="@color/cyan"
+            android:textColorHint="@color/cyan" />
+
+        <EditText
+            android:id="@+id/passwordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_edittext"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:drawablePadding="8dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/cyan"
+            android:textColorHint="@color/cyan" />
+
+        <EditText
+            android:id="@+id/confirmPasswordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_edittext"
+            android:drawableLeft="@drawable/baseline_check_24"
+            android:drawablePadding="8dp"
+            android:hint="Confirmar contraseña"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/cyan"
+            android:textColorHint="@color/cyan" />
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button_background"
+            android:text="Registrar"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</FrameLayout>

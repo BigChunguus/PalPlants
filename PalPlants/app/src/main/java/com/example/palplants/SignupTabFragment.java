@@ -1,20 +1,21 @@
 package com.example.palplants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.content.Intent;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 
@@ -22,22 +23,24 @@ import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Usuario;
 
-public class RegisterActivity extends AppCompatActivity {
+public class SignupTabFragment extends Fragment {
+
     private EditText editTextUsername, editTextEmail, editTextPassword, editTextConfirmPassword;
     private Button buttonRegister;
     private TextView textViewLogin;
     private Usuario usuarioRegistro = new Usuario();
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
 
-        editTextUsername = findViewById(R.id.username);
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        editTextConfirmPassword = findViewById(R.id.confirmPassword);
-        buttonRegister = findViewById(R.id.registerButton);
-        textViewLogin = findViewById(R.id.textViewLogin);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_signup_tab, container, false);
+
+        editTextUsername = view.findViewById(R.id.usernameRegister);
+        editTextEmail = view.findViewById(R.id.emailRegister);
+        editTextPassword = view.findViewById(R.id.passwordRegister);
+        editTextConfirmPassword = view.findViewById(R.id.confirmPasswordRegister);
+        buttonRegister = view.findViewById(R.id.registerButton);
 
         // Escuchar el botón si es clickeado
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -47,15 +50,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // Escuchar el texto
-        textViewLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+
+        return view;
     }
+
 
     private void registerUser() {
         String username = editTextUsername.getText().toString().trim();
@@ -101,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         new InsertarUsuarioTask().execute(usuarioRegistro);
     }
+
     private class InsertarUsuarioTask extends AsyncTask<Usuario, Void, Integer> {
         @Override
         protected Integer doInBackground(Usuario... params) {
@@ -110,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return bcc.insertarUsuario(usuario);
             } catch (ExcepcionBotanica ex) {
                 ex.printStackTrace();
-                Toast.makeText(RegisterActivity.this, "Error al registrar usuario", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error al registrar usuario", Toast.LENGTH_SHORT).show();
                 return -1;
             }
         }
@@ -122,13 +121,13 @@ public class RegisterActivity extends AppCompatActivity {
                 saveUserToSharedPreferences(usuarioRegistro);
 
                 // Iniciar la YourPlantsActivity
-                Intent intent = new Intent(RegisterActivity.this, YourPlantsActivity.class);
+                Intent intent = new Intent(getActivity(), YourPlantsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish();
+                getActivity().finish();
             } else {
                 // Si hubo un error, avisar al usuario
-                Toast.makeText(RegisterActivity.this, "Error al registrar usuario", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error al registrar usuario", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -143,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String usuarioJson = gson.toJson(usuario);
 
                 // Guardamos el JSON en las preferencias compartidas
-                SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 // Verificar si ya hay un usuario guardado
@@ -170,4 +169,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

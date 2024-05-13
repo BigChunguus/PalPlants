@@ -1,12 +1,18 @@
 package com.example.palplants;
 
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,29 +28,23 @@ import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Usuario;
 
-public class LoginActivity extends AppCompatActivity {
+
+public class LoginTabFragment extends Fragment {
 
     private EditText editTextUsername, editTextPassword;
     private Button buttonLogin;
-    private TextView textViewSignUp;
+    private TextView textErrorPassword;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login_tab, container, false);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        Usuario usuarioGuardado = deserializarUsuarioDeSharedPreferences();
-
-        // Si hay datos guardados, ir directamente a YourPlantsActivity
-        if (usuarioGuardado != null) {
-            Intent intent = new Intent(LoginActivity.this, YourPlantsActivity.class);
-            startActivity(intent);
-            finish(); // Cerrar la actividad actual para que el usuario no pueda volver atrás
-        }
-        editTextUsername = findViewById(R.id.username);
-        editTextPassword = findViewById(R.id.password);
-        buttonLogin = findViewById(R.id.loginButton);
-
+        editTextUsername = view.findViewById(R.id.usernameLogin);
+        editTextPassword = view.findViewById(R.id.passwordLogin);
+        buttonLogin = view.findViewById(R.id.loginButton);
+        textErrorPassword = view.findViewById(R.id.textErrorPassword);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,10 +56,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (password.length() >= 8 && matcher.matches()) {
                     new ConnectBotanicaTask().execute(username, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    textErrorPassword.setText("La contraseña debe tener min. 8 caracteres");
                 }
             }
         });
+
+        return view;
     }
 
     private class ConnectBotanicaTask extends AsyncTask<String, Void, Usuario> {
@@ -71,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 BotanicaCC bcc = new BotanicaCC();
                 return bcc.leerUsuario(username);
             } catch (ExcepcionBotanica ex) {
-                ex.printStackTrace(); // Maneja el error apropiadamente
+                ex.printStackTrace();
                 return null;
             }
         }
@@ -83,14 +85,15 @@ public class LoginActivity extends AppCompatActivity {
                 if (password.equals(resultado.getContrasena())) {
                     Log.d("email", resultado.getEmail());
                     saveUserToSharedPreferences(resultado);
-                    Intent intent = new Intent(LoginActivity.this, YourPlantsActivity.class);
+                    Intent intent = new Intent(getActivity(), YourPlantsActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // Maneja la situación de error aquí
-                Toast.makeText(LoginActivity.this, "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -104,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 String usuarioJson = gson.toJson(usuario);
 
                 // Guardamos el JSON en las preferencias compartidas
-                SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("user", usuarioJson);
                 editor.apply();
@@ -121,17 +124,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
-    private Usuario deserializarUsuarioDeSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String usuarioJson = sharedPreferences.getString("user", "");
-
-        if (!usuarioJson.isEmpty()) {
-            Gson gson = new Gson();
-            return gson.fromJson(usuarioJson, Usuario.class);
-        }
-
-        return null;
-    }
-
 }

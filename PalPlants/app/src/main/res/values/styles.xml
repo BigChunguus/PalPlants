@@ -3,4 +3,11 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Configuración adicional -->
     </style>
+    <style name="FondoPersonalizado">
+        <item name="android:background">@drawable/main_bkg</item>
+    </style>
+    <style name="tabCustomStyle" parent="Widget.Design.TabLayout">
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabSelectedTextColor">@color/cyan</item>
+    </style>
 </resources>
