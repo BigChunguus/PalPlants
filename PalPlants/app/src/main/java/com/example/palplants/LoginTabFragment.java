@@ -33,7 +33,7 @@ public class LoginTabFragment extends Fragment {
 
     private EditText editTextUsername, editTextPassword;
     private Button buttonLogin;
-    private TextView textErrorPassword;
+    private TextView textError;
 
 
     @Override
@@ -44,7 +44,8 @@ public class LoginTabFragment extends Fragment {
         editTextUsername = view.findViewById(R.id.usernameLogin);
         editTextPassword = view.findViewById(R.id.passwordLogin);
         buttonLogin = view.findViewById(R.id.loginButton);
-        textErrorPassword = view.findViewById(R.id.textErrorPassword);
+        textError = view.findViewById(R.id.textError);
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +57,10 @@ public class LoginTabFragment extends Fragment {
                 if (password.length() >= 8 && matcher.matches()) {
                     new ConnectBotanicaTask().execute(username, password);
                 } else {
-                    textErrorPassword.setText("La contraseña debe tener min. 8 caracteres");
+                    if(password.length() >= 8)
+                        editTextPassword.setError("La contraseña debe tener min. 8 caracteres");
+                    else
+                        editTextUsername.setError("El nombre no debe contener caracteres especiales");
                 }
             }
         });
@@ -89,7 +93,8 @@ public class LoginTabFragment extends Fragment {
                     startActivity(intent);
                     getActivity().finish();
                 } else {
-                    Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    editTextPassword.setText("");
+                    textError.setText("Usuario o contraseña incorrectos");
                 }
             } else {
                 // Maneja la situación de error aquí

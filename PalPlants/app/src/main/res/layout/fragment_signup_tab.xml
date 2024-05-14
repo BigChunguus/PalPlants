@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignupTabFragment">
@@ -12,60 +13,107 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-
-        <EditText
-            android:id="@+id/usernameRegister"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableLeft="@drawable/baseline_person_24"
-            android:drawablePadding="8dp"
-            android:hint="Nombre de usuario"
-            android:padding="8dp"
-            android:textColor="@color/cyan"
-            android:textColorHint="@color/cyan" />
+            android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/baseline_person_24"
+            app:startIconTint="@color/cyan"
+            android:textColorHint="@color/cyan"
+            android:layout_marginTop="32dp"
+            app:hintEnabled="true">
 
-        <EditText
-            android:id="@+id/emailRegister"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:startIconTint="@color/cyan"
+                android:drawablePadding="8dp"
+                android:hint="Nombre de usuario"
+                android:textColorHint="@color/cyan"
+                android:textColor="@color/cyan"
+                android:padding="8dp"
+                android:background="@drawable/custom_edittext"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/baseline_alternate_email_24"
+            app:startIconTint="@color/cyan"
+            android:textColorHint="@color/cyan"
             android:layout_marginTop="20dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableLeft="@drawable/baseline_alternate_email_24"
-            android:drawablePadding="8dp"
-            android:hint="Correo electrónico"
-            android:padding="8dp"
-            android:textColor="@color/cyan"
-            android:textColorHint="@color/cyan" />
+            app:hintEnabled="true">
 
-        <EditText
-            android:id="@+id/passwordRegister"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableLeft="@drawable/baseline_lock_24"
-            android:drawablePadding="8dp"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textColor="@color/cyan"
-            android:textColorHint="@color/cyan" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/custom_edittext"
+                android:drawablePadding="8dp"
+                android:hint="Correo electrónico"
+                android:padding="8dp"
+                android:textColor="@color/cyan"
+                android:textColorHint="@color/cyan" />
 
-        <EditText
-            android:id="@+id/confirmPasswordRegister"
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/custom_edittext"
-            android:drawableLeft="@drawable/baseline_check_24"
-            android:drawablePadding="8dp"
-            android:hint="Confirmar contraseña"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textColor="@color/cyan"
-            android:textColorHint="@color/cyan" />
+            app:startIconDrawable="@drawable/baseline_lock_24"
+            app:startIconTint="@color/cyan"
+            app:endIconTint="@color/cyan"
+            android:textColorHint="@color/cyan"
+            app:endIconMode="password_toggle"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/custom_edittext"
+                android:drawablePadding="8dp"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/cyan"
+                android:textColorHint="@color/cyan" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/confirmPasswordTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:startIconDrawable="@drawable/baseline_check_24"
+            app:startIconTint="@color/cyan"
+            app:endIconTint="@color/cyan"
+            android:textColorHint="@color/cyan"
+            app:endIconMode="password_toggle"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/custom_edittext"
+                android:drawablePadding="8dp"
+                android:hint="Confirmar contraseña"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/cyan"
+                android:textColorHint="@color/cyan" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:id="@+id/registerButton"
@@ -75,6 +123,8 @@
             android:background="@drawable/rounded_button_background"
             android:text="Registrar"
             android:textSize="18sp" />
+
+
     </LinearLayout>
 
 </FrameLayout>

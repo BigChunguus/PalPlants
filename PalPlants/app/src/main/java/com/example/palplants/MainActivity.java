@@ -9,9 +9,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 import android.widget.TextView;
 import com.google.android.material.tabs.TabLayout;
-import com.example.palplants.ViewPagerAdapter;
-import com.example.palplants.LoginActivity;
-import com.example.palplants.YourPlantsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
