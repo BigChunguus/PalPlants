@@ -41,8 +41,8 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            //String ip = "192.168.31.176";
-            String ip = "192.168.11.207";
+            String ip = "192.168.31.176";
+            //String ip = "192.168.11.207";
             int puertoServidor = 30500;
             socketCliente = new Socket(ip, puertoServidor);
             socketCliente.setSoTimeout(5000);
@@ -627,7 +627,7 @@ public int modificarPlanta(Planta p) throws ExcepcionBotanica {
 public Planta leerPlanta(int idPlanta) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.LEER_PLANTA);
-    peticion.setIdEntidad(idPlanta);
+    peticion.setEntidad(idPlanta);
     
     Respuesta respuesta = null;
     Planta planta = null;

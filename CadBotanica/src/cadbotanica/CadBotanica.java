@@ -557,10 +557,41 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
 
-    public Planta leerPlanta(Integer plantaId) throws ExcepcionBotanica {
+    public Planta leerPlanta(Integer plantaIdBuscar) throws ExcepcionBotanica {
         conectar();
         Planta planta = null;
-        // Código para leer una planta de la base de datos
+        
+        String dml = "SELECT PLANTA.NOMBRECIENTIFICOPLANTA, PLANTA.NOMBRECOMUNPLANTA , PLANTA.DESCRIPCION, PLANTA.TIPOPLANTA, PLANTA.CUIDADOSESPECIFICOS, PLANTA.IMAGEN " +
+                     "FROM PLANTA WHERE PLANTAID = '" + plantaIdBuscar + "'";
+        
+        try {
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(dml);
+            System.out.println(dml);
+            while (resultSet.next()) {
+                
+                String nombreCientifico = resultSet.getString("NOMBRECIENTIFICOPLANTA");
+                String nombreComun = resultSet.getString("NOMBRECOMUNPLANTA");
+                String descripcion = resultSet.getString("DESCRIPCION");
+                String tipoPlanta = resultSet.getString("TIPOPLANTA");
+                String cuidadosEspecificos = resultSet.getString("CUIDADOSESPECIFICOS");
+                String imagen = resultSet.getString("IMAGEN");
+
+                planta = new Planta(plantaIdBuscar, nombreCientifico, nombreComun, descripcion, tipoPlanta, cuidadosEspecificos, imagen);
+                
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
+
         desconectar();
         return planta; // Cambiar el valor de retorno según corresponda
     }
@@ -628,7 +659,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         }
 
         desconectar();
-        System.out.println(listaPlantas);
+        
         return listaPlantas;
     }
 

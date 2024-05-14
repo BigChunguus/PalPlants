@@ -1,6 +1,7 @@
 package com.example.palplants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Outline;
 import android.os.AsyncTask;
@@ -203,6 +204,17 @@ public class YourPlantsActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) cardView.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, padding);
         cardView.setLayoutParams(layoutParams);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Crear un Intent para iniciar PlantsActivity
+                Intent intent = new Intent(getApplicationContext(), PlantsActivity.class);
+                // Pasar el ID de la planta como extra en el Intent
+                intent.putExtra("PLANT_ID", planta.getPlantaId());
+                startActivity(intent);
+            }
+        });
 
         return cardView;
     }

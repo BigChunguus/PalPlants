@@ -611,8 +611,7 @@ public class ManejadorPeticion extends Thread{
     private void leerPlanta(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Planta planta = (Planta) p.getEntidad();
-            int plantaId = planta.getPlantaId();
+            int plantaId = (int) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
