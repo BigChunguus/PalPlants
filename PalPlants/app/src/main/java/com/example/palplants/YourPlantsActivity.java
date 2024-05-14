@@ -211,7 +211,7 @@ public class YourPlantsActivity extends AppCompatActivity {
                 // Crear un Intent para iniciar PlantsActivity
                 Intent intent = new Intent(getApplicationContext(), PlantsActivity.class);
                 // Pasar el ID de la planta como extra en el Intent
-                intent.putExtra("PLANT_ID", planta.getPlantaId());
+                intent.putExtra("PLANT", planta);
                 startActivity(intent);
             }
         });

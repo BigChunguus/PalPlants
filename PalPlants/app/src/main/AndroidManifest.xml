@@ -31,6 +31,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".PlantsActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>
