@@ -41,8 +41,8 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            String ip = "192.168.31.176";
-            //String ip = "192.168.11.207";
+            //String ip = "192.168.31.176";
+            String ip = "192.168.11.207";
             int puertoServidor = 30500;
             socketCliente = new Socket(ip, puertoServidor);
             socketCliente.setSoTimeout(5000);
@@ -116,10 +116,10 @@ public class BotanicaCC {
         }
         return cambios;
     }
-    public int eliminarUsuario(int idUsuario) throws ExcepcionBotanica {
+    public int eliminarUsuario(String nombreUsuario) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.ELIMINAR_USUARIO);
-    p.setIdEntidad(idUsuario);
+    p.setEntidad(nombreUsuario);
     
     Respuesta r = null;
     int cambios = 0;
@@ -814,9 +814,10 @@ public Guia leerGuia(int idGuia) throws ExcepcionBotanica {
     return guia;
 }
 
-public ArrayList<Guia> leerGuias() throws ExcepcionBotanica {
+public ArrayList<Guia> leerGuias(int plantaIdGuia) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.LEER_GUIAS);
+    peticion.setEntidad(plantaIdGuia);
     
     Respuesta respuesta = null;
     ArrayList<Guia> listaGuias = null;
@@ -971,10 +972,15 @@ public int insertarUsuarioPlanta(UsuarioPlanta up) throws ExcepcionBotanica {
     return cambios;
 }
 
-public int eliminarUsuarioPlanta(int idUsuarioPlanta) throws ExcepcionBotanica {
+public int eliminarUsuarioPlanta(int idUsuario, int idPlanta) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.ELIMINAR_USUARIO_PLANTA);
-    peticion.setIdEntidad(idUsuarioPlanta);
+    
+    Object[] parametros = new Object[2];
+    parametros[0] = idUsuario;
+    parametros[1] = idPlanta;
+    
+    peticion.setEntidad(parametros);
     
     Respuesta respuesta = null;
     int cambios = 0;

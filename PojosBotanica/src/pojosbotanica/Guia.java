@@ -21,6 +21,12 @@ public class Guia implements Serializable{
     public Guia() {
     }
 
+    public Guia(Integer guiaId, String titulo, String contenido) {
+        this.guiaId = guiaId;
+        this.titulo = titulo;
+        this.contenido = contenido;
+    }
+    
     public Guia(Integer guiaId, String titulo, String contenido, Planta plantaId) {
         this.guiaId = guiaId;
         this.titulo = titulo;

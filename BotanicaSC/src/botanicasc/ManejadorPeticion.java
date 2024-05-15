@@ -256,13 +256,12 @@ public class ManejadorPeticion extends Thread{
     private void eliminarUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Usuario u = (Usuario) p.getEntidad();
-            String emailUsuario = u.getEmail(); 
+            String nombreUsuario = (String) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
 
-            int cantidad = cad.eliminarUsuario(emailUsuario);
+            int cantidad = cad.eliminarUsuario(nombreUsuario);
             r.setEntidad(cantidad);
 
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
@@ -732,11 +731,12 @@ public class ManejadorPeticion extends Thread{
     
     private void leerGuias(Peticion p) {
         ObjectOutputStream oos = null;
+        int plantaIdGuia = (Integer) p.getEntidad();
         try {
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
-            ArrayList<Guia> guias = cad.leerGuias();
+            ArrayList<Guia> guias = cad.leerGuias(plantaIdGuia);
             r.setEntidad(guias);
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
             oos.writeObject(r);

@@ -219,15 +219,14 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
    public int eliminarUsuario(String nombreUsuario) throws ExcepcionBotanica {
        conectar();
        int registrosAfectados = 0;
-       String dml = "DELETE FROM USUARIO WHERE NOMBREUSUARIO = ?";
+       System.out.println(nombreUsuario);
+       String dml = "DELETE FROM USUARIO WHERE NOMBREUSUARIO = '" + nombreUsuario + "'";
 
        try {
-           PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
-           sentenciaPreparada.setString(1, nombreUsuario);
-
-           registrosAfectados = sentenciaPreparada.executeUpdate();
-
-           sentenciaPreparada.close();
+           Statement sentencia = conexion.createStatement();
+           registrosAfectados = sentencia.executeUpdate(dml);
+           
+           sentencia.close();
            conexion.close();
 
        } catch (SQLException ex) {
@@ -422,13 +421,54 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return guia; // Cambiar el valor de retorno según corresponda
     }
 
-    public ArrayList<Guia> leerGuias() throws ExcepcionBotanica {
-        conectar();
-        ArrayList<Guia> listaGuias = new ArrayList<>();
-        // Código para leer todas las guías de la base de datos
+    public ArrayList<Guia> leerGuias(Integer plantaIdGuia) throws ExcepcionBotanica {
+    conectar();
+    ArrayList<Guia> listaGuias = new ArrayList<>();
+    
+    String dml = "SELECT G.GUIAID, G.TITULO, G.CONTENIDO, " +
+                 "P.NOMBRECIENTIFICOPLANTA, P.NOMBRECOMUNPLANTA, P.DESCRIPCION, P.TIPOPLANTA, P.CUIDADOSESPECIFICOS, P.IMAGEN " +
+                 "FROM GUIA G " +
+                 "JOIN PLANTA P ON G.PLANTAPLANTAID = P.PLANTAID " +
+                 "WHERE G.PLANTAPLANTAID = " + plantaIdGuia;
+
+    try (Statement statement = conexion.createStatement();
+         ResultSet resultSet = statement.executeQuery(dml)) {
+
+        while (resultSet.next()) {
+            // Datos de la guía
+            Integer guiaId = resultSet.getInt("GUIAID");
+            String titulo = resultSet.getString("TITULO");
+            String contenido = resultSet.getString("CONTENIDO");
+
+            // Datos de la planta
+            String nombreCientificoPlanta = resultSet.getString("NOMBRECIENTIFICOPLANTA");
+            String nombreComunPlanta = resultSet.getString("NOMBRECOMUNPLANTA");
+            String descripcion = resultSet.getString("DESCRIPCION");
+            String tipoPlanta = resultSet.getString("TIPOPLANTA");
+            String cuidadosEspecificos = resultSet.getString("CUIDADOSESPECIFICOS");
+            String imagen = resultSet.getString("IMAGEN");
+
+            Planta planta = new Planta(plantaIdGuia, nombreCientificoPlanta, nombreComunPlanta, descripcion, tipoPlanta, cuidadosEspecificos, imagen);
+            Guia guia = new Guia(guiaId, titulo, contenido, planta);
+
+            listaGuias.add(guia);
+        }
+
+    } catch (SQLException ex) {
+        ExcepcionBotanica excepcion = new ExcepcionBotanica();
+        excepcion.setCodigoErrorSQL(ex.getErrorCode());
+        excepcion.setMensajeErrorBd(ex.getMessage());
+        excepcion.setSentenciaSQL(dml);
+        excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+        throw excepcion;
+    } finally {
         desconectar();
-        return listaGuias; // Cambiar el valor de retorno según corresponda
     }
+
+    return listaGuias;
+}
+
+
     
     public int insertarInsecto(Insecto insecto) throws ExcepcionBotanica {
         conectar();
@@ -615,15 +655,29 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public int eliminarUsuarioPlanta(Integer usuarioId, Integer plantaId) throws ExcepcionBotanica {
         conectar();
         int registrosAfectados = 0;
-        // Código para eliminar una relación InsectoPlanta de la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        String dml = "DELETE FROM USUARIO_PLANTA WHERE USUARIOUSUARIOID = " + usuarioId + " AND PLANTAPLANTAID = " + plantaId;
+        try (Statement stmt = conexion.createStatement()) {
+            
+            registrosAfectados = stmt.executeUpdate(dml);
+            
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } finally {
+            desconectar();
+        }
+        return registrosAfectados;
     }
+
     public ArrayList<Planta> leerUsuariosPlantas(String nombreUsuario) throws ExcepcionBotanica {
         conectar();
         ArrayList<Planta> listaPlantas = new ArrayList<>();
 
-        String query = "SELECT PLANTA.PLANTAID, PLANTA.NOMBRECIENTIFICOPLANTA, PLANTA.NOMBRECOMUNPLANTA , PLANTA.DESCRIPCION, PLANTA.TIPOPLANTA, PLANTA.CUIDADOSESPECIFICOS, PLANTA.IMAGEN " +
+        String dml = "SELECT PLANTA.PLANTAID, PLANTA.NOMBRECIENTIFICOPLANTA, PLANTA.NOMBRECOMUNPLANTA , PLANTA.DESCRIPCION, PLANTA.TIPOPLANTA, PLANTA.CUIDADOSESPECIFICOS, PLANTA.IMAGEN " +
                        "FROM USUARIO " +
                        "JOIN USUARIO_PLANTA ON USUARIO.USUARIOID = USUARIO_PLANTA.USUARIOUSUARIOID " +
                        "JOIN PLANTA ON USUARIO_PLANTA.PLANTAPLANTAID = PLANTA.PLANTAID " +
@@ -631,8 +685,8 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
 
         try {
             Statement statement = conexion.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            System.out.println(query);
+            ResultSet resultSet = statement.executeQuery(dml);
+            System.out.println(dml);
             while (resultSet.next()) {
                 
                 Integer plantaId = resultSet.getInt("PLANTAID");
@@ -653,7 +707,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
             ExcepcionBotanica excepcion = new ExcepcionBotanica();
             excepcion.setCodigoErrorSQL(ex.getErrorCode());
             excepcion.setMensajeErrorBd(ex.getMessage());
-            excepcion.setSentenciaSQL(query);
+            excepcion.setSentenciaSQL(dml);
             excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
             throw excepcion;
         }
