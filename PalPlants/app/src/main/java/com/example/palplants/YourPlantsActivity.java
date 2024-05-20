@@ -38,12 +38,13 @@ import pojosbotanica.Usuario;
 public class YourPlantsActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
-
+    private Button buttonSettings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yourplants);
 
+        buttonSettings = findViewById(R.id.buttonSettings);
         linearLayout = findViewById(R.id.linearLayout);
 
         String nombreUsuario = "";
@@ -62,8 +63,15 @@ public class YourPlantsActivity extends AppCompatActivity {
             Log.e("UserInfo", "Error: No se pudo obtener el usuario desde SharedPreferences");
         }
 
-        // Crear una instancia de ConnectBotanicaTask y ejecutarla
         new ConnectBotanicaTask().execute(nombreUsuario);
+
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(YourPlantsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     // AsyncTask para conectar con el servidor y cargar las plantas del usuario

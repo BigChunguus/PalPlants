@@ -28,10 +28,14 @@ public class BotanicaSC {
          try {
             int puertoServidor = 30500;
             ServerSocket socketServidor = new ServerSocket(puertoServidor);
+            System.out.println("Servidor ejecutado");
+            int i = 1;
             while (true) {
+                System.out.println("Petición número: " + i);
                 Socket clienteConectado = socketServidor.accept();
                 ManejadorPeticion mp = new ManejadorPeticion(clienteConectado);
                 mp.start();
+                i+=1;
             }
 //            socketServidor.close();
         } catch (IOException ex) {

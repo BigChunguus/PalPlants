@@ -31,7 +31,15 @@ public class SimuladorAndroid {
             //System.out.println(c.eliminarUsuario("PruebaAndroid"));
             //System.out.println(c.leerUsuario("BigChungus"));
             //System.out.println(c.leerPlanta(1));
-            System.out.println(c.eliminarUsuarioPlanta(1,2));
+            //System.out.println(c.eliminarUsuarioPlanta(1,2));
+            Usuario u = new Usuario();
+            u.setNombre("pruebaupdate");
+            u.setApellido1("pruebaupdate");
+            u.setApellido2("pruebaupdate");
+            u.setDni("34092242D");
+            InteresBotanico ib = new InteresBotanico(1,"");
+            u.setInteres(ib);
+            System.out.println(c.modificarUsuario("Prueba2",u));
             //Usuario u = new Usuario(22, "BigChuunguus", "Prueba", "ApellidoPrueba", "Apellido2Prueba", "alexcruzz267@gmail.com", "21141790Y", new InteresBotanico(1,"a"));
             //System.out.println(c.insertarUsuario(u));
 //            ArrayList<Usuario> arr = c.leerUsuarios();

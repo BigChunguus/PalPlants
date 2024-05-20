@@ -1,4 +1,8 @@
 package pojosbotanica;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Operaciones {
     public static final int INSERTAR_USUARIO = 1;
@@ -37,4 +41,8 @@ public class Operaciones {
     public static final int INSERTAR_USUARIO_PLANTA = 34;
     public static final int ELIMINAR_USUARIO_PLANTA = 35;
     public static final int LEER_USUARIOS_PLANTA = 36;
+    public static final String CLAVE_AES = "+ydN+DfjOiyG2bfpCH2j/OZRyG3SUjWZt7dFwk1NRLI=";
+    
+    
+    
 }

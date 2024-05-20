@@ -41,14 +41,46 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            //String ip = "192.168.31.176";
-            String ip = "192.168.11.207";
+            String ip = "192.168.31.176";
+            //String ip = "192.168.11.207";
             int puertoServidor = 30500;
             socketCliente = new Socket(ip, puertoServidor);
             socketCliente.setSoTimeout(5000);
         } catch (IOException ex) {
             manejadorIOException(ex);
         }
+    }
+    
+    public ArrayList<InteresBotanico> leerIntereses() throws ExcepcionBotanica {
+        
+        Peticion p = new Peticion();
+        p.setIdOperacion(Operaciones.LEER_INTERESES);
+        
+        Respuesta r = null;
+        ArrayList<InteresBotanico> listaIntereses = null;
+        
+        try{
+            
+            ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
+            oos.writeObject(p);
+            ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
+            r = (Respuesta) ois.readObject();
+            
+            ois.close();
+            oos.close();
+            socketCliente.close();
+            
+            if(r.getEntidad() != null)
+                listaIntereses = (ArrayList<InteresBotanico>) r.getEntidad();    
+            else if (r.getEh() != null)
+                throw r.getEh();
+            
+        } catch (ClassNotFoundException ex) {
+            manejadorClassNotFoundException(ex);
+        } catch(IOException ex){
+            manejadorIOException(ex);
+        }
+        return listaIntereses;
     }
     
     public ArrayList<Usuario> leerUsuarios() throws ExcepcionBotanica {
@@ -148,10 +180,15 @@ public class BotanicaCC {
     return cambios;
 }
 
-public int modificarUsuario(Usuario u) throws ExcepcionBotanica {
+public int modificarUsuario(String nombreUsuario, Usuario u) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.MODIFICAR_USUARIO);
-    p.setEntidad(u);
+    
+    System.out.println(nombreUsuario + u);
+    ArrayList<Object> peticionModificarUsuario = new ArrayList<>();
+    peticionModificarUsuario.add(nombreUsuario);
+    peticionModificarUsuario.add(u);
+    p.setEntidad(peticionModificarUsuario);
     
     Respuesta r = null;
     int cambios = 0;

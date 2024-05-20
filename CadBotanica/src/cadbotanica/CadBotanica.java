@@ -128,24 +128,20 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     String dml = "UPDATE USUARIO SET ";
     boolean primerCampo = true;
 
-    if (usuario.getNombreUsuario() != null) {
-        dml += "NOMBREUSUARIO=?, ";
+    if (usuario.getNombre() != null) {
+        dml += "NOMBRE=? ";
         primerCampo = false;
     }
     if (usuario.getApellido1() != null) {
-        dml += (primerCampo ? "" : ", ") + "APELLIDO1=?, ";
+        dml += (primerCampo ? "" : ", ") + "APELLIDO1=? ";
         primerCampo = false;
     }
     if (usuario.getApellido2() != null) {
-        dml += (primerCampo ? "" : ", ") + "APELLIDO2=?, ";
+        dml += (primerCampo ? "" : ", ") + "APELLIDO2=? ";
         primerCampo = false;
     }
     if (usuario.getDni() != null) {
-        dml += (primerCampo ? "" : ", ") + "DNI=?, ";
-        primerCampo = false;
-    }
-    if (usuario.getContrasena() != null) {
-        dml += (primerCampo ? "" : ", ") + "CONTRASEÑA=?, ";
+        dml += (primerCampo ? "" : ", ") + "DNI=? ";
         primerCampo = false;
     }
     if (usuario.getInteres() != null) {
@@ -158,8 +154,8 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
 
         int contador = 1;
-        if (usuario.getNombreUsuario() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getNombreUsuario());
+        if (usuario.getNombre() != null) {
+            sentenciaPreparada.setString(contador++, usuario.getNombre());
         }
         if (usuario.getApellido1() != null) {
             sentenciaPreparada.setString(contador++, usuario.getApellido1());
@@ -169,9 +165,6 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         }
         if (usuario.getDni() != null) {
             sentenciaPreparada.setString(contador++, usuario.getDni());
-        }
-        if (usuario.getContrasena() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getContrasena());
         }
         if (usuario.getInteres() != null) {
             sentenciaPreparada.setInt(contador++, usuario.getInteres().getInteresId());
@@ -568,7 +561,27 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public ArrayList<InteresBotanico> leerInteresesBotanicos() throws ExcepcionBotanica {
         conectar();
         ArrayList<InteresBotanico> listaIntereses = new ArrayList<>();
-        // Código para leer todos los intereses botánicos de la base de datos
+        String dml = "SELECT * FROM BOTANICA.INTERESBOTANICO";
+        
+        try{
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(dml);
+            
+            while (resultSet.next()) {
+                int idInteres = resultSet.getInt("INTERESID");
+                String nombreInteres = resultSet.getString("NOMBREINTERES");
+                
+                InteresBotanico ib = new InteresBotanico(idInteres, nombreInteres);
+                listaIntereses.add(ib);
+            }
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
         desconectar();
         return listaIntereses; // Cambiar el valor de retorno según corresponda
     }
@@ -607,7 +620,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         try {
             Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery(dml);
-            System.out.println(dml);
+            
             while (resultSet.next()) {
                 
                 String nombreCientifico = resultSet.getString("NOMBRECIENTIFICOPLANTA");

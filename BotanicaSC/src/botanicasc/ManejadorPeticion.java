@@ -277,13 +277,14 @@ public class ManejadorPeticion extends Thread{
     private void modificarUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Usuario u = (Usuario) p.getEntidad();
-            String emailUsuario = u.getEmail(); 
+            ArrayList<Object> listaPeticionModificarUsuario = (ArrayList<Object>) p.getEntidad();
+            String stringRecuperado = (String) listaPeticionModificarUsuario.get(0);
+            Usuario usuarioRecuperado = (Usuario) listaPeticionModificarUsuario.get(1);
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
 
-            int cantidad = cad.modificarUsuario(emailUsuario, u);
+            int cantidad = cad.modificarUsuario(stringRecuperado, usuarioRecuperado);
             r.setEntidad(cantidad);
 
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
