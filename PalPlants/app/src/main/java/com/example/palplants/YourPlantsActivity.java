@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
@@ -113,6 +114,7 @@ public class YourPlantsActivity extends AppCompatActivity {
                     strAux = "Ascendente";
                     buttonOrder.setText("Orden: Ascendente");
                 }
+
                 new ConnectBotanicaTask().execute(nombreUsuario, strAux);
             }
         });
@@ -148,23 +150,17 @@ public class YourPlantsActivity extends AppCompatActivity {
             String username = params[0];
             String order = params.length > 1 ? params[1] : null;
             try {
+                Log.e("Orden", order);
                 BotanicaCC bcc = new BotanicaCC();
                 ArrayList<Planta> plantas = bcc.leerUsuariosPlantas(username);
                 if (order != null && !order.isEmpty()) {
                     if (order.equalsIgnoreCase("Ascendente")) {
-                        Collections.sort(plantas, new Comparator<Planta>() {
-                            @Override
-                            public int compare(Planta planta1, Planta planta2) {
-                                return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
-                            }
-                        });
+                        plantas.sort(Comparator.comparing(Planta::getNombreComunPlanta));
+                        Log.e("Orden", plantas.toString());
                     } else if (order.equalsIgnoreCase("Descendente")) {
-                        Collections.sort(plantas, new Comparator<Planta>() {
-                            @Override
-                            public int compare(Planta planta1, Planta planta2) {
-                                return planta2.getNombreComunPlanta().compareTo(planta1.getNombreComunPlanta());
-                            }
-                        });
+                        plantas.sort(Comparator.comparing(Planta::getNombreComunPlanta));
+                        Collections.reverse(plantas);
+                        Log.e("Orden", plantas.toString());
                     }
                 }
 
@@ -178,14 +174,8 @@ public class YourPlantsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<Planta> listaPlantas) {
 
+            linearLayout.removeAllViews();
             if (listaPlantas != null && !listaPlantas.isEmpty()) {
-
-                Collections.sort(listaPlantas, new Comparator<Planta>() {
-                    @Override
-                    public int compare(Planta planta1, Planta planta2) {
-                        return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
-                    }
-                });
 
                 for (Planta planta : listaPlantas) {
                     ConstraintLayout cardView = createCardView(planta);
@@ -219,6 +209,23 @@ public class YourPlantsActivity extends AppCompatActivity {
         }
     }
 
+    private void sortPlantsAscendente(List<Planta> plantas) {
+        Collections.sort(plantas, new Comparator<Planta>() {
+            @Override
+            public int compare(Planta planta1, Planta planta2) {
+                return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
+            }
+        });
+    }
+
+    private void sortPlantsDescendente(List<Planta> plantas) {
+        Collections.sort(plantas, new Comparator<Planta>() {
+            @Override
+            public int compare(Planta planta1, Planta planta2) {
+                return planta2.getNombreComunPlanta().compareTo(planta1.getNombreComunPlanta());
+            }
+        });
+    }
 
     private ConstraintLayout createCardView(Planta planta) {
         ConstraintLayout cardView = new ConstraintLayout(this);
