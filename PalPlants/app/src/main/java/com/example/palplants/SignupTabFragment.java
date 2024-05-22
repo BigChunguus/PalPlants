@@ -33,7 +33,6 @@ public class SignupTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_signup_tab, container, false);
 
         editTextUsername = view.findViewById(R.id.usernameRegister);
@@ -42,14 +41,12 @@ public class SignupTabFragment extends Fragment {
         editTextConfirmPassword = view.findViewById(R.id.confirmPasswordRegister);
         buttonRegister = view.findViewById(R.id.registerButton);
 
-        // Escuchar el botón si es clickeado
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerUser();
             }
         });
-
 
         return view;
     }
@@ -61,8 +58,6 @@ public class SignupTabFragment extends Fragment {
         String password = editTextPassword.getText().toString();
         String confirmPassword = editTextConfirmPassword.getText().toString();
 
-
-        // Validar nombre de usuario
         if (!username.matches("[a-zA-Z0-9]+")) {
             editTextUsername.setError("Nombre de usuario debe contener solo caracteres alfanuméricos");
             editTextUsername.requestFocus();
@@ -71,7 +66,7 @@ public class SignupTabFragment extends Fragment {
         }
 
         usuarioRegistro.setNombreUsuario(username);
-        // Validar correo electrónico
+
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Correo electrónico inválido");
             editTextEmail.requestFocus();
@@ -80,7 +75,7 @@ public class SignupTabFragment extends Fragment {
         }
 
         usuarioRegistro.setEmail(email);
-        // Validar longitud de contraseña
+
         if (password.length() < 8) {
             editTextPassword.setError("Contraseña debe tener al menos 8 caracteres");
             editTextPassword.requestFocus();
@@ -88,7 +83,6 @@ public class SignupTabFragment extends Fragment {
             return;
         }
 
-        // Validar que las contraseñas coincidan
         if (!password.equals(confirmPassword)) {
             editTextConfirmPassword.setError("Las contraseñas no coinciden");
             editTextConfirmPassword.requestFocus();
@@ -105,7 +99,7 @@ public class SignupTabFragment extends Fragment {
         protected Integer doInBackground(Usuario... params) {
             Usuario usuario = params[0];
             try {
-                BotanicaCC bcc = new BotanicaCC(); // No se pasa la IP
+                BotanicaCC bcc = new BotanicaCC();
                 return bcc.insertarUsuario(usuario);
             } catch (ExcepcionBotanica ex) {
                 ex.printStackTrace();
@@ -117,47 +111,36 @@ public class SignupTabFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer resultado) {
             if (resultado == 1) {
-                // Si la inserción fue exitosa, guardar el usuario en SharedPreferences
                 saveUserToSharedPreferences(usuarioRegistro);
-
-                // Iniciar la YourPlantsActivity
                 Intent intent = new Intent(getActivity(), YourPlantsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 getActivity().finish();
             } else {
-                // Si hubo un error, avisar al usuario
                 Toast.makeText(getActivity(), "Error al registrar usuario", Toast.LENGTH_SHORT).show();
             }
         }
 
 
         private void saveUserToSharedPreferences(Usuario usuario) {
-            // Comprobamos que se recibe un usuario y su contenido
             if (usuario != null) {
                 Log.d("UserInfo", "Usuario recibido: " + usuario.toString());
 
-                // Convertimos el usuario a JSON
                 Gson gson = new Gson();
                 String usuarioJson = gson.toJson(usuario);
 
-                // Guardamos el JSON en las preferencias compartidas
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                // Verificar si ya hay un usuario guardado
                 String usuarioGuardado = sharedPreferences.getString("user", "");
                 if (!usuarioGuardado.isEmpty()) {
-                    // Eliminar el usuario existente
                     editor.remove("user");
                     Log.d("UserInfo", "Usuario anterior eliminado de SharedPreferences");
                 }
 
-                // Guardar el nuevo usuario
                 editor.putString("user", usuarioJson);
                 editor.apply();
 
-                // Verificar que se guarda correctamente en las preferencias compartidas
                 usuarioGuardado = sharedPreferences.getString("user", "");
                 if (!usuarioGuardado.isEmpty()) {
                     Log.d("UserInfo", "Usuario guardado correctamente en SharedPreferences: " + usuarioGuardado);
@@ -169,6 +152,4 @@ public class SignupTabFragment extends Fragment {
             }
         }
     }
-
-
 }

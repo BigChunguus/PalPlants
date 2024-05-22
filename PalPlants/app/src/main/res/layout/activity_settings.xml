@@ -49,6 +49,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cambiar Tema: " />
+
+        <Button
+            android:id="@+id/btn_poweroff_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apagar notificaciones" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -65,6 +65,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation(files("C:\\Users\\Alejandro\\Desktop\\Compartido\\ProyectoPalPlants\\BotanicaCC\\dist\\BotanicaCC.jar"))
     implementation(files("C:\\Users\\Alejandro\\Desktop\\Compartido\\ProyectoPalPlants\\PojosBotanica\\dist\\PojosBotanica.jar"))
     implementation("androidx.viewpager2:viewpager2:1.0.0")

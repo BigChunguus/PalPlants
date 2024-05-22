@@ -1,14 +1,17 @@
 package com.example.palplants;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,8 @@ import pojosbotanica.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
+
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerAdapter adapter;
@@ -29,20 +34,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+        }
 
-        // Comprobar si hay información de usuario guardada en SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
 
         if (!usuarioJson.isEmpty()) {
-            // Convertir el JSON a objeto Usuario
             Gson gson = new Gson();
             Usuario usuario = gson.fromJson(usuarioJson, Usuario.class);
-
-            // Verificar el usuario en la base de datos
             new VerifyUserTask().execute(usuario.getNombreUsuario());
         } else {
-            // Si no hay información de usuario, continuar con el flujo normal de la actividad
             setContentView(R.layout.activity_main);
 
             tabLayout = findViewById(R.id.tab_layout);
@@ -78,6 +81,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "El permiso para notificaciones es necesario", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private class VerifyUserTask extends AsyncTask<String, Void, Usuario> {
         @Override
         protected Usuario doInBackground(String... params) {
@@ -93,23 +106,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Usuario usuario) {
-
-            if (usuario.getNombreUsuario() != null) {
-
-                // Usuario verificado, lanzar YourPlantsActivity
+            if (usuario != null && usuario.getNombreUsuario() != null) {
                 Intent intent = new Intent(MainActivity.this, YourPlantsActivity.class);
                 startActivity(intent);
                 finish();
             } else {
-                // Error al verificar el usuario, mostrar un mensaje o tomar una acción apropiada
                 Toast.makeText(MainActivity.this, "Error al verificar el usuario. Por favor, intente de nuevo.", Toast.LENGTH_SHORT).show();
-                // Borrar la información de usuario guardada ya que no es válida
                 SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.clear();
                 editor.apply();
-
-                // Continuar con el flujo normal de la actividad
                 setContentView(R.layout.activity_main);
 
                 tabLayout = findViewById(R.id.tab_layout);
@@ -146,3 +152,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+

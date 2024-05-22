@@ -16,4 +16,5 @@
     <color name="colorTextoClaro">#000000</color>
     <color name="colorTextoOscuro">#FFFFFF</color>
     <color name="grey">#FF4D6359</color>
+    <color name="alarma">#FF4CA1AF</color>
 </resources>

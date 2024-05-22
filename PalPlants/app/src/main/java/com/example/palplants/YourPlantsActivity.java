@@ -1,35 +1,52 @@
 package com.example.palplants;
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Outline;
 import android.graphics.drawable.GradientDrawable;
+import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.Button;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.palplants.PlantsActivity;
+import com.example.palplants.R;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
@@ -38,8 +55,14 @@ import pojosbotanica.Usuario;
 
 public class YourPlantsActivity extends AppCompatActivity {
 
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 2;
     private LinearLayout linearLayout;
-    private ImageButton buttonSettings;
+    private ImageButton buttonSettings, buttonAlarm;
+    private Usuario usuarioGeneral;
+    private Button buttonOrder;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ScrollView scrollView;
+    private String nombreUsuario, strAux;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
@@ -48,27 +71,67 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yourplants);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+        }
+        createNotificationChannel();
+
 
         buttonSettings = findViewById(R.id.buttonSettings);
         linearLayout = findViewById(R.id.linearLayout);
+        buttonAlarm = findViewById(R.id.buttonAlarm);
+        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        scrollView = findViewById(R.id.scrollView);
+        buttonOrder = findViewById(R.id.buttonOrder);
 
-        String nombreUsuario = "";
+
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
 
-        // Comprobar si se pudo obtener el JSON del usuario de las preferencias compartidas
         if (!usuarioJson.isEmpty()) {
-            // Convertir el JSON a objeto Usuario
             Gson gson = new Gson();
             Usuario usuario = gson.fromJson(usuarioJson, Usuario.class);
-
-            // Obtener el nombre de usuario del objeto Usuario
+            usuarioGeneral = usuario;
             nombreUsuario = usuario.getNombreUsuario();
         } else {
             Log.e("UserInfo", "Error: No se pudo obtener el usuario desde SharedPreferences");
         }
 
-        new ConnectBotanicaTask().execute(nombreUsuario);
+        strAux = "defecto";
+        buttonOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textoBoton = buttonOrder.getText().toString();
+
+                if (textoBoton.equals("Orden: Ascendente")) {
+                    strAux = "Descendente";
+                    buttonOrder.setText("Orden: Descendente");
+                } else if (textoBoton.equals("Orden: Descendente")) {
+                    strAux = "Defecto";
+                    buttonOrder.setText("Orden: Pordefecto");
+                } else {
+                    strAux = "Ascendente";
+                    buttonOrder.setText("Orden: Ascendente");
+                }
+                new ConnectBotanicaTask().execute(nombreUsuario, strAux);
+            }
+        });
+        new ConnectBotanicaTask().execute(nombreUsuario, strAux);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recreate();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        buttonAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
+
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,16 +142,33 @@ public class YourPlantsActivity extends AppCompatActivity {
         });
     }
 
-
-
-    // AsyncTask para conectar con el servidor y cargar las plantas del usuario
     private class ConnectBotanicaTask extends AsyncTask<String, Void, ArrayList<Planta>> {
         @Override
         protected ArrayList<Planta> doInBackground(String... params) {
             String username = params[0];
+            String order = params.length > 1 ? params[1] : null;
             try {
                 BotanicaCC bcc = new BotanicaCC();
-                return bcc.leerUsuariosPlantas(username);
+                ArrayList<Planta> plantas = bcc.leerUsuariosPlantas(username);
+                if (order != null && !order.isEmpty()) {
+                    if (order.equalsIgnoreCase("Ascendente")) {
+                        Collections.sort(plantas, new Comparator<Planta>() {
+                            @Override
+                            public int compare(Planta planta1, Planta planta2) {
+                                return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
+                            }
+                        });
+                    } else if (order.equalsIgnoreCase("Descendente")) {
+                        Collections.sort(plantas, new Comparator<Planta>() {
+                            @Override
+                            public int compare(Planta planta1, Planta planta2) {
+                                return planta2.getNombreComunPlanta().compareTo(planta1.getNombreComunPlanta());
+                            }
+                        });
+                    }
+                }
+
+                return plantas;
             } catch (ExcepcionBotanica ex) {
                 ex.printStackTrace();
                 return null;
@@ -97,55 +177,81 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Planta> listaPlantas) {
+
             if (listaPlantas != null && !listaPlantas.isEmpty()) {
-                // Recorre la lista de plantas y crea las tarjetas
+
+                Collections.sort(listaPlantas, new Comparator<Planta>() {
+                    @Override
+                    public int compare(Planta planta1, Planta planta2) {
+                        return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
+                    }
+                });
+
                 for (Planta planta : listaPlantas) {
-                    // Llama al método createCardView para crear la tarjeta de planta y agrégala al LinearLayout
                     ConstraintLayout cardView = createCardView(planta);
                     linearLayout.addView(cardView);
                 }
             } else {
-                // Maneja la situación de error aquí
-                Toast.makeText(YourPlantsActivity.this, "Error al cargar las plantas", Toast.LENGTH_SHORT).show();
+                ConstraintLayout emptyCardView = new ConstraintLayout(YourPlantsActivity.this);
+                emptyCardView.setLayoutParams(new ConstraintLayout.LayoutParams(
+                        dpToPx(340),
+                        dpToPx(50)
+                ));
+
+                emptyCardView.setBackground(ContextCompat.getDrawable(YourPlantsActivity.this, R.drawable.custom_edittext));
+
+                TextView textView = new TextView(YourPlantsActivity.this);
+                textView.setId(View.generateViewId());
+                textView.setText("Aún no has añadido ninguna planta");
+
+                emptyCardView.addView(textView);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(emptyCardView);
+                constraintSet.connect(textView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(textView.getId(), ConstraintSet.END,                ConstraintSet.PARENT_ID, ConstraintSet.END);
+                constraintSet.connect(textView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                constraintSet.applyTo(emptyCardView);
+
+                linearLayout.addView(emptyCardView);
             }
         }
     }
 
 
     private ConstraintLayout createCardView(Planta planta) {
-        // Crear el ConstraintLayout que actuará como tarjeta
         ConstraintLayout cardView = new ConstraintLayout(this);
         cardView.setLayoutParams(new ConstraintLayout.LayoutParams(
-                dpToPx(341),  // Ancho deseado en dp convertido a píxeles
+                dpToPx(341),
                 dpToPx(105)
         ));
         cardView.setClipChildren(true);
-        // Configurar el fondo personalizado
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.custom_edittext));
 
         int desiredWidth = 100;
         int desiredHeight = 100;
 
-        // Crear un conjunto de parámetros de diseño para la ImageView con tamaño fijo para la anchura y la altura
         ConstraintLayout.LayoutParams layoutParamsSingleImage = new ConstraintLayout.LayoutParams(dpToPx(desiredWidth), dpToPx(desiredHeight));
 
         ImageView imageView = new ImageView(this);
         imageView.setId(View.generateViewId());
-        imageView.setLayoutParams(layoutParamsSingleImage); // Establecer los parámetros de diseño
-        imageView.setMaxWidth(dpToPx(desiredWidth)); // Establecer el tamaño máximo para la anchura
-        imageView.setMaxHeight(dpToPx(desiredHeight)); // Establecer el tamaño máximo para la altura
+        imageView.setLayoutParams(layoutParamsSingleImage);
+        imageView.setMaxWidth(dpToPx(desiredWidth));
+        imageView.setMaxHeight(dpToPx(desiredHeight));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setClipToOutline(true);// Escalar la imagen para que se ajuste al tamaño de la ImageView
+        imageView.setClipToOutline(true);
         imageView.setPadding(7, 7, 0, 7);
 
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
 
-        // Especifica los radios para los bordes redondeados
         gradientDrawable.setCornerRadii(new float[]{dpToPx(40), dpToPx(30), 0, 0, 0, 0, dpToPx(40), dpToPx(30)});
         imageView.setBackground(gradientDrawable);
 
-        Log.e("Nombre Planta", planta.getNombreCientificoPlanta());
+        // Mariana
+        // Url de ejemplo: https://drive.google.com/uc?export=view&id=1MlDb1H-V2DyI32ncplsbtyYaI_KFGD8S
+
         Glide.with(this)
                 .load(planta.getImagen())
                 .placeholder(R.drawable.placeholder_image)
@@ -164,79 +270,77 @@ public class YourPlantsActivity extends AppCompatActivity {
         );
         textViewTopParams.topMargin = 50;
         textViewTop.setLayoutParams(textViewTopParams);
-        textViewTop.setText(planta.getNombreCientificoPlanta()); // Texto deseado
+        textViewTop.setText(planta.getNombreCientificoPlanta());
         cardView.addView(textViewTop);
 
-        // Crear y agregar el TextView para el texto inferior
         TextView textViewBottom = new TextView(this);
         textViewBottom.setId(View.generateViewId());
         textViewBottom.setLayoutParams(new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        textViewBottom.setPadding(0, 0, 0, dpToPx(40)); // Padding inferior en dp convertido a píxeles
-        textViewBottom.setText(planta.getNombreComunPlanta()); // Texto deseado
+        textViewBottom.setPadding(0, 0, 0, dpToPx(40));
+        textViewBottom.setText(planta.getNombreComunPlanta());
         cardView.addView(textViewBottom);
 
-        // Crear y agregar el ImageButton
-        ImageButton button = new ImageButton(this);
-        button.setId(View.generateViewId());
+        ImageButton buttonDelete = new ImageButton(this);
+        buttonDelete.setId(View.generateViewId());
         ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
-                dpToPx(30),  // Ancho deseado en dp convertido a píxeles
-                dpToPx(30)   // Altura deseada en dp convertido a píxeles
+                dpToPx(30),
+                dpToPx(30)
         );
         buttonParams.rightMargin = 50;
-        button.setLayoutParams(buttonParams);
-        button.setImageResource(R.drawable.baseline_delete_outline_24); // Establecer el icono
-        button.setBackground(ContextCompat.getDrawable(this, R.drawable.boton_eliminar)); // Fondo deseado
-        cardView.addView(button);
+        buttonDelete.setLayoutParams(buttonParams);
+        buttonDelete.setImageResource(R.drawable.baseline_delete_outline_24);
+        buttonDelete.setBackground(ContextCompat.getDrawable(this, R.drawable.boton_eliminar));
 
-        // Crear y aplicar restricciones
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new DeletePlantTask().execute(usuarioGeneral, planta);
+            }
+        });
+
+        cardView.addView(buttonDelete);
+
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(cardView);
 
-        // Restricciones para la ImageView
         constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
         constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.setVerticalBias(imageView.getId(), 0.515f);
 
-        // Restricciones para el TextView superior
         constraintSet.connect(textViewTop.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
         constraintSet.connect(textViewTop.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        constraintSet.connect(textViewTop.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.END, buttonDelete.getId(), ConstraintSet.START);
         constraintSet.setHorizontalBias(textViewTop.getId(), 0.083f);
         constraintSet.setVerticalBias(textViewTop.getId(), 0.64f);
 
-        // Restricciones para el TextView inferior
         constraintSet.connect(textViewBottom.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
         constraintSet.connect(textViewBottom.getId(), ConstraintSet.TOP, textViewTop.getId(), ConstraintSet.BOTTOM);
-        constraintSet.connect(textViewBottom.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.END, buttonDelete.getId(), ConstraintSet.START);
         constraintSet.connect(textViewBottom.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.setHorizontalBias(textViewBottom.getId(), 0.056f);
 
 
-        // Restricciones para el ImageButton
-        constraintSet.connect(button.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        constraintSet.connect(button.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        constraintSet.connect(button.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        constraintSet.setHorizontalBias(button.getId(), 0.779f);
-        constraintSet.setVerticalBias(button.getId(), 0.505f);
+        constraintSet.connect(buttonDelete.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.connect(buttonDelete.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.connect(buttonDelete.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.setHorizontalBias(buttonDelete.getId(), 0.779f);
+        constraintSet.setVerticalBias(buttonDelete.getId(), 0.505f);
 
         constraintSet.applyTo(cardView);
 
-        // Margen inferior para separar las tarjetas
-        int marginBottom = dpToPx(8); // Margen inferior deseado en dp convertido a píxeles
+        int marginBottom = dpToPx(8);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) cardView.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, marginBottom);
         cardView.setLayoutParams(layoutParams);
 
-        // Manejar clics en la tarjeta
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Acción al hacer clic en la tarjeta
-                // Por ejemplo, iniciar una nueva actividad con detalles de la planta
                 Intent intent = new Intent(getApplicationContext(), PlantsActivity.class);
                 intent.putExtra("PLANT", planta);
                 startActivity(intent);
@@ -246,12 +350,85 @@ public class YourPlantsActivity extends AppCompatActivity {
         return cardView;
     }
 
-    // Método para convertir dp a píxeles
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
+        return Math.round(dp * density);
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "WateringChannel";
+            String description = "Channel for watering notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("watering_channel", name, importance);
+            channel.setDescription(description);
 
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    private void showTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                setDailyAlarm(hourOfDay, minute);
+            }
+        }, hour, minute, true);
+
+        timePickerDialog.show();
+    }
+
+    private void setDailyAlarm(int hour, int minute) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        Toast.makeText(this, "Alarma configurada para regar. ", Toast.LENGTH_SHORT).show();
+    }
+
+    private class DeletePlantTask extends AsyncTask<Object, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Object... params) {
+            Usuario user = (Usuario) params[0];
+            Planta planta = (Planta) params[1];
+            try {
+                BotanicaCC bcc = new BotanicaCC();
+                int cambios = bcc.eliminarUsuarioPlanta(user.getUsuarioID(), planta.getPlantaId());
+                if(cambios == 1)
+                    return true;
+                else
+                    return false;
+            } catch (ExcepcionBotanica ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                recreate();
+            } else {
+                Toast.makeText(YourPlantsActivity.this, "Error al eliminar la planta", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
+

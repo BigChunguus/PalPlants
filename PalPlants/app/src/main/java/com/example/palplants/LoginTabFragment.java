@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,7 +96,6 @@ public class LoginTabFragment extends Fragment {
                     textError.setText("Usuario o contraseña incorrectos");
                 }
             } else {
-                // Maneja la situación de error aquí
                 if(resultado != null || resultado.getEmail() == null || resultado.getContrasena() == null || resultado.getNombreUsuario() == null || resultado.getInteres() == null)
                     textError.setText("Usuario no encontrado");
                 else
@@ -106,21 +104,14 @@ public class LoginTabFragment extends Fragment {
         }
 
         private void saveUserToSharedPreferences(Usuario usuario) {
-            // Comprobamos que se recibe un usuario y su contenido
             if (usuario != null) {
                 Log.d("UserInfo", "Usuario recibido: " + usuario.toString());
-
-                // Convertimos el usuario a JSON
                 Gson gson = new Gson();
                 String usuarioJson = gson.toJson(usuario);
-
-                // Guardamos el JSON en las preferencias compartidas
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("user", usuarioJson);
                 editor.apply();
-
-                // Verificamos que se guarda correctamente en las preferencias compartidas
                 String usuarioGuardado = sharedPreferences.getString("user", "");
                 if (!usuarioGuardado.isEmpty()) {
                     Log.d("UserInfo", "Usuario guardado correctamente en SharedPreferences: " + usuarioGuardado);
