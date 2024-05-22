@@ -21,8 +21,10 @@
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.0">
 
         <Button
             android:id="@+id/btn_edit_user_data"
@@ -47,60 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cambiar Tema: " />
-
-        <!-- Layout para la pestaña de edición de datos de usuario -->
-
-
-        <LinearLayout
-            android:id="@+id/edit_user_data_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <!-- Aquí puedes añadir los campos de edición de datos de usuario -->
-
-        </LinearLayout>
-
-        <!-- Layout para la ventana emergente de borrar cuenta -->
-        <LinearLayout
-            android:id="@+id/delete_account_popup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="¿Está seguro que desea borrar la cuenta?"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="horizontal"
-                android:paddingTop="8dp">
-
-                <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancelar" />
-
-                <Button
-                    android:id="@+id/btn_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Borrar"
-                    android:textColor="@android:color/holo_red_light" />
-
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

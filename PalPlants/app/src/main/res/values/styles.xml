@@ -3,11 +3,31 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Configuración adicional -->
     </style>
-    <style name="FondoPersonalizado">
-        <item name="android:background">@drawable/main_bkg</item>
-    </style>
+
     <style name="tabCustomStyle" parent="Widget.Design.TabLayout">
         <item name="tabTextColor">@color/black</item>
         <item name="tabSelectedTextColor">@color/cyan</item>
+    </style>
+
+    <!-- Light Theme -->
+    <style name="Theme.App.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/cyan</item>
+        <item name="colorPrimaryDark">@color/darkcyan</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/darkcyan</item>
+        <item name="android:color">@color/cyan</item>
+        <item name="strokeColor">@color/cyan</item>
+    </style>
+
+    <!-- Dark Theme -->
+    <style name="Theme.App.Dark.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/darkcyan</item>
+        <item name="colorPrimaryDark">@color/cyan</item>
+        <item name="colorAccent">@color/darkcyan</item>
+        <item name="android:background">@color/darkcyan</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:color">@color/white</item>
+        <item name="strokeColor">@color/white</item>
     </style>
 </resources>

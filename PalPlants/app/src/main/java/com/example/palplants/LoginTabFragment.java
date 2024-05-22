@@ -84,7 +84,7 @@ public class LoginTabFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Usuario resultado) {
-            if (resultado != null && resultado.getEmail() != null) {
+            if (resultado.getEmail() != null) {
                 String password = editTextPassword.getText().toString();
                 if (password.equals(resultado.getContrasena())) {
                     Log.d("email", resultado.getEmail());
@@ -98,7 +98,10 @@ public class LoginTabFragment extends Fragment {
                 }
             } else {
                 // Maneja la situación de error aquí
-                Toast.makeText(getActivity(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
+                if(resultado != null || resultado.getEmail() == null || resultado.getContrasena() == null || resultado.getNombreUsuario() == null || resultado.getInteres() == null)
+                    textError.setText("Usuario no encontrado");
+                else
+                    Toast.makeText(getActivity(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
             }
         }
 

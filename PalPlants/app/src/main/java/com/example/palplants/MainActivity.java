@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Usuario usuario) {
-            if (usuario != null) {
+
+            if (usuario.getNombreUsuario() != null) {
+
                 // Usuario verificado, lanzar YourPlantsActivity
                 Intent intent = new Intent(MainActivity.this, YourPlantsActivity.class);
                 startActivity(intent);

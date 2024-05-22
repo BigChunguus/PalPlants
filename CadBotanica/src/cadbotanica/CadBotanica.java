@@ -218,7 +218,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
        try {
            Statement sentencia = conexion.createStatement();
            registrosAfectados = sentencia.executeUpdate(dml);
-           
+           System.out.println(registrosAfectados);
            sentencia.close();
            conexion.close();
 

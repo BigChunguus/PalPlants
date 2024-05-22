@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,31 +14,35 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
-import java.util.List;
+
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.InteresBotanico;
-import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
 
 public class SettingsActivity extends AppCompatActivity {
 
+
+    private int themeId;
+    private AlertDialog alertDialogDelete, alertDialogUpdate;
     private LinearLayout editUserDataLayout;
     private LinearLayout deleteAccountPopup;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
-        // Inicializar los elementos de la interfaz
-        editUserDataLayout = findViewById(R.id.edit_user_data_layout);
-        deleteAccountPopup = findViewById(R.id.delete_account_popup);
+        // Cargar tema desde preferencias
+        SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
+        themeId = preferences.getInt("current_theme", R.style.Theme_App_Light_NoActionBar);
+        setTheme(themeId);
+
+        setContentView(R.layout.activity_settings);
 
         // Configurar los listeners de los botones
         Button btnEditUserData = findViewById(R.id.btn_edit_user_data);
@@ -53,16 +56,110 @@ public class SettingsActivity extends AppCompatActivity {
 
         Button btnChangeTheme = findViewById(R.id.btn_change_theme);
         btnChangeTheme.setOnClickListener(v -> changeTheme());
-
-        Button btnCancel = findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> hideDeleteAccountPopup());
-
-        Button btnDelete = findViewById(R.id.btn_delete);
-        btnDelete.setOnClickListener(v -> deleteAccount());
-
     }
 
-    // Método para mostrar el diálogo de edición de datos de usuario
+    private void changeTheme() {
+        // Cambiar tema
+        if (themeId == R.style.Theme_App_Light_NoActionBar) {
+            themeId = R.style.Theme_App_Dark_NoActionBar;
+        } else {
+            themeId = R.style.Theme_App_Light_NoActionBar;
+        }
+
+        // Guardar tema en preferencias
+        SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("current_theme", themeId);
+        editor.apply();
+
+        // Reiniciar todas las actividades para aplicar nuevo tema
+        restartAllActivities();
+    }
+
+    private void restartAllActivities() {
+        Intent intent = new Intent(this, YourPlantsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void showDeleteAccountPopup(){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View deleteUserView = inflater.inflate(R.layout.dialog_btn_delete_account, null);
+        Button btnCancel = deleteUserView.findViewById(R.id.btn_cancel);
+        Button btnConfirm = deleteUserView.findViewById(R.id.btn_confirm);
+
+        btnCancel.setOnClickListener(v -> onCancelDeleteUser());
+        btnConfirm.setOnClickListener(v -> onConfirmDeleteUser());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(deleteUserView);
+        alertDialogDelete = builder.create(); // Inicializa alertDialog
+        alertDialogDelete.show();
+    }
+
+    private void onCancelDeleteUser(){
+        // Cierra el diálogo si está inicializado
+        if(alertDialogDelete != null && alertDialogDelete.isShowing()) {
+            alertDialogDelete.dismiss();
+        }
+    }
+
+    private void onConfirmDeleteUser() {
+        // Obtener SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String usuarioJson = preferences.getString("user", null);
+
+        if (!usuarioJson.isEmpty()) {
+            // Convertir el JSON a objeto Usuario
+            Gson gson = new Gson();
+            Usuario usuario = gson.fromJson(usuarioJson, Usuario.class);
+
+            // Verificar el usuario en la base de datos
+            new DeleteUserTask().execute(usuario.getNombreUsuario());
+        }
+    }
+    private class DeleteUserTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            String username = params[0];
+            try {
+                BotanicaCC botanicaCC = new BotanicaCC();
+                int cambios = botanicaCC.eliminarUsuario(username);
+                if(cambios == 1)
+                    return true;
+                else
+                    return false;
+            } catch (ExcepcionBotanica e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                SharedPreferences preferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+
+                // Navegar a MainActivity
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                // Finalizar la actividad actual
+                finish();
+
+            } else {
+                // Mostrar un mensaje de error o realizar otras acciones necesarias
+                Toast.makeText(getApplicationContext(), "Error al eliminar el usuario", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
     private void showEditUserDataPopup() {
         // Inflar el diseño XML de edición de datos de usuario
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -79,14 +176,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Configurar los listeners de los botones
         btnCancel.setOnClickListener(v -> onCancelEditUserData());
-        btnSave.setOnClickListener(v -> onSaveEditUserData());
+
 
         // Mostrar el diálogo de edición de datos de usuario
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(editUserDataView);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
+        alertDialogUpdate = builder.create();
+        alertDialogUpdate.show();
 
         // Configurar el listener para el botón de guardar
         btnSave.setOnClickListener(v -> {
@@ -110,17 +206,16 @@ public class SettingsActivity extends AppCompatActivity {
             new ModifyUserTask().execute(usuario);
 
             // Cerrar el diálogo después de guardar los cambios
-            alertDialog.dismiss();
+            alertDialogUpdate.dismiss();
         });
     }
 
     private void onCancelEditUserData() {
-        // Implementar lógica para cancelar la edición de datos de usuario
+        if(alertDialogUpdate != null && alertDialogUpdate.isShowing()) {
+            alertDialogUpdate.dismiss();
+        }
     }
 
-    private void onSaveEditUserData() {
-
-    }
 
     private void showLogoutConfirmation() {
         // Inflar el diseño XML de confirmación de cierre de sesión
@@ -147,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void logout() {
         // Eliminar las SharedPreferences de UserInfo
-        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
@@ -158,24 +253,6 @@ public class SettingsActivity extends AppCompatActivity {
         finish();
     }
 
-    private void showDeleteAccountPopup() {
-        deleteAccountPopup.setVisibility(View.VISIBLE);
-    }
-
-    private void hideDeleteAccountPopup() {
-        deleteAccountPopup.setVisibility(View.GONE);
-    }
-
-    private void deleteAccount() {
-        // Implementa la lógica para borrar la cuenta del usuario
-        Toast.makeText(this, "Cuenta borrada", Toast.LENGTH_SHORT).show();
-        hideDeleteAccountPopup();
-    }
-
-    private void changeTheme() {
-        // Implementa la lógica para cambiar el tema de la aplicación
-        Toast.makeText(this, "Cambiar Tema", Toast.LENGTH_SHORT).show();
-    }
 
     private class ModifyUserTask extends AsyncTask<Usuario, Void, Void> {
         @Override
@@ -186,7 +263,7 @@ public class SettingsActivity extends AppCompatActivity {
                 String username = sharedPreferences.getString("username", "");
                 try {
                     BotanicaCC botanicaCC = new BotanicaCC();
-                    botanicaCC.modificarUsuario(username,usuario);
+                    botanicaCC.modificarUsuario(username, usuario);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,7 +274,6 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            // Mostrar un mensaje o realizar cualquier otra acción después de modificar el usuario
         }
     }
 
@@ -223,7 +299,7 @@ public class SettingsActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<InteresBotanico> listaBotanica) {
             if (listaBotanica != null && !listaBotanica.isEmpty()) {
                 ArrayList<String> intereses = new ArrayList<>();
-                // Recorre la lista de plantas y obtén los nombres de los intereses
+                // Recorre la lista de intereses y obtén los nombres de los intereses
                 for (InteresBotanico interes : listaBotanica) {
                     intereses.add(interes.getNombreInteres()); // Suponiendo que hay un método para obtener el nombre del interés
                 }
@@ -239,6 +315,5 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Error al cargar los intereses", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 }

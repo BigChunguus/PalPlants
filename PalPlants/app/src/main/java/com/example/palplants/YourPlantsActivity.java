@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Outline;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,9 +39,13 @@ import pojosbotanica.Usuario;
 public class YourPlantsActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
-    private Button buttonSettings;
+    private ImageButton buttonSettings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
+        int themeId = preferences.getInt("current_theme", R.style.Theme_App_Light_NoActionBar);
+        setTheme(themeId);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yourplants);
 
@@ -74,6 +79,8 @@ public class YourPlantsActivity extends AppCompatActivity {
         });
     }
 
+
+
     // AsyncTask para conectar con el servidor y cargar las plantas del usuario
     private class ConnectBotanicaTask extends AsyncTask<String, Void, ArrayList<Planta>> {
         @Override
@@ -83,7 +90,7 @@ public class YourPlantsActivity extends AppCompatActivity {
                 BotanicaCC bcc = new BotanicaCC();
                 return bcc.leerUsuariosPlantas(username);
             } catch (ExcepcionBotanica ex) {
-                ex.printStackTrace(); // Maneja el error apropiadamente
+                ex.printStackTrace();
                 return null;
             }
         }
@@ -109,25 +116,34 @@ public class YourPlantsActivity extends AppCompatActivity {
         // Crear el ConstraintLayout que actuará como tarjeta
         ConstraintLayout cardView = new ConstraintLayout(this);
         cardView.setLayoutParams(new ConstraintLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                dpToPx(341),  // Ancho deseado en dp convertido a píxeles
+                dpToPx(105)
         ));
-
+        cardView.setClipChildren(true);
         // Configurar el fondo personalizado
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.custom_edittext));
 
-        int desiredWidth = 500;
-        int desiredHeight = 400;
+        int desiredWidth = 100;
+        int desiredHeight = 100;
 
         // Crear un conjunto de parámetros de diseño para la ImageView con tamaño fijo para la anchura y la altura
-        LinearLayout.LayoutParams layoutParamsSingleImage = new LinearLayout.LayoutParams(desiredWidth, desiredHeight);
+        ConstraintLayout.LayoutParams layoutParamsSingleImage = new ConstraintLayout.LayoutParams(dpToPx(desiredWidth), dpToPx(desiredHeight));
 
         ImageView imageView = new ImageView(this);
         imageView.setId(View.generateViewId());
         imageView.setLayoutParams(layoutParamsSingleImage); // Establecer los parámetros de diseño
-        imageView.setMaxWidth(desiredWidth); // Establecer el tamaño máximo para la anchura
-        imageView.setMaxHeight(desiredHeight); // Establecer el tamaño máximo para la altura
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // Escalar la imagen para que se ajuste al tamaño de la ImageView
+        imageView.setMaxWidth(dpToPx(desiredWidth)); // Establecer el tamaño máximo para la anchura
+        imageView.setMaxHeight(dpToPx(desiredHeight)); // Establecer el tamaño máximo para la altura
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setClipToOutline(true);// Escalar la imagen para que se ajuste al tamaño de la ImageView
+        imageView.setPadding(7, 7, 0, 7);
+
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+
+        // Especifica los radios para los bordes redondeados
+        gradientDrawable.setCornerRadii(new float[]{dpToPx(40), dpToPx(30), 0, 0, 0, 0, dpToPx(40), dpToPx(30)});
+        imageView.setBackground(gradientDrawable);
 
         Log.e("Nombre Planta", planta.getNombreCientificoPlanta());
         Glide.with(this)
@@ -137,88 +153,91 @@ public class YourPlantsActivity extends AppCompatActivity {
                 .into(imageView);
         cardView.addView(imageView);
 
-        // Agrega el radio a la esquina izquierda de la ImageView
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            imageView.setClipToOutline(true);
-            imageView.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    int radius = getResources().getDimensionPixelSize(R.dimen.left_corner_radius);
-                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), radius);
-                }
-            });
-        }
 
-        // Crear y agregar un TextView para mostrar el nombre común
-        TextView nombreComunTextView = new TextView(this);
-        nombreComunTextView.setId(View.generateViewId());
-        nombreComunTextView.setLayoutParams(new ConstraintLayout.LayoutParams(
+
+        TextView textViewTop = new TextView(this);
+        textViewTop.setId(View.generateViewId());
+
+        ConstraintLayout.LayoutParams textViewTopParams = new ConstraintLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        textViewTopParams.topMargin = 50;
+        textViewTop.setLayoutParams(textViewTopParams);
+        textViewTop.setText(planta.getNombreCientificoPlanta()); // Texto deseado
+        cardView.addView(textViewTop);
+
+        // Crear y agregar el TextView para el texto inferior
+        TextView textViewBottom = new TextView(this);
+        textViewBottom.setId(View.generateViewId());
+        textViewBottom.setLayoutParams(new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        nombreComunTextView.setTextSize(20);
-        nombreComunTextView.setText(planta.getNombreComunPlanta());
-        cardView.addView(nombreComunTextView);
+        textViewBottom.setPadding(0, 0, 0, dpToPx(40)); // Padding inferior en dp convertido a píxeles
+        textViewBottom.setText(planta.getNombreComunPlanta()); // Texto deseado
+        cardView.addView(textViewBottom);
 
-        // Crear y agregar un TextView para mostrar el nombre científico
-        TextView nombreCientificoTextView = new TextView(this);
-        nombreCientificoTextView.setId(View.generateViewId());
-        nombreCientificoTextView.setLayoutParams(new ConstraintLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        nombreCientificoTextView.setTextSize(16);
-        nombreCientificoTextView.setText(planta.getNombreCientificoPlanta());
-        cardView.addView(nombreCientificoTextView);
-
-
+        // Crear y agregar el ImageButton
         ImageButton button = new ImageButton(this);
         button.setId(View.generateViewId());
-        button.setLayoutParams(new ConstraintLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            button.setBackground(ContextCompat.getDrawable(this, R.drawable.boton_eliminar));
-        } else {
-            button.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.boton_eliminar));
-        }
-        button.setImageResource(R.drawable.baseline_delete_outline_24);
+        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
+                dpToPx(30),  // Ancho deseado en dp convertido a píxeles
+                dpToPx(30)   // Altura deseada en dp convertido a píxeles
+        );
+        buttonParams.rightMargin = 50;
+        button.setLayoutParams(buttonParams);
+        button.setImageResource(R.drawable.baseline_delete_outline_24); // Establecer el icono
+        button.setBackground(ContextCompat.getDrawable(this, R.drawable.boton_eliminar)); // Fondo deseado
         cardView.addView(button);
 
+        // Crear y aplicar restricciones
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(cardView);
-        // Restricciones para la imagen
+
+        // Restricciones para la ImageView
         constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
         constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        // Restricciones para el nombre común
-        constraintSet.connect(nombreComunTextView.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
-        constraintSet.connect(nombreComunTextView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        constraintSet.connect(nombreComunTextView.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
-        // Restricciones para el nombre científico
-        constraintSet.connect(nombreCientificoTextView.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
-        constraintSet.connect(nombreCientificoTextView.getId(), ConstraintSet.TOP, nombreComunTextView.getId(), ConstraintSet.BOTTOM);
-        constraintSet.connect(nombreCientificoTextView.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
-        // Restricciones para el botón
+        constraintSet.setVerticalBias(imageView.getId(), 0.515f);
+
+        // Restricciones para el TextView superior
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
+        constraintSet.setHorizontalBias(textViewTop.getId(), 0.083f);
+        constraintSet.setVerticalBias(textViewTop.getId(), 0.64f);
+
+        // Restricciones para el TextView inferior
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.TOP, textViewTop.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.END, button.getId(), ConstraintSet.START);
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.setHorizontalBias(textViewBottom.getId(), 0.056f);
+
+
+        // Restricciones para el ImageButton
         constraintSet.connect(button.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
         constraintSet.connect(button.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(button.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.setHorizontalBias(button.getId(), 0.779f);
+        constraintSet.setVerticalBias(button.getId(), 0.505f);
+
         constraintSet.applyTo(cardView);
 
-
-
-        int padding = getResources().getDimensionPixelSize(R.dimen.card_padding);
+        // Margen inferior para separar las tarjetas
+        int marginBottom = dpToPx(8); // Margen inferior deseado en dp convertido a píxeles
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) cardView.getLayoutParams();
-        layoutParams.setMargins(0, 0, 0, padding);
+        layoutParams.setMargins(0, 0, 0, marginBottom);
         cardView.setLayoutParams(layoutParams);
 
+        // Manejar clics en la tarjeta
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Crear un Intent para iniciar PlantsActivity
+                // Acción al hacer clic en la tarjeta
+                // Por ejemplo, iniciar una nueva actividad con detalles de la planta
                 Intent intent = new Intent(getApplicationContext(), PlantsActivity.class);
-                // Pasar el ID de la planta como extra en el Intent
                 intent.putExtra("PLANT", planta);
                 startActivity(intent);
             }
@@ -226,5 +245,13 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         return cardView;
     }
+
+    // Método para convertir dp a píxeles
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
+    }
+
+
 
 }
