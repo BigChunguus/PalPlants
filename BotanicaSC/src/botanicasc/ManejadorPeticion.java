@@ -277,10 +277,11 @@ public class ManejadorPeticion extends Thread{
     private void modificarUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            ArrayList<Object> listaPeticionModificarUsuario = (ArrayList<Object>) p.getEntidad();
-            String stringRecuperado = (String) listaPeticionModificarUsuario.get(0);
-            Usuario usuarioRecuperado = (Usuario) listaPeticionModificarUsuario.get(1);
+            Object[] entidadArray = (Object[]) p.getEntidad();
+            String stringRecuperado = (String) entidadArray[0];
+            Usuario usuarioRecuperado = (Usuario) entidadArray[1];
             CadBotanica cad = new CadBotanica();
+           
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
 
@@ -815,12 +816,11 @@ public class ManejadorPeticion extends Thread{
     private void leerInteres(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            InteresBotanico interes = (InteresBotanico) p.getEntidad();
-            int interesId = interes.getInteresId();
+            String nombreInteres = (String) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
-            r.setEntidad(cad.leerInteresBotanico(interesId));
+            r.setEntidad(cad.leerInteresBotanico(nombreInteres));
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
             oos.writeObject(r);
 
@@ -912,12 +912,14 @@ private void leerInsectosPlantas(Peticion p) {
 private void insertarUsuarioPlanta(Peticion p) {
     ObjectOutputStream oos = null;
     try {
-        UsuarioPlanta usuarioPlanta = (UsuarioPlanta) p.getEntidad();
+        Object[] entidadArray = (Object[]) p.getEntidad();
+        Integer usuarioId = (Integer) entidadArray[0];
+        Integer plantaId = (Integer) entidadArray[1];
         CadBotanica cad = new CadBotanica();
         Respuesta r = new Respuesta();
         r.setIdOperacion(p.getIdOperacion());
 
-        int cantidad = cad.insertarUsuarioPlanta(usuarioPlanta);
+        int cantidad = cad.insertarUsuarioPlanta(usuarioId, plantaId);
         r.setCantidad(cantidad);
         oos = new ObjectOutputStream(clienteConectado.getOutputStream());
         oos.writeObject(r);

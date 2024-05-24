@@ -18,6 +18,10 @@
         <item name="android:textColor">@color/darkcyan</item>
         <item name="android:color">@color/cyan</item>
         <item name="strokeColor">@color/cyan</item>
+        <item name="startIconTint">@color/cyan</item>
+        <item name="android:textColorHint">@color/cyan</item>
+        <item name="endIconTint">@color/cyan</item>
+
     </style>
 
     <!-- Dark Theme -->
@@ -25,9 +29,21 @@
         <item name="colorPrimary">@color/darkcyan</item>
         <item name="colorPrimaryDark">@color/cyan</item>
         <item name="colorAccent">@color/darkcyan</item>
-        <item name="android:background">@color/darkcyan</item>
+        <item name="android:background">@color/darkBack</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:color">@color/white</item>
         <item name="strokeColor">@color/white</item>
+        <item name="startIconTint">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="endIconTint">@color/white</item>
+    </style>
+
+    <style name="EstiloTexto">
+        <item name="android:textColor">#FF0000</item> <!-- Color del texto (rojo en este caso) -->
+        <item name="android:background">#FFFF00</item> <!-- Color de fondo (amarillo en este caso) -->
+        <item name="android:shadowColor">#000000</item> <!-- Color de la sombra (negro en este caso) -->
+        <item name="android:shadowDx">2</item> <!-- Desplazamiento horizontal de la sombra -->
+        <item name="android:shadowDy">2</item> <!-- Desplazamiento vertical de la sombra -->
+        <item name="android:shadowRadius">4</item> <!-- Radio de la sombra -->
     </style>
 </resources>

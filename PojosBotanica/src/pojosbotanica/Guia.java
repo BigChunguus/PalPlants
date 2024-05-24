@@ -11,10 +11,13 @@ import java.io.Serializable;
  * @author Alejandro
  */
 public class Guia implements Serializable{
+    
     private Integer guiaId;
     private String titulo;
     private String contenido;
+    private Double calificacionMedia;
     private Planta plantaId;
+    private Usuario usuarioId;
     public static final long serialVersionUID = 4L;
     
 
@@ -27,11 +30,13 @@ public class Guia implements Serializable{
         this.contenido = contenido;
     }
     
-    public Guia(Integer guiaId, String titulo, String contenido, Planta plantaId) {
+    public Guia(Integer guiaId, String titulo, String contenido,Double calificacionMedia, Planta plantaId, Usuario usuarioId) {
         this.guiaId = guiaId;
         this.titulo = titulo;
         this.contenido = contenido;
         this.plantaId = plantaId;
+        this.usuarioId = usuarioId; 
+        this.calificacionMedia = calificacionMedia;
     }
 
     public Integer getGuiaId() {
@@ -66,10 +71,28 @@ public class Guia implements Serializable{
         this.plantaId = plantaId;
     }
 
+    public Usuario getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Usuario usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public Double getCalificacionMedia() {
+        return calificacionMedia;
+    }
+
+    public void setCalificacionMedia(Double calificacionMedia) {
+        this.calificacionMedia = calificacionMedia;
+    }
+
     @Override
     public String toString() {
-        return "Guia{" + "guiaId=" + guiaId + ", titulo=" + titulo + ", contenido=" + contenido + ", plantaId=" + plantaId + '}';
+        return "Guia{" + "guiaId=" + guiaId + ", titulo=" + titulo + ", contenido=" + contenido + ", calificacionMedia=" + calificacionMedia + ", plantaId=" + plantaId + ", usuarioId=" + usuarioId + '}';
     }
+    
+    
     
     
 }

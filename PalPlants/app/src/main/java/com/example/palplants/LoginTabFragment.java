@@ -83,6 +83,7 @@ public class LoginTabFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Usuario resultado) {
+            Log.e("Usuario", resultado.toString());
             if (resultado.getEmail() != null) {
                 String password = editTextPassword.getText().toString();
                 if (password.equals(resultado.getContrasena())) {

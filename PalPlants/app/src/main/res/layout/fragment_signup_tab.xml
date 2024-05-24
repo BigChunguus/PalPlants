@@ -33,7 +33,8 @@
                 android:textColorHint="@color/cyan"
                 android:textColor="@color/cyan"
                 android:padding="8dp"
-                android:background="@drawable/custom_edittext"/>
+                android:background="@drawable/custom_login"
+                android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -51,12 +52,13 @@
                 android:id="@+id/emailRegister"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/custom_edittext"
+                android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Correo electrónico"
                 android:padding="8dp"
                 android:textColor="@color/cyan"
-                android:textColorHint="@color/cyan" />
+                android:textColorHint="@color/cyan"
+                android:maxLines="1"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,13 +79,14 @@
                 android:id="@+id/passwordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/custom_edittext"
+                android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/cyan"
-                android:textColorHint="@color/cyan" />
+                android:textColorHint="@color/cyan"
+                android:maxLines="1"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,13 +107,14 @@
                 android:id="@+id/confirmPasswordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/custom_edittext"
+                android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Confirmar contraseña"
                 android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/cyan"
-                android:textColorHint="@color/cyan" />
+                android:textColorHint="@color/cyan"
+                android:maxLines="1"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

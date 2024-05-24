@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/baseline_person_24"
-        app:startIconTint="@color/cyan"
-        android:textColorHint="@color/cyan"
         android:layout_marginTop="8dp"
         app:hintEnabled="true">
 
@@ -20,11 +18,8 @@
             android:id="@+id/editTextRealNameUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconTint="@color/cyan"
             android:drawablePadding="8dp"
             android:hint="Nombre real"
-            android:textColorHint="@color/cyan"
-            android:textColor="@color/cyan"
             android:padding="8dp"
             android:background="@drawable/custom_edittext"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -34,8 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/baseline_person_24"
-        app:startIconTint="@color/cyan"
-        android:textColorHint="@color/cyan"
         android:layout_marginTop="8dp"
         app:hintEnabled="true">
 
@@ -43,11 +36,8 @@
             android:id="@+id/editTextFirstSurnameUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconTint="@color/cyan"
             android:drawablePadding="8dp"
             android:hint="Primer Apellido"
-            android:textColorHint="@color/cyan"
-            android:textColor="@color/cyan"
             android:padding="8dp"
             android:background="@drawable/custom_edittext"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -57,8 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/baseline_person_24"
-        app:startIconTint="@color/cyan"
-        android:textColorHint="@color/cyan"
         android:layout_marginTop="8dp"
         app:hintEnabled="true">
 
@@ -69,8 +57,6 @@
             app:startIconTint="@color/cyan"
             android:drawablePadding="8dp"
             android:hint="Segundo Apellido"
-            android:textColorHint="@color/cyan"
-            android:textColor="@color/cyan"
             android:padding="8dp"
             android:background="@drawable/custom_edittext"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/baseline_person_24"
-        app:startIconTint="@color/cyan"
-        android:textColorHint="@color/cyan"
         android:layout_marginTop="8dp"
         app:hintEnabled="true">
 
@@ -89,11 +73,9 @@
             android:id="@+id/editTextDNIUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconTint="@color/cyan"
             android:drawablePadding="8dp"
             android:hint="DNI"
-            android:textColorHint="@color/cyan"
-            android:textColor="@color/cyan"
+            android:maxLength="9"
             android:padding="8dp"
             android:background="@drawable/custom_edittext"/>
     </com.google.android.material.textfield.TextInputLayout>

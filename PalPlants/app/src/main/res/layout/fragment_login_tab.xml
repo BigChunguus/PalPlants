@@ -33,7 +33,8 @@
                 android:textColorHint="@color/cyan"
                 android:textColor="@color/cyan"
                 android:padding="8dp"
-                android:background="@drawable/custom_edittext"/>
+                android:background="@drawable/custom_login"
+                android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -53,14 +54,16 @@
                 android:id="@+id/passwordLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_edittext"
+                android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
                 android:maxLength="16"
                 android:textColorHint="@color/cyan"
                 android:textColor="@color/cyan"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:maxLines="1"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

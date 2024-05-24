@@ -58,7 +58,7 @@ public class YourPlantsActivity extends AppCompatActivity {
 
     private static final int REQUEST_NOTIFICATION_PERMISSION = 2;
     private LinearLayout linearLayout;
-    private ImageButton buttonSettings, buttonAlarm;
+    private ImageButton buttonSettings, buttonAlarm, buttonAdd;
     private Usuario usuarioGeneral;
     private Button buttonOrder;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -84,7 +84,16 @@ public class YourPlantsActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         scrollView = findViewById(R.id.scrollView);
         buttonOrder = findViewById(R.id.buttonOrder);
+        buttonAdd = findViewById(R.id.buttonAdd);
 
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+
+                startActivity(intent);
+            }
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
@@ -209,23 +218,6 @@ public class YourPlantsActivity extends AppCompatActivity {
         }
     }
 
-    private void sortPlantsAscendente(List<Planta> plantas) {
-        Collections.sort(plantas, new Comparator<Planta>() {
-            @Override
-            public int compare(Planta planta1, Planta planta2) {
-                return planta1.getNombreComunPlanta().compareTo(planta2.getNombreComunPlanta());
-            }
-        });
-    }
-
-    private void sortPlantsDescendente(List<Planta> plantas) {
-        Collections.sort(plantas, new Comparator<Planta>() {
-            @Override
-            public int compare(Planta planta1, Planta planta2) {
-                return planta2.getNombreComunPlanta().compareTo(planta1.getNombreComunPlanta());
-            }
-        });
-    }
 
     private ConstraintLayout createCardView(Planta planta) {
         ConstraintLayout cardView = new ConstraintLayout(this);

@@ -41,8 +41,4 @@ public class Operaciones {
     public static final int INSERTAR_USUARIO_PLANTA = 34;
     public static final int ELIMINAR_USUARIO_PLANTA = 35;
     public static final int LEER_USUARIOS_PLANTA = 36;
-    public static final String CLAVE_AES = "+ydN+DfjOiyG2bfpCH2j/OZRyG3SUjWZt7dFwk1NRLI=";
-    
-    
-    
 }

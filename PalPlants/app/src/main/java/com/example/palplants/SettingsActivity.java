@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
     private AlertDialog alertDialogDelete, alertDialogUpdate;
     private LinearLayout editUserDataLayout;
     private LinearLayout deleteAccountPopup;
+    private ArrayList<InteresBotanico> interesesBotanicos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +169,7 @@ public class SettingsActivity extends AppCompatActivity {
         Button btnSave = editUserDataView.findViewById(R.id.btn_save);
 
         btnCancel.setOnClickListener(v -> onCancelEditUserData());
+        new ConnectBotanicaInteresTask(spinnerInterest).execute();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(editUserDataView);
@@ -181,14 +184,47 @@ public class SettingsActivity extends AppCompatActivity {
             String selectedInterest = spinnerInterest.getSelectedItem().toString();
 
             Usuario usuario = new Usuario();
-            usuario.setNombre(realName);
-            usuario.setApellido1(firstSurname);
-            usuario.setApellido2(secondSurname);
-            usuario.setDni(dni);
-            InteresBotanico interesBotanico = new InteresBotanico(1, selectedInterest);
-            usuario.setInteres(interesBotanico);
+            if (!realName.isEmpty())
+                usuario.setNombre(realName);
+            else
+                realName = null;
 
-            new ModifyUserTask().execute(usuario);
+            if (!firstSurname.isEmpty())
+                usuario.setApellido1(firstSurname);
+            else
+                firstSurname = null;
+
+            if (!secondSurname.isEmpty())
+                usuario.setApellido2(secondSurname);
+            else
+                secondSurname = null;
+
+            if (!dni.isEmpty())
+                usuario.setDni(dni);
+            else
+                dni = null;
+
+
+
+
+
+            InteresBotanico interesBotanico = new InteresBotanico();
+
+            if(!selectedInterest.equals("Ninguno")){
+                for(InteresBotanico interesBotanicoAux : interesesBotanicos){
+                    if(selectedInterest.equals(interesBotanicoAux.getNombreInteres())){
+                        interesBotanico = new InteresBotanico(interesBotanicoAux.getInteresId(), interesBotanicoAux.getNombreInteres());
+                    } else
+                        interesBotanico = new InteresBotanico(1, "Por Defecto");
+                }
+                usuario.setInteres(interesBotanico);
+            }
+
+            if (usuario.getNombre() != null || usuario.getApellido1() != null || usuario.getApellido2() != null || usuario.getDni() != null || usuario.getInteres() != null)
+                new ModifyUserTask().execute(usuario);
+
+
+
 
             alertDialogUpdate.dismiss();
         });
@@ -237,11 +273,21 @@ public class SettingsActivity extends AppCompatActivity {
         protected Void doInBackground(Usuario... usuarios) {
             if (usuarios.length > 0) {
                 Usuario usuario = usuarios[0];
-                SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
-                String username = sharedPreferences.getString("username", "");
+                String nombreUsuario = null;
+                SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                String usuarioJson = sharedPreferences.getString("user", "");
+
+                if (!usuarioJson.isEmpty()) {
+                    Gson gson = new Gson();
+                    Usuario usuarioAux = gson.fromJson(usuarioJson, Usuario.class);
+                    nombreUsuario = usuarioAux.getNombreUsuario();
+                } else {
+                    Log.e("UserInfo", "Error: No se pudo obtener el usuario desde SharedPreferences");
+                }
                 try {
                     BotanicaCC botanicaCC = new BotanicaCC();
-                    botanicaCC.modificarUsuario(username, usuario);
+                    Log.e("Cambios", nombreUsuario + usuario.toString());
+                    botanicaCC.modificarUsuario(nombreUsuario, usuario);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -266,7 +312,8 @@ public class SettingsActivity extends AppCompatActivity {
         protected ArrayList<InteresBotanico> doInBackground(Void... voids) {
             try {
                 BotanicaCC bcc = new BotanicaCC();
-                return bcc.leerIntereses();
+                interesesBotanicos = bcc.leerIntereses();
+                return interesesBotanicos;
             } catch (ExcepcionBotanica ex) {
                 ex.printStackTrace();
                 return null;
@@ -277,6 +324,7 @@ public class SettingsActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<InteresBotanico> listaBotanica) {
             if (listaBotanica != null && !listaBotanica.isEmpty()) {
                 ArrayList<String> intereses = new ArrayList<>();
+                intereses.add("Ninguno");
                 for (InteresBotanico interes : listaBotanica) {
                     intereses.add(interes.getNombreInteres());
                 }

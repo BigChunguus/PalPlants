@@ -10,7 +10,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="cyan">#FF02DB69</color>
     <color name="darkcyan">#1CA86A</color>
-
+    <color name="darkBack">#333634</color>
     <color name="red">#FFFF0000</color>
 
     <color name="colorTextoClaro">#000000</color>

@@ -17,13 +17,14 @@
         app:layout_constraintHeight_percent=".78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/viewpager_bkg"
         app:layout_constraintVertical_bias="1">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="379dp"
             android:layout_height="699dp"
-            android:background="@drawable/viewpager_bkg"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +64,7 @@
         android:layout_height="wrap_content"
         android:text="¡Bienvenido de vuelta!\nLogueate"
         android:textColor="@color/white"
+        android:background="@android:color/transparent"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"

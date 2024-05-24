@@ -6,9 +6,25 @@ package cadbotanica;
 
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.*;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import pojosbotanica.*;
 /**
  * En esta clase se muestra:
@@ -19,7 +35,21 @@ import pojosbotanica.*;
 */
 public class CadBotanica {
 
+    
     private Connection conexion;
+    
+    private SecretKey cargarClave() {
+        
+        String path = new File("claveAES.dat").getAbsolutePath();
+         path = path.replace("\\", "\\\\");
+        System.out.println(path);
+        try (ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(path))) {
+            return (SecretKey) entrada.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("No se pudo cargar la clave: " + e.getMessage());
+            return null;
+        }
+    }
     
     /**
      * Crea el driver de conexion, al hacer el constructor
@@ -76,11 +106,13 @@ public class CadBotanica {
     try {
         PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
 
+        String contrasenaCifrada = cifrarAES(u.getContrasena());
         sentenciaPreparada.setString(1, u.getNombreUsuario());
-        sentenciaPreparada.setString(2, u.getContrasena());
+        sentenciaPreparada.setString(2, contrasenaCifrada);
         sentenciaPreparada.setString(3, u.getEmail());
         sentenciaPreparada.setInt(4, 1);
      
+        System.out.println(contrasenaCifrada);
         registrosAfectados = sentenciaPreparada.executeUpdate();
         
         sentenciaPreparada.close();
@@ -102,7 +134,7 @@ public class CadBotanica {
                 eh.setMensajeUsuario("Error: La dirección debe ser '@gmail.com'");
                 break;
             case 1:
-                eh.setMensajeUsuario("Error: El email no puede repetirse");
+                eh.setMensajeUsuario("Error: El email y nombre de usuario no pueden repetirse");
                 break;
             default:
                 eh.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
@@ -110,11 +142,26 @@ public class CadBotanica {
         }
 
         throw eh;
-    } finally {
+    }   catch (GeneralSecurityException ex) {
+            ex.printStackTrace();
+        } finally {
         desconectar();
     }
     return registrosAfectados;
 }
+    
+    private String cifrarAES(String textoPlano) throws GeneralSecurityException {
+        SecretKey clave = cargarClave();
+        if (clave == null) {
+            throw new GeneralSecurityException("Error al cargar la clave AES");
+        }
+
+        Cipher cifrador = Cipher.getInstance("AES");
+        cifrador.init(Cipher.ENCRYPT_MODE, clave);
+        byte[] textoCifrado = cifrador.doFinal(textoPlano.getBytes());
+        System.out.println(Base64.getEncoder().encodeToString(textoCifrado));
+        return Base64.getEncoder().encodeToString(textoCifrado);
+    }
 
     
     /**
@@ -129,53 +176,33 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     boolean primerCampo = true;
 
     if (usuario.getNombre() != null) {
-        dml += "NOMBRE=? ";
+        dml += "NOMBRE='" + usuario.getNombre() + "' ";
         primerCampo = false;
     }
     if (usuario.getApellido1() != null) {
-        dml += (primerCampo ? "" : ", ") + "APELLIDO1=? ";
+        dml += (primerCampo ? "" : ", ") + "APELLIDO1='" + usuario.getApellido1() + "' ";
         primerCampo = false;
     }
     if (usuario.getApellido2() != null) {
-        dml += (primerCampo ? "" : ", ") + "APELLIDO2=? ";
+        dml += (primerCampo ? "" : ", ") + "APELLIDO2='" + usuario.getApellido2() + "' ";
         primerCampo = false;
     }
     if (usuario.getDni() != null) {
-        dml += (primerCampo ? "" : ", ") + "DNI=? ";
+        dml += (primerCampo ? "" : ", ") + "DNI='" + usuario.getDni() + "' ";
         primerCampo = false;
     }
     if (usuario.getInteres() != null) {
-        dml += (primerCampo ? "" : ", ") + "INTERESBOTANICOINTERESID=? ";
+        dml += (primerCampo ? "" : ", ") + "INTERESBOTANICOINTERESID=" + usuario.getInteres().getInteresId() + " ";
     }
-    
-    dml += " WHERE NOMBREUSUARIO=?";
+
+    dml += " WHERE NOMBREUSUARIO='" + nombreUsuario + "'";
 
     try {
-        PreparedStatement sentenciaPreparada = conexion.prepareStatement(dml);
-
-        int contador = 1;
-        if (usuario.getNombre() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getNombre());
-        }
-        if (usuario.getApellido1() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getApellido1());
-        }
-        if (usuario.getApellido2() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getApellido2());
-        }
-        if (usuario.getDni() != null) {
-            sentenciaPreparada.setString(contador++, usuario.getDni());
-        }
-        if (usuario.getInteres() != null) {
-            sentenciaPreparada.setInt(contador++, usuario.getInteres().getInteresId());
-        }
-        sentenciaPreparada.setString(contador, nombreUsuario);
-
-        registrosAfectados = sentenciaPreparada.executeUpdate();
-        
-        sentenciaPreparada.close();
+        System.out.println(dml);
+        Statement statement = conexion.createStatement();
+        registrosAfectados = statement.executeUpdate(dml);
+        statement.close();
         conexion.close();
-        
     } catch (SQLException ex) {
         ExcepcionBotanica eh = new ExcepcionBotanica();
         eh.setCodigoErrorSQL(ex.getErrorCode());
@@ -184,15 +211,6 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         switch (ex.getErrorCode()) {
             case 2291:
                 eh.setMensajeUsuario("Error: El interés seleccionado no existe");
-                break;
-            case 1407:
-                eh.setMensajeUsuario("Error: Los siguientes datos son obligatorios: \nNombre\nApellido1\nDNI\nEmail");
-                break;
-            case 2290:
-                eh.setMensajeUsuario("Error: La dirección debe ser '@gmail.com'");
-                break;
-            case 1:
-                eh.setMensajeUsuario("Error: El email no puede repetirse");
                 break;
             default:
                 eh.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
@@ -252,7 +270,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
             "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID " +
             "WHERE U.NOMBREUSUARIO = '" + nombreUsuario + "'";
        
-       Usuario lu = new Usuario();
+      Usuario lu = new Usuario();
        
        try {
             Statement statement = conexion.createStatement();
@@ -266,7 +284,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
                String apellido2 = resultSet.getString("APELLIDO2");
                String dni = resultSet.getString("DNI");
                String correo = resultSet.getString("CORREO");
-               String contraseña = resultSet.getString("CONTRASEÑA");
+               String contraseña = descifrarAES(resultSet.getString("CONTRASEÑA"));
                Integer interesId = resultSet.getInt("INTERESBOTANICOINTERESID");
                String nombreInteres = resultSet.getString("NOMBREINTERES");
                
@@ -287,9 +305,24 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
            eh.setSentenciaSQL(dml);
            eh.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
            throw eh;
-       }
+       } catch (GeneralSecurityException ex) {
+            //Error de descifrado
+        }
        return lu;
    }
+    private String descifrarAES(String textoCifrado) throws GeneralSecurityException {
+        SecretKey clave = cargarClave();
+        if (clave == null) {
+            throw new GeneralSecurityException("Error al cargar la clave AES");
+        }
+
+        Cipher descifrador = Cipher.getInstance("AES");
+        descifrador.init(Cipher.DECRYPT_MODE, clave);
+        byte[] textoCifradoBytes = Base64.getDecoder().decode(textoCifrado);
+        byte[] textoDescifradoBytes = descifrador.doFinal(textoCifradoBytes);
+        return new String(textoDescifradoBytes);
+    }
+
     /**
     * Permite mostrar todos los usuarios de la tabla Usuario.
     * @return devuelve el Array con la lista de usuarios.
@@ -418,11 +451,14 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     conectar();
     ArrayList<Guia> listaGuias = new ArrayList<>();
     
-    String dml = "SELECT G.GUIAID, G.TITULO, G.CONTENIDO, " +
-                 "P.NOMBRECIENTIFICOPLANTA, P.NOMBRECOMUNPLANTA, P.DESCRIPCION, P.TIPOPLANTA, P.CUIDADOSESPECIFICOS, P.IMAGEN " +
-                 "FROM GUIA G " +
-                 "JOIN PLANTA P ON G.PLANTAPLANTAID = P.PLANTAID " +
-                 "WHERE G.PLANTAPLANTAID = " + plantaIdGuia;
+    String dml = "SELECT G.GUIAID, G.TITULO, G.CONTENIDO, G.CALIFICACIONMEDIA, " +
+                "P.NOMBRECIENTIFICOPLANTA, P.NOMBRECOMUNPLANTA, P.DESCRIPCION, P.TIPOPLANTA, P.CUIDADOSESPECIFICOS, P.IMAGEN,"+
+                "U.USUARIOID, U.NOMBREUSUARIO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.CORREO, U.DNI, U.CONTRASEÑA, U.INTERESBOTANICOINTERESID, I.NOMBREINTERES "+
+                "FROM GUIA G "+
+                "JOIN USUARIO U ON G.USUARIOUSUARIOID = U.USUARIOID "+
+                "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID "+
+                "JOIN PLANTA P ON G.PLANTAPLANTAID = P.PLANTAID "+
+                "WHERE G.PLANTAPLANTAID = " + plantaIdGuia;
 
     try (Statement statement = conexion.createStatement();
          ResultSet resultSet = statement.executeQuery(dml)) {
@@ -432,7 +468,7 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
             Integer guiaId = resultSet.getInt("GUIAID");
             String titulo = resultSet.getString("TITULO");
             String contenido = resultSet.getString("CONTENIDO");
-
+            Double calificacionMedia = resultSet.getDouble("CALIFICACIONMEDIA");
             // Datos de la planta
             String nombreCientificoPlanta = resultSet.getString("NOMBRECIENTIFICOPLANTA");
             String nombreComunPlanta = resultSet.getString("NOMBRECOMUNPLANTA");
@@ -441,8 +477,24 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
             String cuidadosEspecificos = resultSet.getString("CUIDADOSESPECIFICOS");
             String imagen = resultSet.getString("IMAGEN");
 
+            //Datos usuario
+            int usuarioId = resultSet.getInt("USUARIOID");
+            String nombreUsuario = resultSet.getString("NOMBREUSUARIO");
+            String nombre = resultSet.getString("NOMBRE");
+            String apellido1 = resultSet.getString("APELLIDO1");
+            String apellido2 = resultSet.getString("APELLIDO2");
+            String dni = resultSet.getString("DNI");
+            String correo = resultSet.getString("CORREO");
+            String contraseña = resultSet.getString("CONTRASEÑA");
+            
+            //Datos interes
+            int interesId = resultSet.getInt("INTERESBOTANICOINTERESID");
+            String nombreInteres = resultSet.getString("NOMBREINTERES");
+            
+            InteresBotanico interes = new InteresBotanico(interesId, nombreInteres);
             Planta planta = new Planta(plantaIdGuia, nombreCientificoPlanta, nombreComunPlanta, descripcion, tipoPlanta, cuidadosEspecificos, imagen);
-            Guia guia = new Guia(guiaId, titulo, contenido, planta);
+            Usuario usuario = new Usuario(usuarioId, nombreUsuario, nombre, apellido1, apellido2, correo, dni, contraseña, interes);
+            Guia guia = new Guia(guiaId, titulo, contenido, calificacionMedia, planta,usuario);
 
             listaGuias.add(guia);
         }
@@ -550,10 +602,10 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
 
-    public InteresBotanico leerInteresBotanico(Integer interesId) throws ExcepcionBotanica {
+    public InteresBotanico leerInteresBotanico(String nombreInteres) throws ExcepcionBotanica {
         conectar();
         InteresBotanico interes = null;
-        // Código para leer un interés botánico de la base de datos
+        
         desconectar();
         return interes; // Cambiar el valor de retorno según corresponda
     }
@@ -652,17 +704,50 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public ArrayList<Planta> leerPlantas() throws ExcepcionBotanica {
         conectar();
         ArrayList<Planta> listaPlantas = new ArrayList<>();
-        // Código para leer todas las plantas de la base de datos
+        String dml = "SELECT * FROM PLANTA";
+        try{
+            Statement statement = conexion.createStatement();
+            ResultSet resultSet = statement.executeQuery(dml);
+            System.out.println(dml);
+            while (resultSet.next()) {
+                
+                Integer plantaId = resultSet.getInt("PLANTAID");
+                String nombreCientifico = resultSet.getString("NOMBRECIENTIFICOPLANTA");
+                String nombreComun = resultSet.getString("NOMBRECOMUNPLANTA");
+                String descripcion = resultSet.getString("DESCRIPCION");
+                String tipoPlanta = resultSet.getString("TIPOPLANTA");
+                String cuidadosEspecificos = resultSet.getString("CUIDADOSESPECIFICOS");
+                String imagen = resultSet.getString("IMAGEN");
+
+                Planta planta = new Planta(plantaId, nombreCientifico, nombreComun, descripcion, tipoPlanta, cuidadosEspecificos, imagen);
+                listaPlantas.add(planta);
+            }
+        } catch (SQLException ex){
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
         desconectar();
         return listaPlantas; // Cambiar el valor de retorno según corresponda
     }
 
-    public int insertarUsuarioPlanta(UsuarioPlanta usuarioPlanta) throws ExcepcionBotanica {
+    public int insertarUsuarioPlanta(int usuarioId, int plantaId) throws ExcepcionBotanica {
         conectar();
         int registrosAfectados = 0;
-        // Código para insertar una relación InsectoPlanta en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        String dml = "INSERT INTO USUARIO_PLANTA VALUES (" + usuarioId + ", " + plantaId + ")";
+        try (Statement stmt = conexion.createStatement()){
+            
+            registrosAfectados = stmt.executeUpdate(dml);
+            
+            desconectar(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CadBotanica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return registrosAfectados;
     }
 
     public int eliminarUsuarioPlanta(Integer usuarioId, Integer plantaId) throws ExcepcionBotanica {

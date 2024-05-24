@@ -51,6 +51,37 @@ public class BotanicaCC {
         }
     }
     
+    public InteresBotanico leerInteres(String nombreInteres) throws ExcepcionBotanica {
+    Peticion p = new Peticion();
+    p.setIdOperacion(Operaciones.LEER_USUARIO);
+    p.setEntidad(nombreInteres);
+    
+    Respuesta r = null;
+    InteresBotanico interes = null;
+    
+    try {
+        ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
+        oos.writeObject(p);
+        ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
+        r = (Respuesta) ois.readObject();
+        
+        ois.close();
+        oos.close();
+        socketCliente.close();
+        
+        if (r.getEntidad() != null)
+            interes = (InteresBotanico) r.getEntidad();
+        else if (r.getEh() != null)
+            throw r.getEh();
+        
+    } catch (ClassNotFoundException ex) {
+        manejadorClassNotFoundException(ex);
+    } catch (IOException ex) {
+        manejadorIOException(ex);
+    }
+    
+    return interes;
+}
     public ArrayList<InteresBotanico> leerIntereses() throws ExcepcionBotanica {
         
         Peticion p = new Peticion();
@@ -185,10 +216,11 @@ public int modificarUsuario(String nombreUsuario, Usuario u) throws ExcepcionBot
     p.setIdOperacion(Operaciones.MODIFICAR_USUARIO);
     
     System.out.println(nombreUsuario + u);
-    ArrayList<Object> peticionModificarUsuario = new ArrayList<>();
-    peticionModificarUsuario.add(nombreUsuario);
-    peticionModificarUsuario.add(u);
-    p.setEntidad(peticionModificarUsuario);
+    Object[] parametros = new Object[2];
+    parametros[0] = nombreUsuario;
+    parametros[1] = u;
+    
+    p.setEntidad(parametros);
     
     Respuesta r = null;
     int cambios = 0;
@@ -977,11 +1009,14 @@ public ArrayList<InsectoPlanta> leerInsectosPlanta() throws ExcepcionBotanica {
     return listaInsectosPlanta;
 }
 
-public int insertarUsuarioPlanta(UsuarioPlanta up) throws ExcepcionBotanica {
+public int insertarUsuarioPlanta(int idUsuario, int idPlanta) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.INSERTAR_USUARIO_PLANTA);
-    peticion.setEntidad(up);
+    Object[] parametros = new Object[2];
+    parametros[0] = idUsuario;
+    parametros[1] = idPlanta;
     
+    peticion.setEntidad(parametros);
     Respuesta respuesta = null;
     int cambios = 0;
     

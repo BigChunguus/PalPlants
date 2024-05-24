@@ -35,6 +35,8 @@ public class SignupTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup_tab, container, false);
 
+
+
         editTextUsername = view.findViewById(R.id.usernameRegister);
         editTextEmail = view.findViewById(R.id.emailRegister);
         editTextPassword = view.findViewById(R.id.passwordRegister);
