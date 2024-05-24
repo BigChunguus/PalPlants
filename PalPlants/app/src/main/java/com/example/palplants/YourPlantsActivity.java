@@ -371,15 +371,34 @@ public class YourPlantsActivity extends AppCompatActivity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setDailyAlarm(hourOfDay, minute);
-            }
-        }, hour, minute, true);
+        SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
+        int themeId = preferences.getInt("current_theme", R.style.Theme_App_Light_NoActionBar);
+
+        // Determina el estilo del TimePickerDialog según el tema seleccionado
+        int timePickerDialogThemeId;
+        if (themeId == R.style.Theme_App_Light_NoActionBar) {
+            timePickerDialogThemeId = R.style.TimePickerDialogTheme_Light;
+        } else {
+            timePickerDialogThemeId = R.style.TimePickerDialogTheme_Dark;
+        }
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this,
+                timePickerDialogThemeId, // Aquí aplicas el estilo personalizado
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        setDailyAlarm(hourOfDay, minute);
+                    }
+                },
+                hour,
+                minute,
+                true
+        );
 
         timePickerDialog.show();
     }
+
+
 
     private void setDailyAlarm(int hour, int minute) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

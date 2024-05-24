@@ -70,9 +70,6 @@ public class SearchActivity extends AppCompatActivity {
         gradientDrawable.setCornerRadii(new float[]{dpToPx(40), dpToPx(30), 0, 0, 0, 0, dpToPx(40), dpToPx(30)});
         imageView.setBackground(gradientDrawable);
 
-        // Mariana
-        // Url de ejemplo: https://drive.google.com/uc?export=view&id=1MlDb1H-V2DyI32ncplsbtyYaI_KFGD8S
-
         Glide.with(this)
                 .load(planta.getImagen())
                 .placeholder(R.drawable.placeholder_image)
@@ -80,52 +77,46 @@ public class SearchActivity extends AppCompatActivity {
                 .into(imageView);
         cardView.addView(imageView);
 
-
-
         TextView textViewTop = new TextView(this);
         textViewTop.setId(View.generateViewId());
-
         ConstraintLayout.LayoutParams textViewTopParams = new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        textViewTopParams.topMargin = 50;
+        textViewTopParams.leftMargin = dpToPx(16);
+        textViewTopParams.topMargin = dpToPx(20);
         textViewTop.setLayoutParams(textViewTopParams);
         textViewTop.setText(planta.getNombreCientificoPlanta());
         cardView.addView(textViewTop);
 
         TextView textViewBottom = new TextView(this);
         textViewBottom.setId(View.generateViewId());
-        textViewBottom.setLayoutParams(new ConstraintLayout.LayoutParams(
+        ConstraintLayout.LayoutParams textViewBottomParams = new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        textViewBottom.setPadding(0, 0, 0, dpToPx(40));
+        );
+        textViewBottomParams.leftMargin = dpToPx(16);
+        textViewBottom.setLayoutParams(textViewBottomParams);
         textViewBottom.setText(planta.getNombreComunPlanta());
         cardView.addView(textViewBottom);
-
-
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(cardView);
 
-        constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        constraintSet.setVerticalBias(imageView.getId(), 0.515f);
+        // Constraints for the ImageView
+        constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, ConstraintSet.START);
+        constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, dpToPx(8));
+        constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, dpToPx(8));
 
-        constraintSet.connect(textViewTop.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
-        constraintSet.connect(textViewTop.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        constraintSet.connect(textViewTop.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        constraintSet.setHorizontalBias(textViewTop.getId(), 0.083f);
-        constraintSet.setVerticalBias(textViewTop.getId(), 0.64f);
+        // Constraints for the top TextView
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END, dpToPx(16));
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.TOP, imageView.getId(), ConstraintSet.TOP);
+        constraintSet.connect(textViewTop.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, dpToPx(16));
 
-        constraintSet.connect(textViewBottom.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
-        constraintSet.connect(textViewBottom.getId(), ConstraintSet.TOP, textViewTop.getId(), ConstraintSet.BOTTOM);
-        constraintSet.connect(textViewBottom.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        constraintSet.connect(textViewBottom.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        constraintSet.setHorizontalBias(textViewBottom.getId(), 0.056f);
-
+        // Constraints for the bottom TextView
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END, dpToPx(16));
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.TOP, textViewTop.getId(), ConstraintSet.BOTTOM, dpToPx(8));
+        constraintSet.connect(textViewBottom.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, dpToPx(16));
 
         constraintSet.applyTo(cardView);
 

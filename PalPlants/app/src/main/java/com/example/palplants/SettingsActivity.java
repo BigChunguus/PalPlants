@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
     private LinearLayout editUserDataLayout;
     private LinearLayout deleteAccountPopup;
     private ArrayList<InteresBotanico> interesesBotanicos;
-
+    private Button btnEditUserData,btnLogout,btnDeleteAccount,btnChangeTheme,btnPowerOffAlarm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,19 +45,23 @@ public class SettingsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_settings);
 
-        Button btnEditUserData = findViewById(R.id.btn_edit_user_data);
+        btnEditUserData = findViewById(R.id.btn_edit_user_data);
         btnEditUserData.setOnClickListener(v -> showEditUserDataPopup());
 
-        Button btnLogout = findViewById(R.id.btn_logout);
+        btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> showLogoutConfirmation());
 
-        Button btnDeleteAccount = findViewById(R.id.btn_delete_account);
+        btnDeleteAccount = findViewById(R.id.btn_delete_account);
         btnDeleteAccount.setOnClickListener(v -> showDeleteAccountPopup());
 
-        Button btnChangeTheme = findViewById(R.id.btn_change_theme);
+        btnChangeTheme = findViewById(R.id.btn_change_theme);
         btnChangeTheme.setOnClickListener(v -> changeTheme());
-
-        Button btnPowerOffAlarm = findViewById(R.id.btn_poweroff_alarm);
+        if (themeId == R.style.Theme_App_Light_NoActionBar) {
+            btnChangeTheme.setText("Cambiar Tema: Claro");
+        } else {
+            btnChangeTheme.setText("Cambiar Tema: Oscuro");
+        }
+        btnPowerOffAlarm = findViewById(R.id.btn_poweroff_alarm);
         btnPowerOffAlarm.setOnClickListener(v -> poweroffAlarm());
     }
 
@@ -69,9 +73,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
     private void changeTheme() {
         if (themeId == R.style.Theme_App_Light_NoActionBar) {
+            btnChangeTheme.setText("Cambiar Tema: Claro");
             themeId = R.style.Theme_App_Dark_NoActionBar;
         } else {
             themeId = R.style.Theme_App_Light_NoActionBar;
+            btnChangeTheme.setText("Cambiar Tema: Oscuro");
         }
 
         SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);

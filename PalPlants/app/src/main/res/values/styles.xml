@@ -14,7 +14,7 @@
         <item name="colorPrimary">@color/cyan</item>
         <item name="colorPrimaryDark">@color/darkcyan</item>
         <item name="colorAccent">@color/white</item>
-        <item name="android:background">@color/white</item>
+
         <item name="android:textColor">@color/darkcyan</item>
         <item name="android:color">@color/cyan</item>
         <item name="strokeColor">@color/cyan</item>
@@ -38,12 +38,14 @@
         <item name="endIconTint">@color/white</item>
     </style>
 
-    <style name="EstiloTexto">
-        <item name="android:textColor">#FF0000</item> <!-- Color del texto (rojo en este caso) -->
-        <item name="android:background">#FFFF00</item> <!-- Color de fondo (amarillo en este caso) -->
-        <item name="android:shadowColor">#000000</item> <!-- Color de la sombra (negro en este caso) -->
-        <item name="android:shadowDx">2</item> <!-- Desplazamiento horizontal de la sombra -->
-        <item name="android:shadowDy">2</item> <!-- Desplazamiento vertical de la sombra -->
-        <item name="android:shadowRadius">4</item> <!-- Radio de la sombra -->
+    <style name="TimePickerDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:headerBackground">@color/darkcyan</item>
+        <item name="colorAccent">@color/darkcyan</item>
     </style>
+    <style name="TimePickerDialogTheme.Dark" parent="ThemeOverlay.AppCompat.Dialog">
+    </style>
+
+
+
+
 </resources>
