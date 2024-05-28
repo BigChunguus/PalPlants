@@ -1,4 +1,4 @@
-package com.example.palplants;
+package com.example.palplants.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.palplants.Activity.YourPlantsActivity;
+import com.example.palplants.R;
 import com.google.gson.Gson;
 
 import botanicacc.BotanicaCC;

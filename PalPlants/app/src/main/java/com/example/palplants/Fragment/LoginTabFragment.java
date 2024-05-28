@@ -1,4 +1,4 @@
-package com.example.palplants;
+package com.example.palplants.Fragment;
 
 import android.os.Bundle;
 
@@ -16,11 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.IOException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.palplants.Activity.YourPlantsActivity;
+import com.example.palplants.R;
 import com.google.gson.Gson;
 
 import botanicacc.BotanicaCC;

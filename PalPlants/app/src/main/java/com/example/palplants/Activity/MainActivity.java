@@ -1,4 +1,4 @@
-package com.example.palplants;
+package com.example.palplants.Activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.palplants.R;
+import com.example.palplants.Adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 

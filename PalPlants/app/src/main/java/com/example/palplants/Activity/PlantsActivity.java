@@ -1,16 +1,12 @@
-package com.example.palplants;
+package com.example.palplants.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.palplants.R;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -48,7 +45,6 @@ public class PlantsActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
         int themeId = preferences.getInt("current_theme", R.style.Theme_App_Light_NoActionBar);
         setTheme(themeId);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plants);
 
         imagePlant = findViewById(R.id.imagePlant);
@@ -103,6 +99,12 @@ public class PlantsActivity extends AppCompatActivity {
             }
 
         new ReadGuidesPlantTask().execute();
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        super.onCreate(savedInstanceState);
         }
 
     private class findPlantRegisteredTask extends AsyncTask<Void, Void, ArrayList<Planta>> {

@@ -1,4 +1,4 @@
-package com.example.palplants;
+package com.example.palplants.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.palplants.Utility.AlarmReceiver;
+import com.example.palplants.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 

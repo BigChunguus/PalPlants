@@ -40,6 +40,7 @@ public class ManejadorPeticion extends Thread{
             if(p.getIdOperacion() == Operaciones.LEER_USUARIOS){
                 leerUsuarios(p);
             }
+            
             switch (p.getIdOperacion()) {
                 case Operaciones.INSERTAR_USUARIO:
                     insertarUsuario(p);
@@ -915,6 +916,7 @@ private void insertarUsuarioPlanta(Peticion p) {
         Object[] entidadArray = (Object[]) p.getEntidad();
         Integer usuarioId = (Integer) entidadArray[0];
         Integer plantaId = (Integer) entidadArray[1];
+        System.out.println(usuarioId + "" + plantaId);
         CadBotanica cad = new CadBotanica();
         Respuesta r = new Respuesta();
         r.setIdOperacion(p.getIdOperacion());
@@ -939,6 +941,7 @@ private void eliminarUsuarioPlanta(Peticion p) {
         Integer usuarioId = (Integer) entidadArray[0];
         Integer plantaId = (Integer) entidadArray[1];
 
+        System.out.println(usuarioId + "" + plantaId);
         CadBotanica cad = new CadBotanica();
         Respuesta r = new Respuesta();
         r.setIdOperacion(p.getIdOperacion());

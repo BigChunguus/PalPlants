@@ -18,10 +18,10 @@
         android:supportsRtl="true"
         tools:targetApi="31">
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".Utility.AlarmReceiver" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait">
@@ -32,25 +32,25 @@
         </activity>
 
         <activity
-            android:name=".YourPlantsActivity"
+            android:name=".Activity.YourPlantsActivity"
             android:theme="@style/Theme.App.Light.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".PlantsActivity"
+            android:name=".Activity.PlantsActivity"
             android:theme="@style/Theme.App.Light.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Activity.SettingsActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".SearchActivity"
+            android:name=".Activity.SearchActivity"
             android:theme="@style/Theme.App.Light.NoActionBar"
             android:screenOrientation="portrait">
         </activity>

@@ -1,10 +1,13 @@
-package com.example.palplants;
+package com.example.palplants.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.palplants.Fragment.LoginTabFragment;
+import com.example.palplants.Fragment.SignupTabFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 

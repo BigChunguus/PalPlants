@@ -753,11 +753,11 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public int eliminarUsuarioPlanta(Integer usuarioId, Integer plantaId) throws ExcepcionBotanica {
         conectar();
         int registrosAfectados = 0;
+        System.out.println("Entrada a elimianar");
         String dml = "DELETE FROM USUARIO_PLANTA WHERE USUARIOUSUARIOID = " + usuarioId + " AND PLANTAPLANTAID = " + plantaId;
         try (Statement stmt = conexion.createStatement()) {
-            
             registrosAfectados = stmt.executeUpdate(dml);
-            
+            System.out.println(registrosAfectados);
         } catch (SQLException ex) {
             ExcepcionBotanica excepcion = new ExcepcionBotanica();
             excepcion.setCodigoErrorSQL(ex.getErrorCode());

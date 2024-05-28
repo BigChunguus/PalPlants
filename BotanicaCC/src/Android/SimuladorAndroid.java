@@ -29,7 +29,8 @@ public class SimuladorAndroid {
 //            System.out.println(c.insertarUsuario(u));
             //System.out.println(c.leerUsuariosPlantas("BigChungus"));
             //System.out.println(c.eliminarUsuario("PruebaAndroid"));
-            System.out.println(c.leerUsuario("PruebaInsertar"));
+            //System.out.println(c.leerUsuario("PruebaInsertar"));
+            System.out.println(c.insertarUsuarioPlanta(2, 3));
             //System.out.println(c.leerPlanta(1));
             //System.out.println(c.eliminarUsuarioPlanta(1,2));
             //Usuario u = new Usuario();

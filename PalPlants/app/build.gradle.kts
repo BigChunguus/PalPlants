@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.palplants"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -38,7 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
-        viewBinding = true
+        dataBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -69,6 +69,7 @@ dependencies {
     implementation(files("C:\\Users\\Alejandro\\Desktop\\Compartido\\ProyectoPalPlants\\PojosBotanica\\dist\\PojosBotanica.jar"))
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
     implementation("com.google.android.material:material:1.5.0-alpha01")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
