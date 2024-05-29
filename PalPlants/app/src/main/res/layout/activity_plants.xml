@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swiperefresh"
+    android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -51,7 +52,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:layout_width="match_parent"
-                android:layout_height="624dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginRight="15dp"
@@ -59,8 +60,10 @@
                 android:outlineProvider="bounds"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.551"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4">
+                app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                app:layout_constraintVertical_bias="0.197">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutNames"
@@ -159,22 +162,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textEspecificCare" />
 
-                <LinearLayout
-                    android:id="@+id/guidesLayout"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/custom_edittext"
-                    android:orientation="vertical"
-                    android:padding="5dp"
+                    android:layout_margin="16dp"
+                    android:padding="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificCare"
-                    app:layout_constraintVertical_bias="0.093">
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@id/specificCare" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
