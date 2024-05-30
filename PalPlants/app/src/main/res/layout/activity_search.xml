@@ -7,17 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:id="@+id/scrollView"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -30,27 +22,42 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/top_background" />
 
-        <LinearLayout
-            android:id="@+id/linearLayoutGeneral"
-            android:layout_width="388dp"
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/custom_edittext"
-            android:orientation="vertical"
-            android:padding="24dp"
+            android:hint="Buscar planta por nombre común"
+            android:imeActionLabel="Buscar"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.695"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+            app:layout_constraintVertical_bias="0.019" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="341dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                />
-        </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Error al conectar con el servidor"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

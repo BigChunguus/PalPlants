@@ -2,74 +2,79 @@ package com.example.palplants.AsyncTask;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.palplants.R;
 import com.example.palplants.Adapter.PlantAdapter;
+import com.example.palplants.Adapter.PlantSearchAdapter;
 
-
+import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
 
-public class SelectAllPlants extends AsyncTask<Object, Void, ArrayList<Planta>> {
+public class SelectAllPlants extends AsyncTask<Void, Void, ArrayList<Planta>> {
     private Context context;
     private RecyclerView recyclerView;
     private TextView emptyMessage;
-    private Usuario usuarioPlantas;
-    public SelectAllPlants(Context context, RecyclerView recyclerView, TextView emptyMessage) {
+    private String searchText; // Agregar texto de búsqueda
+
+    public SelectAllPlants(Context context, RecyclerView recyclerView, TextView emptyMessage, String searchText) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.emptyMessage = emptyMessage;
+        this.searchText = searchText; // Inicializar texto de búsqueda
     }
 
     @Override
-    protected ArrayList<Planta> doInBackground(Object... params) {
-        usuarioPlantas = (Usuario) params[0];
-        String order = (String) params[1];
+    protected ArrayList<Planta> doInBackground(Void... voids) {
         try {
-            Log.e("Orden", order);
             BotanicaCC bcc = new BotanicaCC();
-            ArrayList<Planta> plantas = bcc.leerUsuariosPlantas(usuarioPlantas.getNombreUsuario());
-            if (order != null && !order.isEmpty()) {
-                if (order.equalsIgnoreCase("Ascendente")) {
-                    plantas.sort(Comparator.comparing(Planta::getNombreComunPlanta));
-                    Log.e("Orden", plantas.toString());
-                } else if (order.equalsIgnoreCase("Descendente")) {
-                    plantas.sort(Comparator.comparing(Planta::getNombreComunPlanta));
-                    Collections.reverse(plantas);
-                    Log.e("Orden", plantas.toString());
+            ArrayList<Planta> allPlants = bcc.leerPlantas();
+            // Filtrar las plantas según el texto de búsqueda
+            if (!TextUtils.isEmpty(searchText)) {
+                ArrayList<Planta> filteredPlants = new ArrayList<>();
+                String searchLower = searchText.toLowerCase();
+                for (Planta planta : allPlants) {
+                    // Buscar en el nombre común y científico, ignorando las tildes
+                    String nombreComun = quitarTildes(planta.getNombreComunPlanta()).toLowerCase();
+                    String nombreCientifico = quitarTildes(planta.getNombreCientificoPlanta()).toLowerCase();
+                    if (nombreComun.contains(searchLower) || nombreCientifico.contains(searchLower)) {
+                        filteredPlants.add(planta);
+                    }
                 }
+                return filteredPlants;
+            } else {
+                return allPlants;
             }
-
-            return plantas;
         } catch (ExcepcionBotanica ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
+    private String quitarTildes(String texto) {
+        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
     @Override
     protected void onPostExecute(ArrayList<Planta> listaPlantas) {
         if (listaPlantas != null && !listaPlantas.isEmpty()) {
-            PlantAdapter adapter = new PlantAdapter(listaPlantas, context,usuarioPlantas);
+            PlantSearchAdapter adapter = new PlantSearchAdapter(listaPlantas, context);
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(ViewGroup.VISIBLE);
             emptyMessage.setVisibility(ViewGroup.GONE);
         } else {
             recyclerView.setVisibility(ViewGroup.GONE);
             emptyMessage.setVisibility(ViewGroup.VISIBLE);
-            emptyMessage.setText("Aún no has añadido ninguna planta");
+            emptyMessage.setText("Planta no encontrada");
         }
     }
 }

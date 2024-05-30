@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.palplants.Adapter.PlantAdapter;
-import com.example.palplants.AsyncTask.SelectAllPlants;
+import com.example.palplants.AsyncTask.SelectAllPlantsByUser;
 import com.example.palplants.Utility.AlarmReceiver;
 import com.example.palplants.R;
 import com.google.gson.Gson;
@@ -72,7 +72,7 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        buttonAdd.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SearchActivity.class)));
+        buttonAdd.setOnClickListener(v -> startActivity(new Intent(this, SearchActivity.class)));
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String userJson = sharedPreferences.getString("user", "");
@@ -89,7 +89,7 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         orderBy = "default";
 
-        new SelectAllPlants(this, recyclerView, emptyMessage).execute(currentUser, orderBy);
+        new SelectAllPlantsByUser(this, recyclerView, emptyMessage).execute(currentUser, orderBy);
 
         buttonOrder.setOnClickListener(v -> {
             String buttonText = buttonOrder.getText().toString();
@@ -103,7 +103,7 @@ public class YourPlantsActivity extends AppCompatActivity {
                 orderBy = "Ascendente";
                 buttonOrder.setText("Orden: Ascendente");
             }
-            new SelectAllPlants(this, recyclerView, emptyMessage).execute(currentUser, orderBy);
+            new SelectAllPlantsByUser(this, recyclerView, emptyMessage).execute(currentUser, orderBy);
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -174,8 +174,5 @@ public class YourPlantsActivity extends AppCompatActivity {
         }
     }
 
-    public void updatePlantsList(ArrayList<Planta> plantList) {
-        PlantAdapter adapter = new PlantAdapter(plantList, this, currentUser);
-        recyclerView.setAdapter(adapter);
-    }
+
 }
