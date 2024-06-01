@@ -364,8 +364,7 @@ public class ManejadorPeticion extends Thread{
     private void eliminarResena(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Resena resena = (Resena) p.getEntidad();
-            int resenaId = resena.getResenaId();
+            int resenaId = (int) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
@@ -428,10 +427,11 @@ public class ManejadorPeticion extends Thread{
     private void leerResenas(Peticion p) {
         ObjectOutputStream oos = null;
         try {
+            int idGuiaResena = (int) p.getEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());
-            r.setEntidad(cad.leerResenas());
+            r.setEntidad(cad.leerResenasGuia(idGuiaResena));
 
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
             oos.writeObject(r);
@@ -671,8 +671,7 @@ public class ManejadorPeticion extends Thread{
     private void eliminarGuia(Peticion p) {
         ObjectOutputStream oos = null;
         try {
-            Guia guia = (Guia) p.getEntidad();
-            int guiaId = guia.getGuiaId();
+            int guiaId = (int) p.getIdEntidad();
             CadBotanica cad = new CadBotanica();
             Respuesta r = new Respuesta();
             r.setIdOperacion(p.getIdOperacion());

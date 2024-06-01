@@ -20,7 +20,7 @@
             app:startIconDrawable="@drawable/baseline_person_24"
             app:startIconTint="@color/cyan"
             android:textColorHint="@color/cyan"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="120dp"
             app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

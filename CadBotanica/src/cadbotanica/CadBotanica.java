@@ -17,6 +17,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
+import java.sql.Date;
 import java.sql.Statement;
 import java.util.*;
 import java.util.logging.Level;
@@ -375,13 +376,36 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
    
    
    
-   public int insertarResena(Resena r) throws ExcepcionBotanica {
+    public int insertarResena(Resena resena) throws ExcepcionBotanica {
         conectar();
-        int registrosAfectados = 0;
-        // Código para insertar una reseña en la base de datos
+        int filasAfectadas = 0;
+        String dml = "INSERT INTO RESEÑA (CALIFICACION, COMENTARIO, FECHARESEÑA, USUARIOUSUARIOID, GUIAGUIAID) " +
+                     "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+            // Asignar los valores a los parámetros de la consulta
+            preparedStatement.setInt(1, resena.getCalificacion());
+            preparedStatement.setString(2, resena.getComentario());
+            preparedStatement.setDate(3, new java.sql.Date(resena.getFechaResena().getTime()));
+            preparedStatement.setInt(4, resena.getUsuarioId().getUsuarioID());
+            preparedStatement.setInt(5, resena.getGuiaId().getGuiaId());
+
+            // Ejecutar la inserción
+            filasAfectadas = preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } 
         desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        return filasAfectadas;
     }
+
+
 
     public int modificarResena(Integer resenaId, Resena resena) throws ExcepcionBotanica {
         conectar();
@@ -391,13 +415,33 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
 
-    public int eliminarResena(Integer resenaId) throws ExcepcionBotanica {
+    public int eliminarResena(int resenaId) throws ExcepcionBotanica {
         conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar una reseña de la base de datos
+        int filasAfectadas = 0;
+        String dml = "DELETE FROM RESEÑA WHERE RESEÑAID = ?";
+
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+            // Asignar el valor del ID de la reseña al parámetro de la consulta
+            preparedStatement.setInt(1, resenaId);
+
+            // Ejecutar la eliminación
+            filasAfectadas = preparedStatement.executeUpdate();
+
+            
+            
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } 
         desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        return filasAfectadas;
     }
+
 
     public Resena leerResena(Integer resenaId) throws ExcepcionBotanica {
         conectar();
@@ -407,21 +451,94 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return resena; // Cambiar el valor de retorno según corresponda
     }
 
-    public ArrayList<Resena> leerResenas() throws ExcepcionBotanica {
+    public ArrayList<Resena> leerResenasGuia(int guiaId) throws ExcepcionBotanica {
         conectar();
         ArrayList<Resena> listaResenas = new ArrayList<>();
-        // Código para leer todas las reseñas de la base de datos
-        desconectar();
-        return listaResenas; // Cambiar el valor de retorno según corresponda
+
+        String dml = "SELECT R.RESEÑAID, R.CALIFICACION, R.COMENTARIO, R.FECHARESEÑA, " +
+                     "R.USUARIOUSUARIOID, U.NOMBREUSUARIO, U.NOMBRE, U.APELLIDO1, U.APELLIDO2, U.CORREO, U.DNI, U.CONTRASEÑA, " +
+                     "U.INTERESBOTANICOINTERESID, I.NOMBREINTERES " +
+                     "FROM RESEÑA R " +
+                     "JOIN USUARIO U ON R.USUARIOUSUARIOID = U.USUARIOID " +
+                     "JOIN INTERESBOTANICO I ON U.INTERESBOTANICOINTERESID = I.INTERESID " +
+                     "WHERE R.GUIAGUIAID = " + guiaId;
+
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(dml)) {
+
+            while (resultSet.next()) {
+                // Datos de la reseña
+                Integer resenaId = resultSet.getInt("RESEÑAID");
+                Integer calificacion = resultSet.getInt("CALIFICACION");
+                String comentario = resultSet.getString("COMENTARIO");
+                Date fechaResena = resultSet.getDate("FECHARESEÑA");
+
+                // Datos del usuario
+                int usuarioId = resultSet.getInt("USUARIOUSUARIOID");
+                String nombreUsuario = resultSet.getString("NOMBREUSUARIO");
+                String nombre = resultSet.getString("NOMBRE");
+                String apellido1 = resultSet.getString("APELLIDO1");
+                String apellido2 = resultSet.getString("APELLIDO2");
+                String dni = resultSet.getString("DNI");
+                String correo = resultSet.getString("CORREO");
+                String contraseña = resultSet.getString("CONTRASEÑA");
+
+                // Datos del interés
+                int interesId = resultSet.getInt("INTERESBOTANICOINTERESID");
+                String nombreInteres = resultSet.getString("NOMBREINTERES");
+
+                InteresBotanico interes = new InteresBotanico(interesId, nombreInteres);
+                Usuario usuario = new Usuario(usuarioId, nombreUsuario, nombre, apellido1, apellido2, correo, dni, contraseña, interes);
+
+                // Crear el objeto Resena
+                Resena resena = new Resena(resenaId, calificacion, comentario, fechaResena, new Guia(), usuario);
+
+                listaResenas.add(resena);
+            }
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } finally {
+            desconectar();
+        }
+
+        return listaResenas;
     }
 
-    public int insertarGuia(Guia g) throws ExcepcionBotanica {
+    public int insertarGuia(Guia guia) throws ExcepcionBotanica {
         conectar();
-        int registrosAfectados = 0;
-        // Código para insertar una guía en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        int filasAfectadas = 0;
+        String dml = "INSERT INTO GUIA (TITULO, CONTENIDO, CALIFICACIONMEDIA, PLANTAPLANTAID, USUARIOUSUARIOID) " +
+                     "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+            // Asignar los valores a los parámetros de la consulta
+            preparedStatement.setString(1, guia.getTitulo());
+            preparedStatement.setString(2, guia.getContenido());
+            preparedStatement.setDouble(3, guia.getCalificacionMedia());
+            preparedStatement.setInt(4, guia.getPlantaId().getPlantaId());
+            preparedStatement.setInt(5, guia.getUsuarioId().getUsuarioID());
+
+            // Ejecutar la inserción
+            filasAfectadas = preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
+         desconectar();
+        return filasAfectadas;
     }
+
 
     public int modificarGuia(Integer guiaId, Guia guia) throws ExcepcionBotanica {
         conectar();
@@ -431,13 +548,31 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
 
-    public int eliminarGuia(Integer guiaId) throws ExcepcionBotanica {
+    public int eliminarGuia(int guiaId) throws ExcepcionBotanica {
         conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar una guía de la base de datos
+        int filasAfectadas = 0;
+        String dml = "DELETE FROM GUIA WHERE GUIAID = ?";
+
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+            // Asignar el valor del ID de la guía al parámetro de la consulta
+            preparedStatement.setInt(1, guiaId);
+
+            // Ejecutar la eliminación
+            filasAfectadas = preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } 
         desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        return filasAfectadas;
+        
     }
+
 
     public Guia leerGuia(Integer guiaId) throws ExcepcionBotanica {
         conectar();

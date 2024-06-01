@@ -13,6 +13,7 @@
     <color name="darkBack">#333634</color>
     <color name="red">#FFFF0000</color>
 
+    <color name="customBackground">#2e2e2e</color>
     <color name="colorTextoClaro">#000000</color>
     <color name="colorTextoOscuro">#FFFFFF</color>
     <color name="grey">#FF4D6359</color>

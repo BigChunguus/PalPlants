@@ -14,14 +14,14 @@
         <item name="colorPrimary">@color/cyan</item>
         <item name="colorPrimaryDark">@color/darkcyan</item>
         <item name="colorAccent">@color/white</item>
-
         <item name="android:textColor">@color/darkcyan</item>
         <item name="android:color">@color/cyan</item>
         <item name="strokeColor">@color/cyan</item>
         <item name="startIconTint">@color/cyan</item>
         <item name="android:textColorHint">@color/cyan</item>
         <item name="endIconTint">@color/cyan</item>
-
+        <item name="customBackgroundCardview">@drawable/custom_background_cardview</item>
+        <item name="backgroundGradientLayout">@drawable/background_gradient</item>
     </style>
 
     <!-- Dark Theme -->
@@ -29,13 +29,14 @@
         <item name="colorPrimary">@color/darkcyan</item>
         <item name="colorPrimaryDark">@color/cyan</item>
         <item name="colorAccent">@color/darkcyan</item>
-        <item name="android:background">@color/darkBack</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:color">@color/white</item>
         <item name="strokeColor">@color/white</item>
         <item name="startIconTint">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="endIconTint">@color/white</item>
+        <item name="customBackgroundCardview">@drawable/custom_background_cardview_night</item>
+        <item name="backgroundGradientLayout">@drawable/background_gradient_night</item>
     </style>
 
     <style name="TimePickerDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog">

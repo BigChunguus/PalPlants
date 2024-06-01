@@ -1,0 +1,5 @@
+<!-- round_red_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#2e2e2e" /> <!-- Cambia esto al color rojo deseado -->
+</shape>

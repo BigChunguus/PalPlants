@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.View;
+import android.widget.ImageButton;
+
 import com.example.palplants.Adapter.GuideAdapter;
 
 import java.util.ArrayList;
@@ -16,13 +19,17 @@ import pojosbotanica.Guia;
 public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> {
 
     private int plantIdToCheck;
+    private int userIdToCheck;
     private RecyclerView mRecyclerView;
     private Context mContext;
+    private ImageButton mButtonAddGuide;
 
-    public ReadGuidesPlantTask(Context context, int plantIdToCheck, RecyclerView recyclerView) {
+    public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide) {
         mContext = context;
         this.plantIdToCheck = plantIdToCheck;
+        this.userIdToCheck = userIdToCheck;
         mRecyclerView = recyclerView;
+        mButtonAddGuide = buttonAddGuide;
     }
 
     @Override
@@ -44,6 +51,17 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
             GuideAdapter adapter = new GuideAdapter(mContext, listaGuias);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+            for (Guia guia : listaGuias) {
+                if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) { // Assuming Guia has a getUserId() method
+                    mButtonAddGuide.setVisibility(View.INVISIBLE);
+                    mButtonAddGuide.setEnabled(false);
+                    break;
+                } else {
+                    mButtonAddGuide.setVisibility(View.VISIBLE);
+                    mButtonAddGuide.setEnabled(true);
+                }
+            }
         }
     }
 }

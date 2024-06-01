@@ -1,15 +1,17 @@
 package com.example.palplants.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.palplants.Activity.GuidesActivity;
 import com.example.palplants.R;
-
 import java.util.ArrayList;
 import pojosbotanica.Guia;
 import pojosbotanica.Usuario;
@@ -37,8 +39,24 @@ public class GuideAdapter extends RecyclerView.Adapter<GuideAdapter.GuideViewHol
         holder.textTitulo.setText(guia.getTitulo());
         Usuario usuario = guia.getUsuarioId();
         holder.textUserName.setText(usuario.getNombreUsuario());
-        holder.textAverageRate.setText(String.valueOf(guia.getCalificacionMedia()));
+        // Convertir el valor Double a float y establecerlo en el RatingBar
+        holder.ratingBar.setRating(guia.getCalificacionMedia().floatValue());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Aquí puedes iniciar la actividad GuideActivity
+                Intent intent = new Intent(context, GuidesActivity.class);
+                // Puedes pasar datos adicionales a la actividad si es necesario
+                // Por ejemplo, puedes pasar el ID de la guía seleccionada
+                intent.putExtra("GUIDE", guia);
+
+                context.startActivity(intent);
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -46,13 +64,15 @@ public class GuideAdapter extends RecyclerView.Adapter<GuideAdapter.GuideViewHol
     }
 
     public static class GuideViewHolder extends RecyclerView.ViewHolder {
-        TextView textTitulo, textUserName, textAverageRate;
+        TextView textTitulo, textUserName;
+        RatingBar ratingBar;
 
         public GuideViewHolder(@NonNull View itemView) {
             super(itemView);
+
             textTitulo = itemView.findViewById(R.id.textTitulo);
             textUserName = itemView.findViewById(R.id.textUserName);
-            textAverageRate = itemView.findViewById(R.id.textAverageRate);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
         }
     }
 }
