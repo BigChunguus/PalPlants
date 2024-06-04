@@ -379,16 +379,15 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public int insertarResena(Resena resena) throws ExcepcionBotanica {
         conectar();
         int filasAfectadas = 0;
-        String dml = "INSERT INTO RESEÑA (CALIFICACION, COMENTARIO, FECHARESEÑA, USUARIOUSUARIOID, GUIAGUIAID) " +
-                     "VALUES (?, ?, ?, ?, ?)";
+        String dml = "INSERT INTO RESEÑA (CALIFICACION, COMENTARIO, USUARIOUSUARIOID, GUIAGUIAID) " +
+                     "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
             // Asignar los valores a los parámetros de la consulta
             preparedStatement.setInt(1, resena.getCalificacion());
             preparedStatement.setString(2, resena.getComentario());
-            preparedStatement.setDate(3, new java.sql.Date(resena.getFechaResena().getTime()));
-            preparedStatement.setInt(4, resena.getUsuarioId().getUsuarioID());
-            preparedStatement.setInt(5, resena.getGuiaId().getGuiaId());
+            preparedStatement.setInt(3, resena.getUsuarioId().getUsuarioID());
+            preparedStatement.setInt(4, resena.getGuiaId().getGuiaId());
 
             // Ejecutar la inserción
             filasAfectadas = preparedStatement.executeUpdate();
@@ -513,16 +512,15 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     public int insertarGuia(Guia guia) throws ExcepcionBotanica {
         conectar();
         int filasAfectadas = 0;
-        String dml = "INSERT INTO GUIA (TITULO, CONTENIDO, CALIFICACIONMEDIA, PLANTAPLANTAID, USUARIOUSUARIOID) " +
-                     "VALUES (?, ?, ?, ?, ?)";
+        String dml = "INSERT INTO GUIA (TITULO, CONTENIDO, PLANTAPLANTAID, USUARIOUSUARIOID) " +
+                     "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
             // Asignar los valores a los parámetros de la consulta
             preparedStatement.setString(1, guia.getTitulo());
             preparedStatement.setString(2, guia.getContenido());
-            preparedStatement.setDouble(3, guia.getCalificacionMedia());
-            preparedStatement.setInt(4, guia.getPlantaId().getPlantaId());
-            preparedStatement.setInt(5, guia.getUsuarioId().getUsuarioID());
+            preparedStatement.setInt(3, guia.getPlantaId().getPlantaId());
+            preparedStatement.setInt(4, guia.getUsuarioId().getUsuarioID());
 
             // Ejecutar la inserción
             filasAfectadas = preparedStatement.executeUpdate();
