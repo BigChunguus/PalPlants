@@ -41,8 +41,7 @@ public class BotanicaCC {
     
     public BotanicaCC() throws ExcepcionBotanica {
         try {
-            String ip = "192.168.31.176";
-            //String ip = "192.168.11.207";
+            String ip = "192.168.0.207";
             int puertoServidor = 30500;
             socketCliente = new Socket(ip, puertoServidor);
             socketCliente.setSoTimeout(5000);
@@ -380,7 +379,7 @@ public int modificarResena(Resena r) throws ExcepcionBotanica {
 public Resena leerResena(int idResena) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.LEER_RESENA);
-    p.setIdEntidad(idResena);
+    p.setEntidad(idResena);
     
     Respuesta respuesta = null;
     Resena resena = null;
@@ -409,10 +408,10 @@ public Resena leerResena(int idResena) throws ExcepcionBotanica {
     return resena;
 }
 
-public ArrayList<Resena> leerResenas() throws ExcepcionBotanica {
+public ArrayList<Resena> leerResenas(int idGuia) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.LEER_RESENAS);
-    
+    p.setEntidad(idGuia);
     Respuesta respuesta = null;
     ArrayList<Resena> listaResenas = null;
     

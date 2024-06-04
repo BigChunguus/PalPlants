@@ -22,12 +22,13 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 //import com.example.palplants.AsyncTask.InsertGuideTask;
 import com.example.palplants.AsyncTask.FindPlantRegisteredTask;
+import com.example.palplants.AsyncTask.InsertGuideTask;
 import com.example.palplants.AsyncTask.InsertPlantTask;
 import com.example.palplants.AsyncTask.ReadGuidesPlantTask;
 import com.example.palplants.R;
 import com.google.gson.Gson;
 
-import botanicacc.BotanicaCC;
+
 import pojosbotanica.Guia;
 import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
@@ -66,6 +67,14 @@ public class PlantsActivity extends AppCompatActivity {
             usuario = gson.fromJson(usuarioJson, Usuario.class);
         }
 
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Regresa a la actividad anterior
+                finish();
+            }
+        });
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +168,7 @@ public class PlantsActivity extends AppCompatActivity {
                     guia.setUsuarioId(usuario);
                     guia.setCalificacionMedia(null); // or any default value if necessary
 
-                    //new InsertGuideTask(PlantsActivity.this, guia).execute();
+                    new InsertGuideTask(PlantsActivity.this, guia, dialog).execute();
                     dialog.dismiss();
                 } else {
                     // Mostrar un mensaje de error

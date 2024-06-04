@@ -4,4 +4,10 @@
     <attr name="textTitleColor" format="color"/>
     <attr name="backgroundGradientLayout" format="reference"/>
     <attr name="customBackgroundCardview" format="reference"/>
+    <attr name="customProgressStarTint" format="color"/>
+    <attr name="customProgressStarBackgroundTint" format="color"/>
+    <!--<attr name="textViewTextColor" format="color"/>
+    <attr name="textViewBackgroundColor" format="color"/>
+    <attr name="RecyclerViewBackgroundColor" format="color"/>-->
+    <!--<attr name="" format="color"/>-->
 </resources>

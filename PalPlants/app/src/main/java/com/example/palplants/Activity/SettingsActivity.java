@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -34,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
     private AlertDialog alertDialogDelete, alertDialogUpdate;
     private LinearLayout editUserDataLayout;
     private LinearLayout deleteAccountPopup;
-    private ArrayList<InteresBotanico> interesesBotanicos;
+    private ArrayList<InteresBotanico> interesesBotanicos = new ArrayList<>();
     private Button btnEditUserData, btnLogout, btnDeleteAccount, btnChangeTheme, btnPowerOffAlarm;
 
     @Override
@@ -47,6 +48,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_settings);
 
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Regresa a la actividad anterior
+                Log.e("Sett", "Activado");
+                finish();
+            }
+        });
         btnEditUserData = findViewById(R.id.btn_edit_user_data);
         btnEditUserData.setOnClickListener(v -> showEditUserDataPopup());
 
@@ -134,6 +144,7 @@ public class SettingsActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View editUserDataView = inflater.inflate(R.layout.dialog_edit_user_data, null);
 
+
         TextInputEditText editTextRealNameUpdate = editUserDataView.findViewById(R.id.editTextRealNameUpdate);
         TextInputEditText editTextFirstSurnameUpdate = editUserDataView.findViewById(R.id.editTextFirstSurnameUpdate);
         TextInputEditText editTextSecondSurnameUpdate = editUserDataView.findViewById(R.id.editTextSecondSurnameUpdate);
@@ -142,13 +153,16 @@ public class SettingsActivity extends AppCompatActivity {
         Button btnCancel = editUserDataView.findViewById(R.id.btn_cancel);
         Button btnSave = editUserDataView.findViewById(R.id.btn_save);
 
+
         btnCancel.setOnClickListener(v -> onCancelEditUserData());
-        new ReadInteresesTask(this, spinnerInterest).execute();
+        new ReadInteresesTask(this, spinnerInterest, interesesBotanicos).execute();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(editUserDataView);
         alertDialogUpdate = builder.create();
         alertDialogUpdate.show();
+
+
 
         btnSave.setOnClickListener(v -> {
             String realName = editTextRealNameUpdate.getText().toString();
@@ -188,8 +202,7 @@ public class SettingsActivity extends AppCompatActivity {
                 for (InteresBotanico interesBotanicoAux : interesesBotanicos) {
                     if (selectedInterest.equals(interesBotanicoAux.getNombreInteres())) {
                         interesBotanico = new InteresBotanico(interesBotanicoAux.getInteresId(), interesBotanicoAux.getNombreInteres());
-                    } else {
-                        interesBotanico = new InteresBotanico(1, "Por Defecto");
+                        break;
                     }
                 }
                 usuario.setInteres(interesBotanico);
