@@ -20,6 +20,8 @@
         <item name="startIconTint">@color/cyan</item>
         <item name="android:textColorHint">@color/cyan</item>
         <item name="endIconTint">@color/cyan</item>
+        <item name="customProgressStarTint">@color/cyan</item>
+        <item name="customProgressStarBackgroundTint">@color/grey</item>
         <item name="customBackgroundCardview">@drawable/custom_background_cardview</item>
         <item name="backgroundGradientLayout">@drawable/background_gradient</item>
     </style>
@@ -35,6 +37,8 @@
         <item name="startIconTint">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="endIconTint">@color/white</item>
+        <item name="customProgressStarTint">@color/darkcyan</item>
+        <item name="customProgressStarBackgroundTint">@color/white</item>
         <item name="customBackgroundCardview">@drawable/custom_background_cardview_night</item>
         <item name="backgroundGradientLayout">@drawable/background_gradient_night</item>
     </style>

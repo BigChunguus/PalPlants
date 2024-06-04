@@ -97,6 +97,8 @@
                     <RatingBar
                         android:id="@+id/ratingBar"
                         style="?android:attr/ratingBarStyleSmall"
+                        android:progressTint="?attr/customProgressStarTint"
+                        android:backgroundTint="?attr/customProgressStarBackgroundTint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -142,7 +144,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textContent" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                    android:id="@+id/reviewRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -150,14 +152,44 @@
                     android:padding="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.687"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contentGuide"
-                    app:layout_constraintVertical_bias="0.635" />
+                    app:layout_constraintTop_toBottomOf="@+id/buttonAddReview"
+                    app:layout_constraintVertical_bias="0.392" />
+
+                <ImageButton
+                    android:id="@+id/buttonAddReview"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:adjustViewBounds="true"
+                    android:visibility="invisible"
+                    android:enabled="false"
+                    android:background="@drawable/boton_anadir"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/baseline_add_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.952"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contentGuide" />
+
+                <TextView
+                    android:id="@+id/Comentarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="Comentarios"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonAddReview"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonAddReview"
+                    app:layout_constraintHorizontal_bias="0.004"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/buttonAddReview"
+                    app:layout_constraintVertical_bias="0.476" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/buttonBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/boton_retroceder"
@@ -169,7 +201,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.018"
                 app:srcCompat="@drawable/round_arrow_forward_24" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

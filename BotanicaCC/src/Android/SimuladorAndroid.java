@@ -30,7 +30,7 @@ public class SimuladorAndroid {
             //System.out.println(c.leerUsuariosPlantas("BigChungus"));
             //System.out.println(c.eliminarUsuario("PruebaAndroid"));
             //System.out.println(c.leerUsuario("PruebaInsertar"));
-            System.out.println(c.insertarUsuarioPlanta(2, 3));
+            //System.out.println(c.insertarUsuarioPlanta(2, 3));
             //System.out.println(c.leerPlanta(1));
             //System.out.println(c.eliminarUsuarioPlanta(1,2));
             //Usuario u = new Usuario();
@@ -38,6 +38,7 @@ public class SimuladorAndroid {
             //u.setApellido1("pruebaupdate");
             //u.setApellido2("pruebaupdate");
             //u.setDni("34092242D");
+            System.out.println(c.leerResenas(1));
             //InteresBotanico ib = new InteresBotanico(1,"");
             //u.setInteres(ib);
             //System.out.println(c.modificarUsuario("Prueba2",u));

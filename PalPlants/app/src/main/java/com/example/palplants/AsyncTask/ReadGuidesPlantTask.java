@@ -53,7 +53,7 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
             for (Guia guia : listaGuias) {
-                if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) { // Assuming Guia has a getUserId() method
+                if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) {
                     mButtonAddGuide.setVisibility(View.INVISIBLE);
                     mButtonAddGuide.setEnabled(false);
                     break;

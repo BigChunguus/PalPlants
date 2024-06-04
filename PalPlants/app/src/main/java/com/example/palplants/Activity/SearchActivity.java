@@ -4,7 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -41,6 +43,14 @@ public class SearchActivity extends AppCompatActivity {
         editTextSearch = findViewById(R.id.editTextSearch); // Obtener referencia al EditText
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Regresa a la actividad anterior
+                finish();
+            }
+        });
         selectAllPlants("");
 
         // Agregar TextWatcher para detectar cambios en el EditText
