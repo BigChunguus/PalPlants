@@ -23,13 +23,15 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
     private RecyclerView mRecyclerView;
     private Context mContext;
     private ImageButton mButtonAddGuide;
+    private ImageButton mButtonDropdownMenu; // Nuevo botón de menú desplegable
 
-    public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide) {
+    public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide, ImageButton buttonDropdownMenu) {
         mContext = context;
         this.plantIdToCheck = plantIdToCheck;
         this.userIdToCheck = userIdToCheck;
         mRecyclerView = recyclerView;
         mButtonAddGuide = buttonAddGuide;
+        mButtonDropdownMenu = buttonDropdownMenu;
     }
 
     @Override
@@ -48,20 +50,35 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
         super.onPostExecute(listaGuias);
 
         if (listaGuias != null && !listaGuias.isEmpty()) {
-            GuideAdapter adapter = new GuideAdapter(mContext, listaGuias);
-            mRecyclerView.setAdapter(adapter);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            ArrayList<Guia> userGuides = new ArrayList<>();
+            ArrayList<Guia> otherGuides = new ArrayList<>();
 
             for (Guia guia : listaGuias) {
                 if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) {
-                    mButtonAddGuide.setVisibility(View.INVISIBLE);
-                    mButtonAddGuide.setEnabled(false);
-                    break;
+                    userGuides.add(guia);
                 } else {
-                    mButtonAddGuide.setVisibility(View.VISIBLE);
-                    mButtonAddGuide.setEnabled(true);
+                    otherGuides.add(guia);
                 }
             }
+
+            if (!userGuides.isEmpty()) {
+                mButtonAddGuide.setVisibility(View.INVISIBLE);
+                mButtonAddGuide.setEnabled(false);
+                mButtonDropdownMenu.setVisibility(View.VISIBLE);
+                mButtonDropdownMenu.setEnabled(true);
+            } else {
+                mButtonAddGuide.setVisibility(View.VISIBLE);
+                mButtonAddGuide.setEnabled(true);
+                mButtonDropdownMenu.setVisibility(View.INVISIBLE);
+                mButtonDropdownMenu.setEnabled(false);
+            }
+
+            userGuides.addAll(otherGuides);
+
+            GuideAdapter adapter = new GuideAdapter(mContext, userGuides);
+            mRecyclerView.setAdapter(adapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         }
     }
 }
+

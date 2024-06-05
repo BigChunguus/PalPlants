@@ -2,9 +2,11 @@ package com.example.palplants.Activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.RatingBar;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +24,9 @@ import com.example.palplants.AsyncTask.InsertReviewTask;
 import com.example.palplants.R;
 import com.example.palplants.Adapter.ReviewAdapter;
 import com.example.palplants.AsyncTask.ReadReviewsTask;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -57,12 +64,42 @@ public class GuidesActivity extends AppCompatActivity {
         reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
         buttonAddReview = findViewById(R.id.buttonAddReview);
 
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         ImageButton buttonBack = findViewById(R.id.buttonBack);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Regresa a la actividad anterior
                 finish();
+            }
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.NoneActivityButton);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.YourPlantsActivityButton) {
+                    if (!(getApplicationContext() instanceof YourPlantsActivity)) {
+                        startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                } else if (item.getItemId() == R.id.SearchActivityButton) {
+                    if (!(getApplicationContext() instanceof SearchActivity)) {
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                }
+                return false;
             }
         });
 

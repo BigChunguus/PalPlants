@@ -1,5 +1,6 @@
 package com.example.palplants.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -26,6 +28,9 @@ import com.example.palplants.AsyncTask.InsertGuideTask;
 import com.example.palplants.AsyncTask.InsertPlantTask;
 import com.example.palplants.AsyncTask.ReadGuidesPlantTask;
 import com.example.palplants.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 
@@ -38,7 +43,7 @@ public class PlantsActivity extends AppCompatActivity {
     private int plantIdToCheck;
     private Planta plantaSeleccionada = new Planta();
     private ImageView imagePlant;
-    private ImageButton buttonAdd, buttonAddGuide;
+    private ImageButton buttonAdd, buttonAddGuide, mButtonDropdownMenu;
     private TextView comunName, cientificName, description, specificCare;
     private Usuario usuario;
     private RecyclerView recyclerView;
@@ -58,7 +63,38 @@ public class PlantsActivity extends AppCompatActivity {
         specificCare = findViewById(R.id.specificCare);
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonAddGuide = findViewById(R.id.buttonAddGuide);
+        mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
         recyclerView = findViewById(R.id.recyclerView);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.NoneActivityButton);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.YourPlantsActivityButton) {
+                    if (!(getApplicationContext() instanceof YourPlantsActivity)) {
+                        startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                } else if (item.getItemId() == R.id.SearchActivityButton) {
+                    if (!(getApplicationContext() instanceof SearchActivity)) {
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
@@ -130,7 +166,7 @@ public class PlantsActivity extends AppCompatActivity {
                     buttonAdd.setEnabled(true);
                 }
             }).execute();
-            new ReadGuidesPlantTask(this, plantIdToCheck, usuario.getUsuarioID(), recyclerView, buttonAddGuide).execute();
+            new ReadGuidesPlantTask(this, plantIdToCheck, usuario.getUsuarioID(), recyclerView, buttonAddGuide, mButtonDropdownMenu).execute();
         }
     }
 
