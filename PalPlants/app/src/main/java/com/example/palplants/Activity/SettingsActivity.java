@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +24,9 @@ import com.example.palplants.AsyncTask.ModifyUserTask;
 import com.example.palplants.AsyncTask.ReadInteresesTask;
 import com.example.palplants.Utility.AlarmReceiver;
 import com.example.palplants.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
@@ -75,6 +81,37 @@ public class SettingsActivity extends AppCompatActivity {
         }
         btnPowerOffAlarm = findViewById(R.id.btn_poweroff_alarm);
         btnPowerOffAlarm.setOnClickListener(v -> poweroffAlarm());
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.NoneActivityButton);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.YourPlantsActivityButton) {
+                    if (!(getApplicationContext() instanceof YourPlantsActivity)) {
+                        startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                } else if (item.getItemId() == R.id.SearchActivityButton) {
+                    if (!(getApplicationContext() instanceof SearchActivity)) {
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     private void poweroffAlarm() {

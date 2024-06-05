@@ -38,7 +38,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.textUsername.setText(resena.getUsuarioId().getNombreUsuario());
         holder.textDate.setText(resena.getFechaResena().toString());
         holder.ratingBar.setRating(resena.getCalificacion().floatValue());
+
+        // Establecer OnClickListener para la vista principal del elemento
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtener la visibilidad actual de textComentarioView
+                int visibility = holder.textComentarioView.getVisibility();
+                // Cambiar la visibilidad de textComentarioView
+                holder.textComentarioView.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -46,7 +58,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView textUsername, textDate;
+        TextView textUsername, textDate, textComentarioView; // Agregar textComentarioView
         RatingBar ratingBar;
 
         public ReviewViewHolder(@NonNull View itemView) {
@@ -54,6 +66,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             textUsername = itemView.findViewById(R.id.textUsername);
             textDate = itemView.findViewById(R.id.textDate);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            textComentarioView = itemView.findViewById(R.id.textComentarioView); // Inicializar textComentarioView
         }
     }
 }

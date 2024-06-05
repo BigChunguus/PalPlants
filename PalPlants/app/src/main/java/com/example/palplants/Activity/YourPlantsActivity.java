@@ -14,11 +14,14 @@ import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,20 +29,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.palplants.Adapter.PlantAdapter;
+
 import com.example.palplants.AsyncTask.SelectAllPlantsByUser;
 import com.example.palplants.Utility.AlarmReceiver;
 import com.example.palplants.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 
-import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
 
 public class YourPlantsActivity extends AppCompatActivity {
 
     private static final int REQUEST_NOTIFICATION_PERMISSION = 2;
+    private static final int YOUR_PLANTS_ACTIVITY_BUTTON_ID = R.id.YourPlantsActivityButton;
+    private static final int SEARCH_ACTIVITY_BUTTON_ID = R.id.SearchActivityButton;
     private RecyclerView recyclerView;
     private TextView emptyMessage;
     private ImageButton buttonSettings, buttonAlarm, buttonAdd;
@@ -47,6 +53,7 @@ public class YourPlantsActivity extends AppCompatActivity {
     private Button buttonOrder;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String username, orderBy;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,10 @@ public class YourPlantsActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         buttonOrder = findViewById(R.id.buttonOrder);
         buttonAdd = findViewById(R.id.buttonAdd);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -111,10 +122,40 @@ public class YourPlantsActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         });
 
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.YourPlantsActivityButton) {
+                    if (!(getApplicationContext() instanceof YourPlantsActivity)) {
+                        startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                } else if (item.getItemId() == R.id.SearchActivityButton) {
+                    if (!(getApplicationContext() instanceof SearchActivity)) {
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                    } else {
+                        // Si ya estamos en la actividad, la recreamos
+                        recreate();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
         buttonAlarm.setOnClickListener(v -> showTimePickerDialog());
 
         buttonSettings.setOnClickListener(v -> startActivity(new Intent(YourPlantsActivity.this, SettingsActivity.class)));
     }
+
+
 
     private void showTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();

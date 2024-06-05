@@ -24,11 +24,12 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
     private int guideIdToCheck;
     private int userIdToCheck;
     private RecyclerView recyclerView;
-    private ImageButton buttonAddReview;
+    private ImageButton buttonAddReview, mButtonDropdownMenu;
     private ArrayList<Resena> resenaList;
     private ReviewAdapter adapter;
 
-    public ReadReviewsTask(Context context, int guideIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddReview, ArrayList<Resena> resenaList, ReviewAdapter adapter) {
+
+    public ReadReviewsTask(Context context, int guideIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddReview, ArrayList<Resena> resenaList, ReviewAdapter adapter, ImageButton buttonDropdownMenu) {
         this.context = context;
         this.guideIdToCheck = guideIdToCheck;
         this.userIdToCheck = userIdToCheck;
@@ -36,6 +37,7 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         this.buttonAddReview = buttonAddReview;
         this.resenaList = resenaList;
         this.adapter = adapter;
+        this.mButtonDropdownMenu = buttonDropdownMenu;
     }
 
     @Override
@@ -54,28 +56,41 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         super.onPostExecute(listaResenas);
 
         if (listaResenas != null && !listaResenas.isEmpty()) {
-            // Configuración del adaptador de reseñas
-            adapter = new ReviewAdapter(context, listaResenas);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            ArrayList<Resena> userReviews = new ArrayList<>();
+            ArrayList<Resena> otherReviews = new ArrayList<>();
 
-            // Verificar si el usuario ya dejó una reseña
             for (Resena resena : listaResenas) {
                 if (resena.getUsuarioId().getUsuarioID() == userIdToCheck) {
-                    buttonAddReview.setVisibility(View.INVISIBLE);
-                    buttonAddReview.setEnabled(false);
-                    break;
+                    userReviews.add(resena);
                 } else {
-                    buttonAddReview.setVisibility(View.VISIBLE);
-                    buttonAddReview.setEnabled(true);
+                    otherReviews.add(resena);
                 }
             }
+
+            if (!userReviews.isEmpty()) {
+                buttonAddReview.setVisibility(View.INVISIBLE);
+                buttonAddReview.setEnabled(false);
+                mButtonDropdownMenu.setVisibility(View.VISIBLE);
+                mButtonDropdownMenu.setEnabled(true);
+            } else {
+                buttonAddReview.setVisibility(View.VISIBLE);
+                buttonAddReview.setEnabled(true);
+                mButtonDropdownMenu.setVisibility(View.INVISIBLE);
+                mButtonDropdownMenu.setEnabled(false);
+            }
+
+            userReviews.addAll(otherReviews);
+
+            ReviewAdapter adapter = new ReviewAdapter(context, userReviews);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
             // La lista de reseñas está vacía, por lo que el botón de agregar reseña debe estar visible y habilitado
             buttonAddReview.setVisibility(View.VISIBLE);
             buttonAddReview.setEnabled(true);
         }
     }
+
 
 
 }
