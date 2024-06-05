@@ -23,7 +23,7 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
     private RecyclerView mRecyclerView;
     private Context mContext;
     private ImageButton mButtonAddGuide;
-    private ImageButton mButtonDropdownMenu; // Nuevo botón de menú desplegable
+    private ImageButton mButtonDropdownMenu;
 
     public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide, ImageButton buttonDropdownMenu) {
         mContext = context;

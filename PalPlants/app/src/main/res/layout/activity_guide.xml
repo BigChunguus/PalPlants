@@ -163,8 +163,8 @@
 
                 <ImageButton
                     android:id="@+id/buttonAddReview"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginTop="16dp"
                     android:adjustViewBounds="true"
                     android:visibility="invisible"
@@ -176,6 +176,19 @@
                     app:layout_constraintHorizontal_bias="0.952"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/contentGuide" />
+
+                <ImageButton
+                    android:id="@+id/mButtonDropdownMenu"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/boton_mas_opciones"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/baseline_more_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonAddReview"
+                    app:layout_constraintEnd_toEndOf="@+id/buttonAddReview"
+                    app:layout_constraintStart_toStartOf="@+id/buttonAddReview"
+                    app:layout_constraintTop_toTopOf="@+id/buttonAddReview"/>
 
                 <TextView
                     android:id="@+id/Comentarios"

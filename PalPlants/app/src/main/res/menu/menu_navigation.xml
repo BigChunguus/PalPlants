@@ -11,6 +11,5 @@
     <item
         android:id="@+id/NoneActivityButton"
         android:title="None"
-
-        android:visible="false" /> <!-- Establece la visibilidad como gone -->
+        android:visible="false" />
 </menu>

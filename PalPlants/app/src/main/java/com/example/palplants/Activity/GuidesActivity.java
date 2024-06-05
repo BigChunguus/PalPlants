@@ -40,7 +40,7 @@ public class GuidesActivity extends AppCompatActivity {
     private TextView titleTextView, contentGuideTextView, userNameTextView;
     private RatingBar ratingBar;
     private RecyclerView reviewRecyclerView;
-    private ImageButton buttonAddReview;
+    private ImageButton buttonAddReview, mButtonDropdownMenu;
     private ArrayList<Resena> resenaList;
     private ReviewAdapter reviewAdapter;
     private Usuario usuario;
@@ -63,6 +63,7 @@ public class GuidesActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
         buttonAddReview = findViewById(R.id.buttonAddReview);
+        mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
 
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -178,6 +179,6 @@ public class GuidesActivity extends AppCompatActivity {
         ratingBar.setRating(guia.getCalificacionMedia().floatValue());
 
         // Ejecutar el AsyncTask para cargar las reseñas
-        new ReadReviewsTask(this, guia.getGuiaId(), usuario.getUsuarioID(), reviewRecyclerView, buttonAddReview, resenaList, reviewAdapter).execute();
+        new ReadReviewsTask(this, guia.getGuiaId(), usuario.getUsuarioID(), reviewRecyclerView, buttonAddReview, resenaList, reviewAdapter, mButtonDropdownMenu).execute();
     }
 }
