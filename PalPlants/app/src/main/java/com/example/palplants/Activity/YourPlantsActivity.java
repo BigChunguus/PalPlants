@@ -10,14 +10,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +60,9 @@ public class YourPlantsActivity extends AppCompatActivity {
     private Usuario currentUser;
     private Button buttonOrder;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String username, orderBy;
+    private String  orderBy;
+
+
 
 
     @Override
@@ -70,13 +80,14 @@ public class YourPlantsActivity extends AppCompatActivity {
         createNotificationChannel();
 
         buttonSettings = findViewById(R.id.buttonSettings);
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerViewYourPlants);
         buttonAlarm = findViewById(R.id.buttonAlarm);
         emptyMessage = findViewById(R.id.emptyTextView);
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         buttonOrder = findViewById(R.id.buttonOrder);
         buttonAdd = findViewById(R.id.buttonAdd);
 
+        //
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -88,12 +99,11 @@ public class YourPlantsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String userJson = sharedPreferences.getString("user", "");
 
+
         if (!userJson.isEmpty()) {
             Gson gson = new Gson();
             Usuario user = gson.fromJson(userJson, Usuario.class);
             currentUser = user;
-            username = user.getNombreUsuario();
-
         } else {
             Log.e("UserInfo", "Error: No se pudo obtener el usuario desde SharedPreferences");
         }
@@ -123,6 +133,7 @@ public class YourPlantsActivity extends AppCompatActivity {
         });
 
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -130,17 +141,21 @@ public class YourPlantsActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.YourPlantsActivityButton) {
                     if (!(getApplicationContext() instanceof YourPlantsActivity)) {
                         startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                        finish();
                     } else {
                         // Si ya estamos en la actividad, la recreamos
                         recreate();
+                        finish();
                     }
                     return true;
                 } else if (item.getItemId() == R.id.SearchActivityButton) {
                     if (!(getApplicationContext() instanceof SearchActivity)) {
                         startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                        finish();
                     } else {
                         // Si ya estamos en la actividad, la recreamos
                         recreate();
+                        finish();
                     }
                     return true;
                 }
@@ -154,7 +169,6 @@ public class YourPlantsActivity extends AppCompatActivity {
 
         buttonSettings.setOnClickListener(v -> startActivity(new Intent(YourPlantsActivity.this, SettingsActivity.class)));
     }
-
 
 
     private void showTimePickerDialog() {
