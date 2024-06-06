@@ -9,61 +9,60 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="24dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameTextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/baseline_person_24"
-            app:startIconTint="@color/cyan"
-            android:textColorHint="@color/cyan"
+            android:layout_height="75dp"
             android:layout_marginTop="16dp"
-            app:hintEnabled="true">
+            android:textColorHint="@color/cyan"
+            app:hintEnabled="true"
+            app:startIconDrawable="@drawable/baseline_person_24"
+            app:startIconTint="@color/cyan">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameLogin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:startIconTint="@color/cyan"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Nombre de usuario"
-                android:textColorHint="@color/cyan"
-                android:textColor="@color/cyan"
+                android:inputType="text"
                 android:padding="8dp"
-                android:background="@drawable/custom_login"
-                android:maxLines="1"/>
+                android:textColor="@color/cyan"
+                android:textColorHint="@color/cyan"
+                app:startIconTint="@color/cyan" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordTextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:startIconDrawable="@drawable/baseline_lock_24"
-            app:startIconTint="@color/cyan"
-            app:endIconTint="@color/cyan"
+            android:layout_height="75dp"
+            android:layout_marginTop="24dp"
             android:textColorHint="@color/cyan"
             app:endIconMode="password_toggle"
-            app:hintEnabled="true">
+            app:endIconTint="@color/cyan"
+            app:hintEnabled="true"
+            app:startIconDrawable="@drawable/baseline_lock_24"
+            app:startIconTint="@color/cyan">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordLogin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
                 android:maxLength="16"
-                android:textColorHint="@color/cyan"
-                android:textColor="@color/cyan"
-                android:padding="8dp"
                 android:maxLines="1"
-                />
+                android:padding="8dp"
+                android:textColor="@color/cyan"
+                android:textColorHint="@color/cyan" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -75,8 +74,8 @@
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="128dp"
             android:background="@drawable/rounded_button_background"
             android:text="Iniciar sesión"
             android:textSize="18sp" />

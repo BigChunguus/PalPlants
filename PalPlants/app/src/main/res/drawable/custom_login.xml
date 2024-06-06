@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@android:color/white" />
-    <stroke
-        android:width="2dp"
-        android:color="@color/cyan" />
+    <!-- Sombra -->
+    <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="#FFFFFF" /> <!-- Color de fondo del LinearLayout -->
+            <corners android:radius="30dp" /> <!-- Radio de las esquinas -->
+            <padding
+                android:bottom="4dp"
+                android:left="4dp"
+                android:right="4dp"
+                android:top="4dp" /> <!-- Espacio para la sombra -->
+            <size android:height="1dp" /> <!-- Altura de la sombra -->
+            <gradient
+                android:endColor="#44000000"
+                android:startColor="#00000000"
+                android:angle="-60" /> <!-- Gradiente de la sombra -->
+        </shape>
+    </item>
 
-    <corners
-        android:radius="30dp"/>
-
-
-</shape>
+    <!-- Padding para desplazar la sombra -->
+    <item android:left="-2dp" android:right="0.25dp" android:top="-2dp" android:bottom="0.25dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <stroke android:width="2dp" android:color="@color/cyan" />
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+</layer-list>

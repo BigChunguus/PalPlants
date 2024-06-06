@@ -65,6 +65,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation("com.scwang.wave:MultiWaveHeader:1.0.0-andx")
     implementation(files("C:\\Users\\alexc\\Documents\\GitHub\\PalPlants\\BotanicaCC\\dist\\BotanicaCC.jar"))
     implementation(files("C:\\Users\\alexc\\Documents\\GitHub\\PalPlants\\PojosBotanica\\dist\\PojosBotanica.jar"))
     implementation("com.google.android.gms:play-services-ads:23.0.0");
