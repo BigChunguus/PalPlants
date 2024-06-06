@@ -25,16 +25,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/imageView3"
+                <com.scwang.wave.MultiWaveHeader
+                    android:id="@+id/waveHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
+                    android:layout_height="150dp"
+                    android:elevation="-1dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/top_background" />
+                    app:mwhCloseColor="@color/cyan"
+                    app:mwhColorAlpha="0.45"
+                    app:mwhGradientAngle="45"
+                    app:mwhProgress="1"
+                    app:mwhStartColor="@color/darkcyan"
+                    app:mwhVelocity="1"
+                    app:mwhWaveHeight="50dp"
+                    app:mwhWaves="MultiWave" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -45,7 +51,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.695"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                    app:layout_constraintTop_toBottomOf="@+id/waveHeader"
                     app:layout_constraintVertical_bias="0.0"
                     android:layout_gravity="end|bottom">
 
@@ -135,7 +141,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.956"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                    app:layout_constraintTop_toTopOf="@+id/waveHeader" />
 
                 <ImageButton
                     android:id="@+id/buttonAlarm"
@@ -145,7 +151,7 @@
                     android:background="@drawable/boton_alarma"
                     android:scaleType="centerInside"
                     android:src="@drawable/round_access_time_24"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                    app:layout_constraintBottom_toBottomOf="@+id/waveHeader"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.956"
                     app:layout_constraintStart_toStartOf="parent"

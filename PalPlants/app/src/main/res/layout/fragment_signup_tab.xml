@@ -7,8 +7,8 @@
     tools:context=".Fragment.SignupTabFragment">
 
     <LinearLayout
-        android:layout_width="360dp"
-        android:layout_height="620dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="24dp">
@@ -16,7 +16,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             app:startIconDrawable="@drawable/baseline_person_24"
             app:startIconTint="@color/cyan"
             android:textColorHint="@color/cyan"
@@ -26,7 +26,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameRegister"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:startIconTint="@color/cyan"
                 android:drawablePadding="8dp"
                 android:hint="Nombre de usuario"
@@ -34,14 +34,14 @@
                 android:textColor="@color/cyan"
                 android:padding="8dp"
                 android:background="@drawable/custom_login"
-                android:maxLines="1"/>
+                android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             app:startIconDrawable="@drawable/baseline_alternate_email_24"
             app:startIconTint="@color/cyan"
             android:textColorHint="@color/cyan"
@@ -51,14 +51,14 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailRegister"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Correo electrónico"
                 android:padding="8dp"
                 android:textColor="@color/cyan"
                 android:textColorHint="@color/cyan"
-                android:maxLines="1"/>
+                android:inputType="text"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,7 +66,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             app:startIconDrawable="@drawable/baseline_lock_24"
             app:startIconTint="@color/cyan"
@@ -78,7 +78,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordRegister"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Contraseña"
@@ -86,7 +86,7 @@
                 android:padding="8dp"
                 android:textColor="@color/cyan"
                 android:textColorHint="@color/cyan"
-                android:maxLines="1"/>
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,7 +94,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/confirmPasswordTextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             app:startIconDrawable="@drawable/baseline_check_24"
             app:startIconTint="@color/cyan"
@@ -106,7 +106,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirmPasswordRegister"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/custom_login"
                 android:drawablePadding="8dp"
                 android:hint="Confirmar contraseña"
@@ -114,7 +114,7 @@
                 android:padding="8dp"
                 android:textColor="@color/cyan"
                 android:textColorHint="@color/cyan"
-                android:maxLines="1"/>
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,7 +123,7 @@
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="70dp"
             android:background="@drawable/rounded_button_background"
             android:text="Registrar"
             android:textSize="18sp" />

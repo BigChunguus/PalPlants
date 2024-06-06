@@ -29,17 +29,22 @@
                 app:layout_constraintVertical_bias="0.018"
                 app:srcCompat="@drawable/round_arrow_forward_24" />
 
-            <ImageView
-                android:id="@+id/imageView3"
+            <com.scwang.wave.MultiWaveHeader
+                android:id="@+id/waveHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:layout_height="150dp"
                 android:elevation="-1dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/top_background" />
+                app:mwhCloseColor="@color/cyan"
+                app:mwhColorAlpha="0.45"
+                app:mwhGradientAngle="45"
+                app:mwhProgress="1"
+                app:mwhStartColor="@color/darkcyan"
+                app:mwhVelocity="1"
+                app:mwhWaveHeight="50dp"
+                app:mwhWaves="MultiWave" />
 
             <EditText
                 android:id="@+id/editTextSearch"
@@ -53,7 +58,7 @@
                 android:textAppearance="?android:textAppearanceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                app:layout_constraintTop_toBottomOf="@+id/waveHeader" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
