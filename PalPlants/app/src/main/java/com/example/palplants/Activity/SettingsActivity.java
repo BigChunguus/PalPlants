@@ -94,17 +94,21 @@ public class SettingsActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.YourPlantsActivityButton) {
                     if (!(getApplicationContext() instanceof YourPlantsActivity)) {
                         startActivity(new Intent(getApplicationContext(), YourPlantsActivity.class));
+                        finish();
                     } else {
                         // Si ya estamos en la actividad, la recreamos
                         recreate();
+                        finish();
                     }
                     return true;
                 } else if (item.getItemId() == R.id.SearchActivityButton) {
                     if (!(getApplicationContext() instanceof SearchActivity)) {
                         startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                        finish();
                     } else {
                         // Si ya estamos en la actividad, la recreamos
                         recreate();
+                        finish();
                     }
                     return true;
                 }

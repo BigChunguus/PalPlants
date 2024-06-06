@@ -83,7 +83,8 @@ public class SearchActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Regresa a la actividad anterior
+                Intent intent = new Intent(getApplicationContext(), YourPlantsActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

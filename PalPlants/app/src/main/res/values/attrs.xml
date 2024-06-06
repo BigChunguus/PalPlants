@@ -10,4 +10,5 @@
     <attr name="textViewBackgroundColor" format="color"/>
     <attr name="RecyclerViewBackgroundColor" format="color"/>-->
     <!--<attr name="" format="color"/>-->
+
 </resources>
