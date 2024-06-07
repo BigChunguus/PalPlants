@@ -788,6 +788,20 @@ BEGIN
 END;
 /
 ALTER TRIGGER "BOTANICA"."VALIDAR_DNI" ENABLE;
+
+--------------------------------------------------------
+--  DDL for Trigger ACTUALIZAR_FECHA_RESENA_TRG
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "BOTANICA"."ACTUALIZAR_FECHA_RESENA_TRG"
+BEFORE INSERT OR UPDATE ON "BOTANICA"."RESEÑA"
+FOR EACH ROW
+BEGIN
+	:NEW.FECHARESEÑA := SYSDATE;
+END;
+/
+ALTER TRIGGER "BOTANICA"."ACTUALIZAR_FECHA_RESENA_TRG" ENABLE;
+
 --------------------------------------------------------
 --  DDL for Synonymn DUAL
 --------------------------------------------------------
