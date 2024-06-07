@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.PopupMenu;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,16 +30,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.palplants.AsyncTask.DeleteGuideUserTask;
 import com.example.palplants.AsyncTask.FindPlantRegisteredTask;
 import com.example.palplants.AsyncTask.InsertGuideTask;
 import com.example.palplants.AsyncTask.InsertPlantTask;
+import com.example.palplants.AsyncTask.ModifyGuideTask;
 import com.example.palplants.AsyncTask.ReadGuidesPlantTask;
 import com.example.palplants.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
-
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -55,6 +58,7 @@ public class PlantsActivity extends AppCompatActivity {
     private TextView comunName, cientificName, description, specificCare;
     private Usuario usuario;
     private RecyclerView recyclerView;
+    private Guia guiaUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +78,13 @@ public class PlantsActivity extends AppCompatActivity {
         mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
         recyclerView = findViewById(R.id.recyclerView);
 
-
         mButtonDropdownMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(view);
+                showPopupMenu(view, guiaUsuario);
             }
         });
+
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -115,8 +119,6 @@ public class PlantsActivity extends AppCompatActivity {
             }
         });
 
-
-
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
         if (!usuarioJson.isEmpty()) {
@@ -132,6 +134,7 @@ public class PlantsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,11 +190,20 @@ public class PlantsActivity extends AppCompatActivity {
                     buttonAdd.setEnabled(true);
                 }
             }).execute();
-            new ReadGuidesPlantTask(this, plantIdToCheck, usuario.getUsuarioID(), recyclerView, buttonAddGuide, mButtonDropdownMenu).execute();
+
+            ReadGuidesPlantTask readGuidesPlantTask = new ReadGuidesPlantTask(this, plantIdToCheck, usuario.getUsuarioID(), recyclerView, buttonAddGuide, mButtonDropdownMenu);
+            readGuidesPlantTask.execute();
+
+            readGuidesPlantTask.setOnGuiaUsuarioReceivedListener(new ReadGuidesPlantTask.OnGuiaUsuarioReceivedListener() {
+                @Override
+                public void onGuiaUsuarioReceived(Guia guia) {
+                    guiaUsuario = guia;
+                }
+            });
         }
     }
 
-    public void showPopupMenu(View view) {
+    public void showPopupMenu(View view, final Guia guiaUsuario) {
         PopupMenu popup = new PopupMenu(PlantsActivity.this, view);
         try {
             Field[] fields = popup.getClass().getDeclaredFields();
@@ -200,7 +212,7 @@ public class PlantsActivity extends AppCompatActivity {
                     field.setAccessible(true);
                     Object menuPopupHelper = field.get(popup);
                     Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon",boolean.class);
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
                     setForceIcons.invoke(menuPopupHelper, true);
                     break;
                 }
@@ -210,17 +222,78 @@ public class PlantsActivity extends AppCompatActivity {
         }
         popup.getMenuInflater().inflate(R.menu.menu_more_options, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
+            @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getApplicationContext(), "You Clicked : " + item.getTitle(),  Toast.LENGTH_SHORT).show();
-                return true;
+                if (item.getTitle().equals("Eliminar")) {
+                    showConfirmationDialog(guiaUsuario);
+                    return true;
+                } else {
+                    showEditGuideDialog(guiaUsuario);
+                    return true;
+                }
             }
         });
         popup.show();
     }
 
+    private void showConfirmationDialog(final Guia guiaUsuario) {
+        new AlertDialog.Builder(PlantsActivity.this)
+                .setTitle("Confirmar eliminación")
+                .setMessage("¿Está seguro de que desea eliminar esta guía?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        new DeleteGuideUserTask(PlantsActivity.this, guiaUsuario).execute();
+                        recreate();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 
+    private void showEditGuideDialog(final Guia guiaUsuario) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_insert_guide);
 
+        EditText editTextTitle = dialog.findViewById(R.id.editTextTitle);
+        EditText editTextContent = dialog.findViewById(R.id.editTextContent);
+        Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
+        Button buttonPublish = dialog.findViewById(R.id.buttonPublish);
+
+        editTextTitle.setText(guiaUsuario.getTitulo());
+        editTextContent.setText(guiaUsuario.getContenido());
+        // Ajustar el tamaño del diálogo
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        buttonPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = editTextTitle.getText().toString();
+                String content = editTextContent.getText().toString();
+
+                if (!title.isEmpty() && !content.isEmpty()) {
+                    Guia guia = new Guia();
+                    guia.setGuiaId(guiaUsuario.getGuiaId());
+                    guia.setTitulo(title);
+                    guia.setContenido(content);
+                    new ModifyGuideTask(PlantsActivity.this, guia, dialog).execute();
+                    recreate();
+                } else {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
+    }
     private void showAddGuideDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

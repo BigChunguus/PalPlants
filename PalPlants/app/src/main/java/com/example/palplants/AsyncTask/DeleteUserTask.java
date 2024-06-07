@@ -25,6 +25,7 @@ public class DeleteUserTask extends AsyncTask<String, Void, Boolean> {
         try {
             BotanicaCC botanicaCC = new BotanicaCC();
             int cambios = botanicaCC.eliminarUsuario(username);
+            Log.e("UserDelete", cambios + "");
             return cambios == 1;
         } catch (ExcepcionBotanica e) {
             e.printStackTrace();

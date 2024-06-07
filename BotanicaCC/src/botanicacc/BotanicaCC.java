@@ -315,7 +315,7 @@ public int insertarResena(Resena r) throws ExcepcionBotanica {
 public int eliminarResena(int idResena) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.ELIMINAR_RESENA);
-    p.setIdEntidad(idResena);
+    p.setEntidad(idResena);
     
     Respuesta respuesta = null;
     int cambios = 0;
@@ -344,10 +344,13 @@ public int eliminarResena(int idResena) throws ExcepcionBotanica {
     return cambios;
 }
 
-public int modificarResena(Resena r) throws ExcepcionBotanica {
+public int modificarResena(int idResena, Resena r) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.MODIFICAR_RESENA);
-    p.setEntidad(r);
+    Object[] parametros = new Object[2];
+    parametros[0] = idResena;
+    parametros[1] = r;
+    p.setEntidad(parametros);
     
     Respuesta respuesta = null;
     int cambios = 0;
@@ -789,7 +792,7 @@ public int insertarGuia(Guia g) throws ExcepcionBotanica {
 public int eliminarGuia(int idGuia) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.ELIMINAR_GUIA);
-    peticion.setIdEntidad(idGuia);
+    peticion.setEntidad(idGuia);
     
     Respuesta respuesta = null;
     int cambios = 0;
@@ -797,6 +800,7 @@ public int eliminarGuia(int idGuia) throws ExcepcionBotanica {
     try {
         ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
         oos.writeObject(peticion);
+        oos.flush();
         ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
         respuesta = (Respuesta) ois.readObject();
         
@@ -818,10 +822,13 @@ public int eliminarGuia(int idGuia) throws ExcepcionBotanica {
     return cambios;
 }
 
-public int modificarGuia(Guia g) throws ExcepcionBotanica {
+public int modificarGuia(int idGuia, Guia g) throws ExcepcionBotanica {
     Peticion peticion = new Peticion();
     peticion.setIdOperacion(Operaciones.MODIFICAR_GUIA);
-    peticion.setEntidad(g);
+    Object[] parametros = new Object[2];
+    parametros[0] = idGuia;
+    parametros[1] = g;
+    peticion.setEntidad(parametros);
     
     Respuesta respuesta = null;
     int cambios = 0;
@@ -829,6 +836,7 @@ public int modificarGuia(Guia g) throws ExcepcionBotanica {
     try {
         ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
         oos.writeObject(peticion);
+        oos.flush();
         ObjectInputStream ois = new ObjectInputStream(socketCliente.getInputStream());
         respuesta = (Respuesta) ois.readObject();
         

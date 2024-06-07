@@ -4,18 +4,27 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Outline;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.palplants.Activity.PlantsActivity;
 import com.example.palplants.AsyncTask.DeletePlantTask;
 import com.example.palplants.R;
@@ -118,11 +127,38 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         }
 
         public void bind(Planta planta) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image);
+
             Glide.with(context)
                     .load(planta.getImagen())
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(imageView);
+                    .apply(requestOptions)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            // Aplicar el radio de esquina a la imagen
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                imageView.setBackground(resource);
+                            } else {
+                                imageView.setBackgroundDrawable(resource);
+                            }
+                            // Establecer el radio de esquina a la ImageView
+                            imageView.setClipToOutline(true);
+                            imageView.setOutlineProvider(new ViewOutlineProvider() {
+                                @Override
+                                public void getOutline(View view, Outline outline) {
+                                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 20);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            // Hacer algo si la carga se cancela
+                        }
+                    });
+
             textViewTop.setText(planta.getNombreCientificoPlanta());
             textViewBottom.setText(planta.getNombreComunPlanta());
         }
