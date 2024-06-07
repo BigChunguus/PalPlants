@@ -38,7 +38,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.textUsername.setText(resena.getUsuarioId().getNombreUsuario());
         holder.textDate.setText(resena.getFechaResena().toString());
         holder.ratingBar.setRating(resena.getCalificacion().floatValue());
-
+        holder.textComentarioView.setText(resena.getComentario());
         // Establecer OnClickListener para la vista principal del elemento
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

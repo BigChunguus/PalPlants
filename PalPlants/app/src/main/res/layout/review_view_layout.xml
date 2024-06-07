@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/customBackgroundCardview"
     android:padding="16dp">
 
     <TextView
@@ -15,6 +16,7 @@
         android:text="textoPrueba"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="?attr/userNameTextColor"
         app:layout_constraintEnd_toStartOf="@+id/textDate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/ratingBar"
@@ -27,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="textoPrueba"
         android:textSize="14sp"
+        android:textColor="?attr/userNameTextColor"
         app:layout_constraintBottom_toBottomOf="@+id/textUsername"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.924"
@@ -55,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="pakdm paskmd kpasnmd kolnasdjkbn asjkdbnajksdbjkasb djkas dkjasd jkasdkjnaoszidn aiopsnd ioansdo nasodb iauwsvbd uioyabsd uiawisueh qiuwhd uioascuinc aojb sdlaks dnkla jsnd ojkansd uihqwuiodbqwiudn iausbdkljansd jkhazsdjlnqiwud ioqawbcuiasn dhjkabsdujoa"
+        android:text="Comentario"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

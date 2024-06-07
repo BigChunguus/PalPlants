@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:text="textoPrueba"
         android:textSize="14sp"
+        android:textColor="?attr/userNameTextColor"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/ratingBar"
