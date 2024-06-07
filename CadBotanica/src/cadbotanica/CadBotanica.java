@@ -406,13 +406,32 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
 
 
 
-    public int modificarResena(Integer resenaId, Resena resena) throws ExcepcionBotanica {
+    public int modificarResena(int idResena, Resena resena) throws ExcepcionBotanica {
         conectar();
-        int registrosAfectados = 0;
-        // Código para modificar una reseña en la base de datos
+        int filasAfectadas = 0;
+        String dml = "UPDATE RESEÑA SET CALIFICACION = ?, COMENTARIO = ? WHERE RESEÑAID = ?";
+
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+            // Asignar los valores a los parámetros de la consulta
+            preparedStatement.setInt(1, resena.getCalificacion());
+            preparedStatement.setString(2, resena.getComentario());
+            preparedStatement.setInt(3, idResena);
+
+            // Ejecutar la actualización
+            filasAfectadas = preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(dml);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        }
         desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+        return filasAfectadas;
     }
+
 
     public int eliminarResena(int resenaId) throws ExcepcionBotanica {
         conectar();
@@ -439,15 +458,6 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         } 
         desconectar();
         return filasAfectadas;
-    }
-
-
-    public Resena leerResena(Integer resenaId) throws ExcepcionBotanica {
-        conectar();
-        Resena resena = null;
-        // Código para leer una reseña de la base de datos
-        desconectar();
-        return resena; // Cambiar el valor de retorno según corresponda
     }
 
     public ArrayList<Resena> leerResenasGuia(int guiaId) throws ExcepcionBotanica {
@@ -539,12 +549,31 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
 
 
     public int modificarGuia(Integer guiaId, Guia guia) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para modificar una guía en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
+    conectar();
+    int registrosAfectados = 0;
+    String dml = "UPDATE GUIA SET TITULO = ?, CONTENIDO = ? WHERE GUIAID = ?";
+
+    try (PreparedStatement preparedStatement = conexion.prepareStatement(dml)) {
+        // Asignar los valores a los parámetros de la consulta
+        preparedStatement.setString(1, guia.getTitulo());
+        preparedStatement.setString(2, guia.getContenido());
+        preparedStatement.setInt(3, guiaId);
+
+        // Ejecutar la actualización
+        registrosAfectados = preparedStatement.executeUpdate();
+
+    } catch (SQLException ex) {
+        ExcepcionBotanica excepcion = new ExcepcionBotanica();
+        excepcion.setCodigoErrorSQL(ex.getErrorCode());
+        excepcion.setMensajeErrorBd(ex.getMessage());
+        excepcion.setSentenciaSQL(dml);
+        excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+        throw excepcion;
     }
+    desconectar();
+    return registrosAfectados;
+}
+
 
     public int eliminarGuia(int guiaId) throws ExcepcionBotanica {
         conectar();
@@ -569,15 +598,6 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         desconectar();
         return filasAfectadas;
         
-    }
-
-
-    public Guia leerGuia(Integer guiaId) throws ExcepcionBotanica {
-        conectar();
-        Guia guia = null;
-        // Código para leer una guía de la base de datos
-        desconectar();
-        return guia; // Cambiar el valor de retorno según corresponda
     }
 
     public ArrayList<Guia> leerGuias(Integer plantaIdGuia) throws ExcepcionBotanica {
@@ -646,101 +666,35 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
     return listaGuias;
 }
 
-
-    
-    public int insertarInsecto(Insecto insecto) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para insertar un insecto en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int modificarInsecto(Integer insectoId, Insecto insecto) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para modificar un insecto en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int eliminarInsecto(Integer insectoId) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar un insecto de la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public Insecto leerInsecto(Integer insectoId) throws ExcepcionBotanica {
-        conectar();
-        Insecto insecto = null;
-        // Código para leer un insecto de la base de datos
-        desconectar();
-        return insecto; // Cambiar el valor de retorno según corresponda
-    }
-
-    public ArrayList<Insecto> leerInsectos() throws ExcepcionBotanica {
+    public ArrayList<Insecto> leerInsectos(int idPlanta) throws ExcepcionBotanica {
         conectar();
         ArrayList<Insecto> listaInsectos = new ArrayList<>();
-        // Código para leer todos los insectos de la base de datos
-        desconectar();
-        return listaInsectos; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int insertarInsectoPlanta(InsectoPlanta insectoPlanta) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para insertar una relación InsectoPlanta en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int eliminarInsectoPlanta(InsectoPlanta insectoPlanta) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar una relación InsectoPlanta de la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-    public ArrayList<InsectoPlanta> leerInsectosPlantas(Integer plantaId) throws ExcepcionBotanica {
-        conectar();
-        ArrayList<InsectoPlanta> listaInsectosPlantas = new ArrayList<>();
-        // Código para leer todas las relaciones InsectoPlanta de la base de datos
-        desconectar();
-        return listaInsectosPlantas; // Cambiar el valor de retorno según corresponda
-    }
-    
-    public int insertarInteresBotanico(InteresBotanico interes) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para insertar un interés botánico en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int modificarInteresBotanico(Integer interesId, InteresBotanico interes) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para modificar un interés botánico en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int eliminarInteresBotanico(Integer interesId) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar un interés botánico de la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public InteresBotanico leerInteresBotanico(String nombreInteres) throws ExcepcionBotanica {
-        conectar();
-        InteresBotanico interes = null;
-        
-        desconectar();
-        return interes; // Cambiar el valor de retorno según corresponda
+        String query = "SELECT i.INSECTOID, i.NOMBRECIENTIFICOINSECTO, i.NOMBRECOMUNINSECTO, i.DESCRIPCION " +
+                       "FROM PLANTA_INSECTO pi " +
+                       "JOIN INSECTO i ON pi.INSECTOINSECTOID = i.INSECTOID " +
+                       "WHERE pi.PLANTAPLANTAID = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, idPlanta);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int insectoId = rs.getInt("INSECTOID");
+                String nombreCientificoInsecto = rs.getString("NOMBRECIENTIFICOINSECTO");
+                String nombreComunInsecto = rs.getString("NOMBRECOMUNINSECTO");
+                String descripcion = rs.getString("DESCRIPCION");
+                Insecto insecto = new Insecto(insectoId, nombreCientificoInsecto, nombreComunInsecto, descripcion);
+                listaInsectos.add(insecto);
+            }
+        } catch (SQLException ex) {
+            ExcepcionBotanica excepcion = new ExcepcionBotanica();
+            excepcion.setCodigoErrorSQL(ex.getErrorCode());
+            excepcion.setMensajeErrorBd(ex.getMessage());
+            excepcion.setSentenciaSQL(query);
+            excepcion.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+            throw excepcion;
+        } finally {
+            desconectar();
+        }
+        return listaInsectos;
     }
 
     public ArrayList<InteresBotanico> leerInteresesBotanicos() throws ExcepcionBotanica {
@@ -769,30 +723,6 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
         }
         desconectar();
         return listaIntereses; // Cambiar el valor de retorno según corresponda
-    }
-    
-    public int insertarPlanta(Planta planta) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para insertar una planta en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int modificarPlanta(Integer plantaId, Planta planta) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para modificar una planta en la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
-    }
-
-    public int eliminarPlanta(Integer plantaId) throws ExcepcionBotanica {
-        conectar();
-        int registrosAfectados = 0;
-        // Código para eliminar una planta de la base de datos
-        desconectar();
-        return registrosAfectados; // Cambiar el valor de retorno según corresponda
     }
 
     public Planta leerPlanta(Integer plantaIdBuscar) throws ExcepcionBotanica {
