@@ -26,7 +26,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="16dp"
-                android:background="@drawable/custom_edittext"
+                android:background="@drawable/imagen_planta"
                 android:scaleType="centerCrop"
                 android:layout_margin="7dp"
                 app:layout_constraintBottom_toBottomOf="parent"

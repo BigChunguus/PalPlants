@@ -15,7 +15,7 @@
             <gradient
                 android:startColor="@android:color/transparent"
                 android:centerColor="@android:color/transparent"
-                android:endColor="#2e2e2e"
+                android:endColor="#802e2e2e"
                 android:endX="10"
                 android:endY="10"
                 android:angle="315" /> <!-- Gradiente de la sombra -->

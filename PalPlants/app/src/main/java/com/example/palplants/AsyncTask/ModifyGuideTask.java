@@ -1,27 +1,31 @@
 package com.example.palplants.AsyncTask;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
-import pojosbotanica.Resena;
-import pojosbotanica.Usuario;
+import pojosbotanica.Guia;
 
-public class DeleteReviewUserTask extends AsyncTask<Void, Void, Boolean> {
+public class ModifyGuideTask extends AsyncTask<Void, Void, Boolean> {
     private Context context;
-    private Resena resena;
+    private Guia guia;
+    private Dialog dialog;
 
-    public DeleteReviewUserTask(Context context,Resena resena) {
+    public ModifyGuideTask(Context context, Guia guia, Dialog dialog) {
         this.context = context;
-        this.resena = resena;
+        this.guia = guia;
+        this.dialog = dialog;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
             BotanicaCC botanicaCC = new BotanicaCC();
-            int cambios = botanicaCC.eliminarResena(resena.getResenaId());
-            return cambios == 1;
+            botanicaCC.modificarGuia(guia.getGuiaId(), guia);
+            return true;
         } catch (ExcepcionBotanica e) {
             e.printStackTrace();
             return false;
@@ -30,10 +34,7 @@ public class DeleteReviewUserTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
-        if (success) {
 
-        } else {
-
-        }
+        dialog.dismiss();
     }
 }

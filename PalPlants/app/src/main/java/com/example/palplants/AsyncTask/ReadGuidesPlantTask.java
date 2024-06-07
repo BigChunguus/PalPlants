@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -20,18 +19,20 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
 
     private int plantIdToCheck;
     private int userIdToCheck;
+    private Guia guiaUsuario;
     private RecyclerView mRecyclerView;
     private Context mContext;
     private ImageButton mButtonAddGuide;
     private ImageButton mButtonDropdownMenu;
+    private OnGuiaUsuarioReceivedListener listener;
 
     public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide, ImageButton buttonDropdownMenu) {
-        mContext = context;
+        this.mContext = context;
         this.plantIdToCheck = plantIdToCheck;
         this.userIdToCheck = userIdToCheck;
-        mRecyclerView = recyclerView;
-        mButtonAddGuide = buttonAddGuide;
-        mButtonDropdownMenu = buttonDropdownMenu;
+        this.mRecyclerView = recyclerView;
+        this.mButtonAddGuide = buttonAddGuide;
+        this.mButtonDropdownMenu = buttonDropdownMenu;
     }
 
     @Override
@@ -53,20 +54,18 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
             ArrayList<Guia> userGuides = new ArrayList<>();
             ArrayList<Guia> otherGuides = new ArrayList<>();
 
-
             for (Guia guia : listaGuias) {
                 if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) {
-                    for(int i = 0; i < 10; i++) {
-                        userGuides.add(guia);
-                    }
+                    guiaUsuario = guia;
+                    userGuides.add(guia);
                 } else {
-                    for(int i = 0; i < 10; i++) {
-                        otherGuides.add(guia);
-                    }
+                    otherGuides.add(guia);
                 }
             }
 
-
+            if (listener != null) {
+                listener.onGuiaUsuarioReceived(guiaUsuario);
+            }
 
             if (!userGuides.isEmpty()) {
                 mButtonAddGuide.setVisibility(View.INVISIBLE);
@@ -87,5 +86,12 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         }
     }
-}
 
+    public void setOnGuiaUsuarioReceivedListener(OnGuiaUsuarioReceivedListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnGuiaUsuarioReceivedListener {
+        void onGuiaUsuarioReceived(Guia guia);
+    }
+}

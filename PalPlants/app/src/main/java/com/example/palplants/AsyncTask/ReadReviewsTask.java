@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
-import pojosbotanica.Guia;
 import pojosbotanica.Resena;
 
 public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
@@ -27,7 +26,7 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
     private ImageButton buttonAddReview, mButtonDropdownMenu;
     private ArrayList<Resena> resenaList;
     private ReviewAdapter adapter;
-
+    private OnResenaUsuarioReceivedListener listener;
 
     public ReadReviewsTask(Context context, int guideIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddReview, ArrayList<Resena> resenaList, ReviewAdapter adapter, ImageButton buttonDropdownMenu) {
         this.context = context;
@@ -58,13 +57,19 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         if (listaResenas != null && !listaResenas.isEmpty()) {
             ArrayList<Resena> userReviews = new ArrayList<>();
             ArrayList<Resena> otherReviews = new ArrayList<>();
+            Resena userReview = null;
 
             for (Resena resena : listaResenas) {
                 if (resena.getUsuarioId().getUsuarioID() == userIdToCheck) {
+                    userReview = resena;
                     userReviews.add(resena);
                 } else {
                     otherReviews.add(resena);
                 }
+            }
+
+            if (listener != null) {
+                listener.onResenaUsuarioReceived(userReview);
             }
 
             if (!userReviews.isEmpty()) {
@@ -91,6 +96,11 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         }
     }
 
+    public void setOnResenaUsuarioReceivedListener(OnResenaUsuarioReceivedListener listener) {
+        this.listener = listener;
+    }
 
-
+    public interface OnResenaUsuarioReceivedListener {
+        void onResenaUsuarioReceived(Resena resena);
+    }
 }

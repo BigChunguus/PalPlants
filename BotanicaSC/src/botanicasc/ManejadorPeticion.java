@@ -263,7 +263,7 @@ public class ManejadorPeticion extends Thread{
             r.setIdOperacion(p.getIdOperacion());
 
             int cantidad = cad.eliminarUsuario(nombreUsuario);
-            r.setEntidad(cantidad);
+            r.setCantidad(cantidad);
 
             oos = new ObjectOutputStream(clienteConectado.getOutputStream());
             oos.writeObject(r);

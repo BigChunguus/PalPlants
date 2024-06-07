@@ -2,24 +2,28 @@ package com.example.palplants.AsyncTask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
-import pojosbotanica.Usuario;
+import pojosbotanica.Guia;
 
 public class DeleteGuideUserTask extends AsyncTask<Void, Void, Boolean> {
     private Context context;
-    private Usuario usuario;
+    private Guia guia;
 
-    public DeleteGuideUserTask(Context context, Usuario usuario) {
+    public DeleteGuideUserTask(Context context, Guia guia) {
         this.context = context;
-        this.usuario = usuario;
+        this.guia = guia;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
+            int guiaId = guia.getGuiaId();
+            Log.e("GuiaId", "Guia id: " + guiaId);
             BotanicaCC botanicaCC = new BotanicaCC();
-            int cambios = botanicaCC.eliminarGuia(usuario.getUsuarioID());
+            int cambios = botanicaCC.eliminarGuia(guiaId);
             return cambios == 1;
         } catch (ExcepcionBotanica e) {
             e.printStackTrace();
@@ -30,9 +34,9 @@ public class DeleteGuideUserTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {
-
+            // Aquí puedes agregar código para manejar el éxito
         } else {
-
+            // Aquí puedes agregar código para manejar el fallo
         }
     }
 }
