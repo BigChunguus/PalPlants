@@ -9,6 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.palplants.Fragment.LoginTabFragment;
 import com.example.palplants.Fragment.SignupTabFragment;
 
+// Este adaptador de ViewPager se utiliza para manejar las pestañas de inicio de sesión y registro en una actividad.
+// Proporciona los fragmentos correspondientes a cada pestaña y controla la cantidad total de pestañas.
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
     public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {

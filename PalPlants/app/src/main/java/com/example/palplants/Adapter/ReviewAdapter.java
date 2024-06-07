@@ -8,13 +8,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.palplants.R;
-
 import java.util.ArrayList;
-
 import pojosbotanica.Resena;
 
+// Este adaptador se utiliza para mostrar las reseñas de los usuarios en un RecyclerView.
+// Se encarga de inflar el diseño de la vista de la reseña y vincular los datos de la reseña a cada vista de elemento.
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private Context context;
@@ -38,7 +37,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.textUsername.setText(resena.getUsuarioId().getNombreUsuario());
         holder.textDate.setText(resena.getFechaResena().toString());
         holder.ratingBar.setRating(resena.getCalificacion().floatValue());
-
+        holder.textComentarioView.setText(resena.getComentario());
         // Establecer OnClickListener para la vista principal del elemento
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +49,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             }
         });
     }
-
 
     @Override
     public int getItemCount() {

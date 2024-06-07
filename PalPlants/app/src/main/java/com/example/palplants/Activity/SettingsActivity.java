@@ -3,17 +3,11 @@ package com.example.palplants.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,14 +17,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.palplants.AsyncTask.DeleteUserTask;
 import com.example.palplants.AsyncTask.ModifyUserTask;
 import com.example.palplants.AsyncTask.ReadInteresesTask;
 import com.example.palplants.Utility.AlarmReceiver;
 import com.example.palplants.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -40,6 +33,12 @@ import java.util.ArrayList;
 import pojosbotanica.InteresBotanico;
 import pojosbotanica.Usuario;
 
+// Esta clase representa la actividad de configuración en la aplicación.
+// Los usuarios pueden acceder a esta actividad para ajustar diferentes configuraciones y preferencias de la aplicación.
+// Algunos ejemplos de configuraciones comunes que los usuarios pueden ajustar incluyen el tema de la aplicación (claro u oscuro), la notificación de recordatorios, la frecuencia de actualización de datos, entre otros.
+// La actividad SettingsActivity proporciona una interfaz de usuario intuitiva para que los usuarios puedan modificar estas configuraciones según sus preferencias.
+// Además, la actividad también puede incluir funciones para restablecer la configuración predeterminada de la aplicación o para realizar copias de seguridad y restaurar la configuración del usuario.
+// En resumen, esta actividad es crucial para brindar a los usuarios control sobre la experiencia de la aplicación y adaptarla a sus necesidades individuales.
 public class SettingsActivity extends AppCompatActivity {
 
     private int themeId;
@@ -53,21 +52,31 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Cargar el tema actual
         SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
         themeId = preferences.getInt("current_theme", R.style.Theme_App_Light_NoActionBar);
         setTheme(themeId);
 
         setContentView(R.layout.activity_settings);
 
+        // Configurar el botón de retroceso
         ImageButton buttonBack = findViewById(R.id.buttonBack);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Regresa a la actividad anterior
+                // Regresar a la actividad anterior
                 Log.e("Sett", "Activado");
                 finish();
             }
         });
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            recreate();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        // Configurar los botones y la navegación inferior
         btnEditUserData = findViewById(R.id.btn_edit_user_data);
         btnEditUserData.setOnClickListener(v -> showEditUserDataPopup());
 
@@ -84,13 +93,13 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             btnChangeTheme.setText("Cambiar Tema: Oscuro");
         }
+
         btnPowerOffAlarm = findViewById(R.id.btn_poweroff_alarm);
         btnPowerOffAlarm.setOnClickListener(v -> poweroffAlarm());
 
-
+        // Configurar la navegación inferior
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.NoneActivityButton);
-        // Iterar sobre los ítems del menú para cambiar el color del texto e icono
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -118,9 +127,9 @@ public class SettingsActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
+    // Método para apagar la alarma
     private void poweroffAlarm() {
         Intent cancelAlarmIntent = new Intent(this, AlarmReceiver.class);
         cancelAlarmIntent.setAction("CANCEL_ALARM_ACTION");
@@ -128,6 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this, "Alarma cancelada", Toast.LENGTH_SHORT).show();
     }
 
+    // Método para cambiar el tema de la aplicación
     private void changeTheme() {
         if (themeId == R.style.Theme_App_Light_NoActionBar) {
             btnChangeTheme.setText("Cambiar Tema: Claro");
@@ -137,27 +147,34 @@ public class SettingsActivity extends AppCompatActivity {
             btnChangeTheme.setText("Cambiar Tema: Oscuro");
         }
 
+        // Guardar el tema seleccionado en las preferencias compartidas
         SharedPreferences preferences = getSharedPreferences("theme_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("current_theme", themeId);
         editor.apply();
 
+        // Reiniciar todas las actividades para aplicar el nuevo tema
         restartAllActivities();
     }
 
+    // Método para reiniciar todas las actividades para aplicar el nuevo tema
     private void restartAllActivities() {
         Intent intent = new Intent(this, YourPlantsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    // Método para mostrar el cuadro de diálogo de eliminación de cuenta
     private void showDeleteAccountPopup() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View deleteUserView = inflater.inflate(R.layout.dialog_btn_delete_account, null);
         Button btnCancel = deleteUserView.findViewById(R.id.btn_cancel);
         Button btnConfirm = deleteUserView.findViewById(R.id.btn_confirm);
 
+        // Configurar el botón Cancelar
         btnCancel.setOnClickListener(v -> onCancelDeleteUser());
+
+        // Configurar el botón Confirmar
         btnConfirm.setOnClickListener(v -> onConfirmDeleteUser());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -166,12 +183,14 @@ public class SettingsActivity extends AppCompatActivity {
         alertDialogDelete.show();
     }
 
+    // Método para cancelar la eliminación de la cuenta
     private void onCancelDeleteUser() {
         if (alertDialogDelete != null && alertDialogDelete.isShowing()) {
             alertDialogDelete.dismiss();
         }
     }
 
+    // Método para confirmar la eliminación de la cuenta
     private void onConfirmDeleteUser() {
         SharedPreferences preferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = preferences.getString("user", null);
@@ -184,11 +203,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Método para mostrar el cuadro de diálogo de edición de datos del usuario
     private void showEditUserDataPopup() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View editUserDataView = inflater.inflate(R.layout.dialog_edit_user_data, null);
 
-
+        // Obtener referencias a las vistas del diálogo
         TextInputEditText editTextRealNameUpdate = editUserDataView.findViewById(R.id.editTextRealNameUpdate);
         TextInputEditText editTextFirstSurnameUpdate = editUserDataView.findViewById(R.id.editTextFirstSurnameUpdate);
         TextInputEditText editTextSecondSurnameUpdate = editUserDataView.findViewById(R.id.editTextSecondSurnameUpdate);
@@ -197,8 +217,10 @@ public class SettingsActivity extends AppCompatActivity {
         Button btnCancel = editUserDataView.findViewById(R.id.btn_cancel);
         Button btnSave = editUserDataView.findViewById(R.id.btn_save);
 
-
+        // Configurar el botón Cancelar
         btnCancel.setOnClickListener(v -> onCancelEditUserData());
+
+        // Cargar los intereses botánicos del usuario
         new ReadInteresesTask(this, spinnerInterest, interesesBotanicos).execute();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -206,15 +228,16 @@ public class SettingsActivity extends AppCompatActivity {
         alertDialogUpdate = builder.create();
         alertDialogUpdate.show();
 
-
-
+        // Configurar el botón Guardar
         btnSave.setOnClickListener(v -> {
+            // Obtener los datos ingresados por el usuario
             String realName = editTextRealNameUpdate.getText().toString();
             String firstSurname = editTextFirstSurnameUpdate.getText().toString();
             String secondSurname = editTextSecondSurnameUpdate.getText().toString();
             String dni = editTextDNIUpdate.getText().toString();
             String selectedInterest = spinnerInterest.getSelectedItem().toString();
 
+            // Crear un objeto Usuario con los datos ingresados
             Usuario usuario = new Usuario();
             if (!realName.isEmpty()) {
                 usuario.setNombre(realName);
@@ -260,12 +283,14 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    // Método para cancelar la edición de datos del usuario
     private void onCancelEditUserData() {
         if (alertDialogUpdate != null && alertDialogUpdate.isShowing()) {
             alertDialogUpdate.dismiss();
         }
     }
 
+    // Método para mostrar el cuadro de diálogo de confirmación de cierre de sesión
     private void showLogoutConfirmation() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View confirmationView = inflater.inflate(R.layout.dialog_btn_logout, null);
@@ -285,14 +310,18 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    // Método para cerrar sesión
     private void logout() {
+        // Limpiar los datos de usuario almacenados en las preferencias compartidas
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
 
+        // Redirigir a la actividad principal (inicio de sesión)
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 }
+

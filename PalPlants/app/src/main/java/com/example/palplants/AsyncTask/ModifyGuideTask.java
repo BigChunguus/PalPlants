@@ -1,40 +1,37 @@
 package com.example.palplants.AsyncTask;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Guia;
 
+// AsyncTask encargado de modificar una guía existente en la base de datos del servidor.
+// Recibe como parámetros el contexto y la guía que se va a modificar.
 public class ModifyGuideTask extends AsyncTask<Void, Void, Boolean> {
     private Context context;
     private Guia guia;
-    private Dialog dialog;
 
-    public ModifyGuideTask(Context context, Guia guia, Dialog dialog) {
+    // Constructor
+    public ModifyGuideTask(Context context, Guia guia) {
         this.context = context;
         this.guia = guia;
-        this.dialog = dialog;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la modificación de la guía en la base de datos.
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
+            // Modificar la guía en la base de datos
             BotanicaCC botanicaCC = new BotanicaCC();
             botanicaCC.modificarGuia(guia.getGuiaId(), guia);
-            return true;
+            return true; // Indicar éxito
         } catch (ExcepcionBotanica e) {
+            // Capturar excepción si ocurre
             e.printStackTrace();
-            return false;
+            return false; // Indicar fallo
         }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean success) {
-
-        dialog.dismiss();
     }
 }

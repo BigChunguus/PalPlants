@@ -250,8 +250,8 @@
                             android:scaleType="fitCenter"
                             android:src="@drawable/baseline_add_24"
                             app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlants"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.962"
+                            app:layout_constraintEnd_toEndOf="@+id/buttonShowInsects"
+                            app:layout_constraintHorizontal_bias="1.0"
                             app:layout_constraintStart_toEndOf="@+id/textView"
                             app:layout_constraintTop_toBottomOf="@+id/specificCare"
                             app:layout_constraintVertical_bias="0.464" />
@@ -304,6 +304,24 @@
                             app:layout_constraintStart_toEndOf="@+id/imagePlant"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.142" />
+
+                        <ImageButton
+                            android:id="@+id/buttonShowInsects"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/boton_mas_opciones"
+                            android:enabled="false"
+                            android:padding="5dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/baseline_format_list_bulleted_24"
+                            app:layout_constraintBottom_toTopOf="@+id/descriptionPlant"
+                            app:layout_constraintEnd_toEndOf="@+id/buttonAdd"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toEndOf="@+id/textDescription"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayoutNames"
+                            app:layout_constraintVertical_bias="0.411" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

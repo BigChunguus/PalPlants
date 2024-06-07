@@ -9,13 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.palplants.Adapter.PlantSearchAdapter;
 import com.example.palplants.AsyncTask.SelectAllPlants;
@@ -26,14 +26,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-import pojosbotanica.Planta;
-
+// Esta clase representa la actividad de búsqueda en la aplicación.
+// Los usuarios pueden utilizar esta actividad para buscar plantas por su nombre científico o nombre común.
+// La actividad puede mostrar una lista de resultados de búsqueda y permitir a los usuarios ver detalles de una planta seleccionada.
+// Además, la actividad puede proporcionar opciones para que los usuarios filtren los resultados de búsqueda según diferentes criterios, como tipo de planta o región.
+// En resumen, esta actividad es fundamental para permitir a los usuarios buscar plantas dentro de la aplicación y explorar los resultados de búsqueda de manera interactiva.
 public class SearchActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private PlantSearchAdapter plantAdapter;
     private TextView emptyMessage;
-    private EditText editTextSearch; // Agregar el EditText
+    private EditText editTextSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,14 @@ public class SearchActivity extends AppCompatActivity {
         plantAdapter = new PlantSearchAdapter(new ArrayList<>(), this);
         recyclerView = findViewById(R.id.recyclerView);
         emptyMessage = findViewById(R.id.emptyTextView);
-        editTextSearch = findViewById(R.id.editTextSearch); // Obtener referencia al EditText
+        editTextSearch = findViewById(R.id.editTextSearch);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            recreate();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -106,8 +115,8 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    // Método para obtener todas las plantas y mostrarlas en el RecyclerView
     private void selectAllPlants(String searchText) {
         new SelectAllPlants(this, recyclerView, emptyMessage, searchText).execute();
     }
 }
-

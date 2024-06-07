@@ -21,30 +21,31 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        // Obtener la hora actual
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String horaActual = sdf.format(calendar.getTime());
 
+        // Construir la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "watering_channel")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("¡Hora de regar tus planta!")
+                .setContentTitle("¡Hora de regar tus plantas!")
                 .setContentText("¡Es hora de regar tus plantas!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
+        // Administrador de notificaciones
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+        // Mostrar la notificación
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            // Verificar si se tienen los permisos necesarios
+            // Si no se tienen los permisos, retornar sin mostrar la notificación
             return;
         }
         notificationManager.notify(1, builder.build());
     }
+
+    // Método para cancelar la alarma
     public void cancelAlarm(Context context) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);

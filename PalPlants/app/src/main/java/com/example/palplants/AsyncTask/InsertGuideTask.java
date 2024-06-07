@@ -1,7 +1,6 @@
 package com.example.palplants.AsyncTask;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -9,19 +8,22 @@ import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Guia;
 
+// Este AsyncTask se encarga de insertar una nueva guía en la base de datos del servidor.
+// Después de la inserción, recrea la actividad para reflejar los cambios.
 public class InsertGuideTask extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
     private Guia mGuia;
-    private Dialog mDialog;
     private Exception mException;
 
-    public InsertGuideTask(Context context, Guia guia, Dialog dialog) {
+    // Constructor
+    public InsertGuideTask(Context context, Guia guia) {
         mContext = context;
         mGuia = guia;
-        mDialog = dialog;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la inserción de la guía en la base de datos.
     @Override
     protected Void doInBackground(Void... voids) {
         try {
@@ -33,16 +35,12 @@ public class InsertGuideTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta en el hilo principal después de que doInBackground haya terminado.
+    // Recrea la actividad para reflejar los cambios realizados.
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-        // Cerrar el diálogo si está mostrándose
-        if (mDialog != null && mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        // Recrear la actividad
         ((Activity) mContext).recreate();
     }
 }

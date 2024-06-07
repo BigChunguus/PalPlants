@@ -14,6 +14,7 @@
         <item name="colorPrimary">@color/cyan</item>
         <item name="colorPrimaryDark">@color/darkcyan</item>
         <item name="colorAccent">@color/white</item>
+        <item name="iconPopUp">@color/darkcyan</item>
         <item name="android:textColor">@color/darkcyan</item>
         <item name="android:color">@color/cyan</item>
         <item name="strokeColor">@color/cyan</item>
@@ -26,6 +27,7 @@
         <item name="backgroundGradientLayout">@drawable/background_gradient</item>
         <item name="backgroundRecyclerViewCard">@color/white</item>
         <item name="textViewTextColor">@color/colorTextoClaro</item>
+        <item name="userNameTextColor">@color/darkblue</item>
     </style>
 
     <!-- Dark Theme -->
@@ -33,6 +35,7 @@
         <item name="colorPrimary">@color/darkcyan</item>
         <item name="colorPrimaryDark">@color/cyan</item>
         <item name="colorAccent">@color/darkcyan</item>
+        <item name="iconPopUp">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:color">@color/white</item>
         <item name="strokeColor">@color/white</item>
@@ -45,6 +48,7 @@
         <item name="backgroundGradientLayout">@drawable/background_gradient_night</item>
         <item name="backgroundRecyclerViewCard">@color/customBackground</item>
         <item name="textViewTextColor">@color/colorTextoOscuro</item>
+        <item name="userNameTextColor">@color/blue</item>
     </style>
 
     <style name="TimePickerDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog">

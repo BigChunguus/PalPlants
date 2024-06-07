@@ -12,13 +12,20 @@ import com.example.palplants.Activity.MainActivity;
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 
+// Este AsyncTask se encarga de eliminar un usuario de la base de datos del servidor.
+// Después de la eliminación, realiza algunas acciones en la interfaz de usuario según el resultado.
 public class DeleteUserTask extends AsyncTask<String, Void, Boolean> {
     private Context context;
 
+    // Constructor
     public DeleteUserTask(Context context) {
         this.context = context;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la eliminación del usuario.
+    // Recibe el nombre de usuario como parámetro y llama al método eliminarUsuario de la clase BotanicaCC.
+    // Devuelve true si se eliminó correctamente y false si ocurrió algún error.
     @Override
     protected Boolean doInBackground(String... params) {
         String username = params[0];
@@ -33,6 +40,9 @@ public class DeleteUserTask extends AsyncTask<String, Void, Boolean> {
         }
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta en el hilo principal después de que doInBackground haya terminado.
+    // Realiza acciones en la interfaz de usuario según el resultado de la eliminación.
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {

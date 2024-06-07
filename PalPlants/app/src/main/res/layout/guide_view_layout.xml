@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:text="textoPrueba"
         android:textSize="14sp"
+        android:textColor="?attr/userNameTextColor"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/ratingBar"
@@ -40,7 +41,7 @@
     <RatingBar
         android:id="@+id/ratingBar"
         style="?android:attr/ratingBarStyleSmall"
-        android:progressTint="?attr/customProgressStarTint"
+        android:progressTint="?attr/colorPrimary"
         android:backgroundTint="?attr/customProgressStarBackgroundTint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

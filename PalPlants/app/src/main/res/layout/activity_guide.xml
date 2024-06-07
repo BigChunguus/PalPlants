@@ -116,44 +116,57 @@
 
                             <TextView
                                 android:id="@+id/title"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="14dp"
                                 android:layout_marginBottom="10dp"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
                                 android:text="Titulo"
-                                android:textAlignment="center"
                                 android:textSize="25dp"
-                                app:layout_constraintBottom_toTopOf="@+id/cientificName"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.798"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:gravity="center"/>
 
-                            <RatingBar
-                                android:id="@+id/ratingBar"
-                                style="?android:attr/ratingBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:backgroundTint="?attr/customProgressStarBackgroundTint"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="?attr/customProgressStarTint"
-                                android:rating="0"
-                                android:stepSize="0.1"
-                                android:layout_marginVertical="10dp" />
-
-                            <TextView
-                                android:id="@+id/userName"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="usuario"
-                                android:textAlignment="center"
-                                android:textSize="25dp"
-                                app:layout_constraintBottom_toTopOf="@+id/cientificName"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.798"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:orientation="horizontal"
+                                android:gravity="center">
+
+                                <RatingBar
+                                    android:id="@+id/ratingBar"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="?attr/customProgressStarBackgroundTint"
+                                    android:isIndicator="true"
+                                    android:layout_marginStart="28dp"
+                                    android:numStars="5"
+                                    android:progressTint="?attr/colorPrimary"
+
+                                    android:rating="0"
+                                    android:stepSize="0.1"
+                                    android:layout_marginVertical="10dp"
+                                    android:scaleX="1.3"
+                                    android:scaleY="1.3"
+                                    android:transformPivotX="0dp"
+                                    android:transformPivotY="0dp"
+                                    />
+
+                                <Space
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/userName"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="usuario"
+                                    android:textColor="?attr/userNameTextColor"
+                                    android:textSize="20dp"
+                                    android:gravity="center"/>
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView

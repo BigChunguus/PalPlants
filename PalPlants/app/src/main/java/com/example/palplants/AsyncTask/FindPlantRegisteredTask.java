@@ -1,8 +1,6 @@
 package com.example.palplants.AsyncTask;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
 
 import com.example.palplants.Utility.FindPlantRegisteredCallback;
 
@@ -13,17 +11,24 @@ import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
 
+// Este AsyncTask se encarga de buscar una planta específica registrada por un usuario en la base de datos del servidor.
+// Después de la búsqueda, notifica el resultado a través de un callback.
+
 public class FindPlantRegisteredTask extends AsyncTask<Void, Void, Boolean> {
     private Usuario usuario;
     private int plantIdToCheck;
     private FindPlantRegisteredCallback callback;
 
+    // Constructor
     public FindPlantRegisteredTask(Usuario usuario, int plantIdToCheck, FindPlantRegisteredCallback callback) {
         this.usuario = usuario;
         this.plantIdToCheck = plantIdToCheck;
         this.callback = callback;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y busca la planta en la lista de plantas del usuario.
+    // Devuelve true si la planta está registrada por el usuario, y false si no lo está.
     @Override
     protected Boolean doInBackground(Void... voids) {
         ArrayList<Planta> listaPlantas;
@@ -45,9 +50,11 @@ public class FindPlantRegisteredTask extends AsyncTask<Void, Void, Boolean> {
         return false; // La planta no fue encontrada
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta en el hilo principal después de que doInBackground haya terminado.
+    // Notifica al callback si la planta fue encontrada o no.
     @Override
     protected void onPostExecute(Boolean plantaEncontrada) {
-        // Llama al callback con el resultado
         if (callback != null) {
             callback.onPlantChecked(plantaEncontrada);
         }

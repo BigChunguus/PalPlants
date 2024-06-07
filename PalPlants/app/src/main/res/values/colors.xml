@@ -20,6 +20,9 @@
     <color name="grey">#FF4D6359</color>
     <color name="alarma">#9D74DB</color>
 
+    <color name="blue">#53CCF6</color>
+    <color name="darkblue">#537AF6</color>
+
     <color name="backgroundMenu">#159873</color>
     <color name="text_color">#FFFFFF</color> <!-- Blanco -->
     <color name="icon_color">#FFFFFF</color> <!-- Blanco -->

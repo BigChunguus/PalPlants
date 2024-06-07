@@ -2,8 +2,10 @@ package com.example.palplants.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,30 +13,33 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Menu;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.MenuInflater;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.palplants.Adapter.InsectAdapter;
 import com.example.palplants.AsyncTask.DeleteGuideUserTask;
 import com.example.palplants.AsyncTask.FindPlantRegisteredTask;
 import com.example.palplants.AsyncTask.InsertGuideTask;
 import com.example.palplants.AsyncTask.InsertPlantTask;
 import com.example.palplants.AsyncTask.ModifyGuideTask;
+import com.example.palplants.AsyncTask.SelectAllInsectsPlantTask;
 import com.example.palplants.AsyncTask.ReadGuidesPlantTask;
 import com.example.palplants.R;
 import com.google.android.gms.ads.AdRequest;
@@ -44,11 +49,18 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import pojosbotanica.Guia;
+import pojosbotanica.Insecto;
 import pojosbotanica.Planta;
 import pojosbotanica.Usuario;
 
+// Esta clase representa la actividad que muestra los detalles de una planta específica.
+// Los usuarios pueden ver información detallada sobre una planta, como su nombre científico, nombre común, imagen y otras características.
+// Además, los usuarios pueden interactuar con la planta, como agregarla a su lista de plantas, escribir reseñas y ver reseñas de otros usuarios.
+// La actividad también puede proporcionar opciones para que los usuarios realicen acciones relacionadas con la planta, como editarla o eliminarla si son propietarios.
+// En resumen, esta actividad es fundamental para proporcionar a los usuarios información detallada y funcionalidades relacionadas con una planta específica.
 public class PlantsActivity extends AppCompatActivity {
 
     private int plantIdToCheck;
@@ -77,7 +89,40 @@ public class PlantsActivity extends AppCompatActivity {
         buttonAddGuide = findViewById(R.id.buttonAddGuide);
         mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
         recyclerView = findViewById(R.id.recyclerView);
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            recreate();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
+        ImageButton buttonShowInsects = findViewById(R.id.buttonShowInsects);
+        buttonShowInsects.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ejecutar la tarea para cargar la lista de insectos
+                new SelectAllInsectsPlantTask(plantaSeleccionada, new SelectAllInsectsPlantTask.OnInsectsLoadedListener() {
+                    @Override
+                    public void onInsectsLoaded(List<Insecto> insectList) {
+                        // Crear el diálogo personalizado
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PlantsActivity.this);
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_list_insects, null);
+                        builder.setView(dialogView);
+
+                        RecyclerView recyclerViewInsects = dialogView.findViewById(R.id.recyclerViewInsects);
+                        recyclerViewInsects.setLayoutManager(new LinearLayoutManager(PlantsActivity.this));
+
+                        InsectAdapter insectAdapter = new InsectAdapter(insectList, PlantsActivity.this);
+                        recyclerViewInsects.setAdapter(insectAdapter);
+
+                        // Mostrar el diálogo
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                }).execute();
+            }
+        });
+
+        // Configurar el menú desplegable
         mButtonDropdownMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,10 +130,12 @@ public class PlantsActivity extends AppCompatActivity {
             }
         });
 
+        // Cargar el anuncio
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        // Configurar la navegación inferior
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.NoneActivityButton);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -119,6 +166,7 @@ public class PlantsActivity extends AppCompatActivity {
             }
         });
 
+        // Obtener usuario de las SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         String usuarioJson = sharedPreferences.getString("user", "");
         if (!usuarioJson.isEmpty()) {
@@ -126,15 +174,17 @@ public class PlantsActivity extends AppCompatActivity {
             usuario = gson.fromJson(usuarioJson, Usuario.class);
         }
 
+        // Configurar el botón de retroceso
         ImageButton buttonBack = findViewById(R.id.buttonBack);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Regresa a la actividad anterior
+                // Regresar a la actividad anterior
                 finish();
             }
         });
 
+        // Configurar el botón de agregar planta
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +193,7 @@ public class PlantsActivity extends AppCompatActivity {
             }
         });
 
+        // Configurar el botón de agregar guía
         buttonAddGuide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +201,7 @@ public class PlantsActivity extends AppCompatActivity {
             }
         });
 
+        // Obtener la planta seleccionada del intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("PLANT")) {
             plantaSeleccionada = (Planta) intent.getSerializableExtra("PLANT");
@@ -180,6 +232,7 @@ public class PlantsActivity extends AppCompatActivity {
             }
             plantIdToCheck = plantaSeleccionada.getPlantaId();
 
+            // Verificar si la planta está registrada por el usuario actual
             new FindPlantRegisteredTask(usuario, plantIdToCheck, isPlantRegistered -> {
                 // Manejar el resultado
                 if (isPlantRegistered) {
@@ -191,9 +244,11 @@ public class PlantsActivity extends AppCompatActivity {
                 }
             }).execute();
 
+            // Obtener las guías asociadas a la planta
             ReadGuidesPlantTask readGuidesPlantTask = new ReadGuidesPlantTask(this, plantIdToCheck, usuario.getUsuarioID(), recyclerView, buttonAddGuide, mButtonDropdownMenu);
             readGuidesPlantTask.execute();
 
+            // Establecer un listener para la guía del usuario actual
             readGuidesPlantTask.setOnGuiaUsuarioReceivedListener(new ReadGuidesPlantTask.OnGuiaUsuarioReceivedListener() {
                 @Override
                 public void onGuiaUsuarioReceived(Guia guia) {
@@ -203,6 +258,7 @@ public class PlantsActivity extends AppCompatActivity {
         }
     }
 
+    // Método para mostrar el menú desplegable
     public void showPopupMenu(View view, final Guia guiaUsuario) {
         PopupMenu popup = new PopupMenu(PlantsActivity.this, view);
         try {
@@ -236,6 +292,7 @@ public class PlantsActivity extends AppCompatActivity {
         popup.show();
     }
 
+    // Método para mostrar el diálogo de confirmación de eliminación de guía
     private void showConfirmationDialog(final Guia guiaUsuario) {
         new AlertDialog.Builder(PlantsActivity.this)
                 .setTitle("Confirmar eliminación")
@@ -251,6 +308,7 @@ public class PlantsActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Método para mostrar el diálogo de edición de guía
     private void showEditGuideDialog(final Guia guiaUsuario) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -284,7 +342,7 @@ public class PlantsActivity extends AppCompatActivity {
                     guia.setGuiaId(guiaUsuario.getGuiaId());
                     guia.setTitulo(title);
                     guia.setContenido(content);
-                    new ModifyGuideTask(PlantsActivity.this, guia, dialog).execute();
+                    new ModifyGuideTask(PlantsActivity.this, guia).execute();
                     recreate();
                 } else {
                     dialog.dismiss();
@@ -294,6 +352,8 @@ public class PlantsActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+    // Método para mostrar el diálogo de agregar guía
     private void showAddGuideDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -328,15 +388,17 @@ public class PlantsActivity extends AppCompatActivity {
                     guia.setUsuarioId(usuario);
                     guia.setCalificacionMedia(null); // or any default value if necessary
 
-                    new InsertGuideTask(PlantsActivity.this, guia, dialog).execute();
+                    new InsertGuideTask(PlantsActivity.this, guia).execute();
                     dialog.dismiss();
                 } else {
                     // Mostrar un mensaje de error
+                    Toast.makeText(PlantsActivity.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         dialog.show();
     }
-
 }
+
+
