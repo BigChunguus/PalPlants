@@ -27,10 +27,11 @@ public class SimuladorAndroid {
 //            u.setContrasena("1234567890123456");
 //            u.setEmail("pruebainsertar2@gmail.com");
 //            System.out.println(c.insertarUsuario(u));
-            Guia g = new Guia();
-            g.setTitulo("a");
-            g.setContenido("a");
-            System.out.println(c.modificarGuia(20, g));
+//            Guia g = new Guia();
+//            g.setTitulo("a");
+//            g.setContenido("a");
+//            System.out.println(c.modificarGuia(20, g));
+                System.out.println(c.leerInsectos(1));
 //            Resena r = new Resena();
 //            r.setCalificacion(3);
 //            r.setComentario("PruebaInsertarResena2");

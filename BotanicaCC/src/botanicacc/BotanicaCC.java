@@ -569,10 +569,10 @@ public Insecto leerInsecto(int idInsecto) throws ExcepcionBotanica {
     return insecto;
 }
 
-public ArrayList<Insecto> leerInsectos() throws ExcepcionBotanica {
+public ArrayList<Insecto> leerInsectos(int plantaId) throws ExcepcionBotanica {
     Peticion p = new Peticion();
     p.setIdOperacion(Operaciones.LEER_INSECTOS);
-    
+    p.setEntidad(plantaId);
     Respuesta respuesta = null;
     ArrayList<Insecto> listaInsectos = null;
     

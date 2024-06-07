@@ -17,6 +17,9 @@ import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Resena;
 
+// AsyncTask para leer las reseñas asociadas a una guía y mostrarlas en un RecyclerView.
+// Recibe el contexto de la aplicación, el ID de la guía, el ID del usuario, el RecyclerView donde se mostrarán las reseñas,
+// el botón para agregar una reseña, la lista de reseñas, el adaptador de reseñas y el botón de menú desplegable.
 public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
 
     private Context context;
@@ -28,6 +31,7 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
     private ReviewAdapter adapter;
     private OnResenaUsuarioReceivedListener listener;
 
+    // Constructor
     public ReadReviewsTask(Context context, int guideIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddReview, ArrayList<Resena> resenaList, ReviewAdapter adapter, ImageButton buttonDropdownMenu) {
         this.context = context;
         this.guideIdToCheck = guideIdToCheck;
@@ -39,6 +43,8 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         this.mButtonDropdownMenu = buttonDropdownMenu;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la lectura de las reseñas asociadas a la guía.
     @Override
     protected ArrayList<Resena> doInBackground(Void... voids) {
         try {
@@ -50,6 +56,8 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         }
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta después de que doInBackground ha finalizado.
     @Override
     protected void onPostExecute(ArrayList<Resena> listaResenas) {
         super.onPostExecute(listaResenas);
@@ -96,10 +104,12 @@ public class ReadReviewsTask extends AsyncTask<Void, Void, ArrayList<Resena>> {
         }
     }
 
+    // Método para establecer un listener para recibir la reseña del usuario
     public void setOnResenaUsuarioReceivedListener(OnResenaUsuarioReceivedListener listener) {
         this.listener = listener;
     }
 
+    // Interfaz para el listener de recepción de reseña del usuario
     public interface OnResenaUsuarioReceivedListener {
         void onResenaUsuarioReceived(Resena resena);
     }

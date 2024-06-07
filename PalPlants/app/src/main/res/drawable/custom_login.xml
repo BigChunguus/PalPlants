@@ -8,20 +8,23 @@
             <solid android:color="#FFFFFF" /> <!-- Color de fondo del LinearLayout -->
             <corners android:radius="30dp" /> <!-- Radio de las esquinas -->
             <padding
-                android:bottom="4dp"
-                android:left="4dp"
-                android:right="4dp"
-                android:top="4dp" /> <!-- Espacio para la sombra -->
+                android:bottom="3dp"
+                android:left="0dp"
+                android:right="3dp"
+                android:top="0dp" /> <!-- Espacio para la sombra -->
             <size android:height="1dp" /> <!-- Altura de la sombra -->
             <gradient
-                android:endColor="@color/customBackground"
-                android:startColor="#00000000"
-                android:angle="-60" /> <!-- Gradiente de la sombra -->
+                android:startColor="@android:color/transparent"
+                android:centerColor="@android:color/transparent"
+                android:endColor="#802e2e2e"
+                android:endX="10"
+                android:endY="10"
+                android:angle="315" /> <!-- Gradiente de la sombra -->
         </shape>
     </item>
 
     <!-- Padding para desplazar la sombra -->
-    <item android:left="-2dp" android:right="0.25dp" android:top="-2dp" android:bottom="0.25dp">
+    <item>
         <shape android:shape="rectangle">
             <solid android:color="@android:color/white" />
             <stroke android:width="2dp" android:color="@color/cyan" />

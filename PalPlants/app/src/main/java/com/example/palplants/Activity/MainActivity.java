@@ -28,6 +28,10 @@ import com.google.gson.Gson;
 
 import pojosbotanica.Usuario;
 
+// Esta clase representa la actividad principal de la aplicación.
+// Funciona como la puerta de entrada principal para los usuarios después de iniciar sesión.
+// Aquí, los usuarios pueden acceder a diversas funciones de la aplicación, como ver sus plantas, explorar guías y realizar otras acciones relacionadas con la jardinería y las plantas.
+// Además, esta actividad maneja la verificación del usuario, asegurándose de que el usuario esté autenticado antes de acceder al contenido principal de la aplicación.
 public class MainActivity extends AppCompatActivity implements VerifyUserCallback {
 
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
@@ -62,13 +66,16 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
         }
     }
 
+    // Método para manejar el resultado de la verificación del usuario
     @Override
     public void onVerifyUserResult(boolean result) {
         if (result) {
+            // Si el usuario está verificado, inicia YourPlantsActivity
             Intent intent = new Intent(MainActivity.this, YourPlantsActivity.class);
             startActivity(intent);
             finish();
         } else {
+            // Si hay un error al verificar, muestra un mensaje y restablece la vista predeterminada
             Toast.makeText(MainActivity.this, "Error al verificar el usuario. Por favor, intente de nuevo.", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -78,12 +85,14 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
         }
     }
 
+    // Método para verificar la disponibilidad de la red
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    // Método para mostrar un diálogo de conexión no disponible
     private void showNoConnectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Sin conexión a Internet")
@@ -99,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
                 .show();
     }
 
+    // Método para manejar el resultado de la solicitud de permisos
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -109,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
         }
     }
 
+    // Método para configurar la vista predeterminada
     private void setupDefaultView() {
         setContentView(R.layout.activity_main);
 
@@ -116,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
         viewPager2 = findViewById(R.id.view_pager);
         textViewSignupOrLogin = findViewById(R.id.textViewSignupOrLogin);
 
+        // Añadir pestañas al TabLayout
         tabLayout.addTab(tabLayout.newTab().setText("Loguear"));
         tabLayout.addTab(tabLayout.newTab().setText("Registrar"));
 
@@ -123,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements VerifyUserCallbac
         adapter = new ViewPagerAdapter(fragmentManager, getLifecycle());
         viewPager2.setAdapter(adapter);
 
+        // Cambiar el texto según la pestaña seleccionada
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

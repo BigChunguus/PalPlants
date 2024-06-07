@@ -18,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -29,6 +28,8 @@ import java.util.List;
 
 import pojosbotanica.Planta;
 
+// Este adaptador se utiliza para mostrar las plantas en un RecyclerView en el contexto de una búsqueda.
+// Se encarga de inflar el diseño de la vista de la planta de búsqueda y vincular los datos de la planta a cada vista de elemento.
 public class PlantSearchAdapter extends RecyclerView.Adapter<PlantSearchAdapter.PlantSearchViewHolder> {
 
     private List<Planta> plantas;
@@ -103,6 +104,7 @@ public class PlantSearchAdapter extends RecyclerView.Adapter<PlantSearchAdapter.
                             imageView.setOutlineProvider(new ViewOutlineProvider() {
                                 @Override
                                 public void getOutline(View view, Outline outline) {
+                                    // Establecer la forma de la vista de recorte como un rectángulo redondeado
                                     outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 20);
                                 }
                             });
@@ -114,9 +116,9 @@ public class PlantSearchAdapter extends RecyclerView.Adapter<PlantSearchAdapter.
                         }
                     });
 
+            // Establecer los textos de la planta en las vistas correspondientes
             textViewTop.setText(planta.getNombreCientificoPlanta());
             textViewBottom.setText(planta.getNombreComunPlanta());
         }
-
     }
 }

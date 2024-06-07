@@ -15,6 +15,9 @@ import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.Guia;
 
+// AsyncTask para leer las guías relacionadas con una planta específica.
+// Recibe el contexto de la aplicación, el ID de la planta, el ID del usuario, el RecyclerView donde se mostrarán las guías,
+// y los botones para agregar guías y desplegar menú.
 public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> {
 
     private int plantIdToCheck;
@@ -26,6 +29,7 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
     private ImageButton mButtonDropdownMenu;
     private OnGuiaUsuarioReceivedListener listener;
 
+    // Constructor
     public ReadGuidesPlantTask(Context context, int plantIdToCheck, int userIdToCheck, RecyclerView recyclerView, ImageButton buttonAddGuide, ImageButton buttonDropdownMenu) {
         this.mContext = context;
         this.plantIdToCheck = plantIdToCheck;
@@ -35,6 +39,8 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
         this.mButtonDropdownMenu = buttonDropdownMenu;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la lectura de las guías relacionadas con la planta.
     @Override
     protected ArrayList<Guia> doInBackground(Void... voids) {
         try {
@@ -46,6 +52,8 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
         }
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta después de que doInBackground ha finalizado.
     @Override
     protected void onPostExecute(ArrayList<Guia> listaGuias) {
         super.onPostExecute(listaGuias);
@@ -87,10 +95,12 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
         }
     }
 
+    // Método para establecer un listener para recibir la guía del usuario.
     public void setOnGuiaUsuarioReceivedListener(OnGuiaUsuarioReceivedListener listener) {
         this.listener = listener;
     }
 
+    // Interfaz para definir el método de callback para recibir la guía del usuario.
     public interface OnGuiaUsuarioReceivedListener {
         void onGuiaUsuarioReceived(Guia guia);
     }

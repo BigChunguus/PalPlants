@@ -6,25 +6,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.palplants.Activity.SettingsActivity;
-
 import botanicacc.BotanicaCC;
 import pojosbotanica.ExcepcionBotanica;
 import pojosbotanica.InteresBotanico;
 
 import java.util.ArrayList;
 
+// AsyncTask para leer los intereses botánicos desde la base de datos y cargarlos en un Spinner.
+// Recibe el contexto de la aplicación, el Spinner donde se cargarán los intereses y una lista para almacenar los intereses leídos.
 public class ReadInteresesTask extends AsyncTask<Void, Void, ArrayList<InteresBotanico>> {
     private Context context;
     private Spinner spinner;
     private ArrayList<InteresBotanico> interesesBotanicos;
 
+    // Constructor
     public ReadInteresesTask(Context context, Spinner spinner, ArrayList<InteresBotanico> interesesBotanicos) {
         this.context = context;
         this.spinner = spinner;
         this.interesesBotanicos = interesesBotanicos;
     }
 
+    // Método doInBackground
+    // Este método se ejecuta en segundo plano y realiza la lectura de los intereses botánicos.
     @Override
     protected ArrayList<InteresBotanico> doInBackground(Void... voids) {
         try {
@@ -36,6 +39,8 @@ public class ReadInteresesTask extends AsyncTask<Void, Void, ArrayList<InteresBo
         }
     }
 
+    // Método onPostExecute
+    // Este método se ejecuta después de que doInBackground ha finalizado.
     @Override
     protected void onPostExecute(ArrayList<InteresBotanico> listaBotanica) {
         if (listaBotanica != null && !listaBotanica.isEmpty()) {
