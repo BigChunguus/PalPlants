@@ -8,14 +8,19 @@
     <color name="black">#FF000000</color>
 
     <color name="white">#FFFFFFFF</color>
+    <color name="clearcyan">#69E1A5</color>
     <color name="cyan">#FF02DB69</color>
-    <color name="darkcyan">#1CA86A</color>
+    <color name="darkcyan">#208552</color>
     <color name="darkBack">#333634</color>
     <color name="red">#FFFF0000</color>
 
     <color name="customBackground">#2e2e2e</color>
-    <color name="colorTextoClaro">#000000</color>
+    <color name="colorTextoClaro">#1e1e1e</color>
     <color name="colorTextoOscuro">#FFFFFF</color>
     <color name="grey">#FF4D6359</color>
-    <color name="alarma">#FF4CA1AF</color>
+    <color name="alarma">#9D74DB</color>
+
+    <color name="backgroundMenu">#159873</color>
+    <color name="text_color">#FFFFFF</color> <!-- Blanco -->
+    <color name="icon_color">#FFFFFF</color> <!-- Blanco -->
 </resources>

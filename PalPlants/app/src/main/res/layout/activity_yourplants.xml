@@ -12,12 +12,12 @@
         android:id="@+id/swiperefresh"
         android:background="?attr/backgroundGradientLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
 
                 <com.scwang.wave.MultiWaveHeader
                     android:id="@+id/waveHeader"
@@ -36,21 +36,20 @@
                     app:mwhWaveHeight="50dp"
                     app:mwhWaves="MultiWave" />
 
-
-
                 <ImageButton
                     android:id="@+id/buttonSettings"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="16dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/boton_ajustes"
                     android:scaleType="centerInside"
                     android:src="@drawable/round_settings_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.956"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/waveHeader" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.018" />
 
                 <ImageButton
                     android:id="@+id/buttonAlarm"
@@ -60,26 +59,55 @@
                     android:background="@drawable/boton_alarma"
                     android:scaleType="centerInside"
                     android:src="@drawable/round_access_time_24"
-                    app:layout_constraintBottom_toBottomOf="@+id/waveHeader"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.956"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonSettings"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonSettings"
+                    app:layout_constraintHorizontal_bias="0.05"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonSettings"
-                    app:layout_constraintVertical_bias="0.099" />
+                    app:layout_constraintTop_toTopOf="@+id/buttonSettings"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <LinearLayout
+                    android:id="@+id/layoutNavigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.gms.ads.AdView
+                        xmlns:ads="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/adView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+
+                    <com.google.android.material.bottomnavigation.BottomNavigationView
+                        android:id="@+id/bottomNavigationView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/backgroundMenu"
+                        app:menu="@menu/menu_navigation"
+                        app:itemIconTint="@color/selector_icon_color"
+                        app:itemTextColor="@color/selector_text_color"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayoutGeneral"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="72dp"
+                    android:layout_height="0dp"
                     android:background="?attr/customBackgroundCardview"
                     android:orientation="vertical"
                     android:padding="24dp"
+                    android:layout_margin="10dp"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutNavigation"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/waveHeader">
+                    app:layout_constraintTop_toBottomOf="@id/waveHeader">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -121,67 +149,35 @@
                             android:background="@drawable/boton_anadir"
                             android:scaleType="centerInside"
                             android:src="@drawable/baseline_add_24" />
-
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="456dp"
                         android:id="@+id/layoutRecycleView"
-                        >
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/backgroundRecyclerViewCard"
+                        android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewYourPlants"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:scrollbars="vertical"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"/>
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="?attr/backgroundRecyclerViewCard"
+                            android:scrollbars="vertical" />
 
                         <TextView
                             android:id="@+id/emptyTextView"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="16dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="Aún no has añadido ninguna planta"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </LinearLayout>
-
                 </LinearLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:layout_gravity="bottom">
-
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/menu_navigation" />
-    </LinearLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

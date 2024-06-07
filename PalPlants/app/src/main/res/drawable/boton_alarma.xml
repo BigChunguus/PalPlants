@@ -1,5 +1,33 @@
-<!-- round_red_button.xml -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="@color/alarma" /> <!-- Cambia esto al color rojo deseado -->
-</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item>
+    <shape android:left="-4dp" android:right="0dp" android:top="-4dp" android:bottom="0.25dp"
+        android:shape="oval">
+        <solid android:color="#FFFFFF" /> <!-- Color de fondo del LinearLayout -->
+         <!-- Radio de las esquinas -->
+        <padding
+            android:bottom="2dp"
+            android:left="2dp"
+            android:right="2dp"
+            android:top="2dp" /> <!-- Espacio para la sombra -->
+        <size android:height="1dp" /> <!-- Altura de la sombra -->
+        <gradient
+            android:startColor="@android:color/transparent"
+            android:centerColor="@android:color/transparent"
+            android:endColor="#2e2e2e"
+            android:endX="10"
+            android:endY="10"
+            android:angle="315" />
+        <!-- Gradiente de la sombra -->
+    </shape>
+</item>
+
+<item>
+    <!-- round_red_button.xml -->
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
+        <solid android:color="@color/alarma" /> <!-- Cambia esto al color rojo deseado -->
+    </shape>
+</item>
+</layer-list>

@@ -24,6 +24,8 @@
         <item name="customProgressStarBackgroundTint">@color/grey</item>
         <item name="customBackgroundCardview">@drawable/custom_background_cardview</item>
         <item name="backgroundGradientLayout">@drawable/background_gradient</item>
+        <item name="backgroundRecyclerViewCard">@color/white</item>
+        <item name="textViewTextColor">@color/colorTextoClaro</item>
     </style>
 
     <!-- Dark Theme -->
@@ -41,15 +43,15 @@
         <item name="customProgressStarBackgroundTint">@color/white</item>
         <item name="customBackgroundCardview">@drawable/custom_background_cardview_night</item>
         <item name="backgroundGradientLayout">@drawable/background_gradient_night</item>
+        <item name="backgroundRecyclerViewCard">@color/customBackground</item>
+        <item name="textViewTextColor">@color/colorTextoOscuro</item>
     </style>
 
     <style name="TimePickerDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:headerBackground">@color/darkcyan</item>
         <item name="colorAccent">@color/darkcyan</item>
     </style>
-    <style name="TimePickerDialogTheme.Dark" parent="ThemeOverlay.AppCompat.Dialog">
-    </style>
-
+    <style name="TimePickerDialogTheme.Dark" parent="ThemeOverlay.AppCompat.Dialog"></style>
 
 
 

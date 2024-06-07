@@ -4,11 +4,12 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/custom_edittext">
+    >
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/backgroundRecyclerViewCard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +18,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundRecyclerViewCard">
 
 
             <ImageView
@@ -28,33 +30,39 @@
                 android:background="@drawable/custom_edittext"
                 android:scaleType="centerCrop"
                 android:layout_margin="7dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <TextView
-                android:id="@+id/text_view_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="24dp"
-                android:text="Nombre Científico"
-                app:layout_constraintStart_toEndOf="@id/image_view"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_view_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginBottom="40dp"
-                android:text="Nombre Común"
+                android:layout_marginTop="20dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="Nombre Común"
+                android:textSize="24dp"
+                app:layout_constraintEnd_toStartOf="@+id/button_delete"
+                app:layout_constraintHorizontal_bias="0.029"
                 app:layout_constraintStart_toEndOf="@id/image_view"
-                app:layout_constraintTop_toBottomOf="@id/text_view_top"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre Científico"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_bottom"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/text_view_bottom"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_bottom"
+                app:layout_constraintVertical_bias="0.119" />
 
             <ImageButton
                 android:id="@+id/button_delete"

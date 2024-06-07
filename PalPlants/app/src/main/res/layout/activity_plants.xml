@@ -10,17 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="1dp">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:elevation="-1dp">
 
             <ImageButton
                 android:id="@+id/buttonBack"
@@ -53,234 +46,277 @@
                 app:mwhWaveHeight="50dp"
                 app:mwhWaves="MultiWave" />
 
-
-            <ImageButton
-                android:id="@+id/buttonAdd"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/boton_anadir"
-                android:enabled="false"
-                android:scaleType="fitCenter"
-                android:src="@drawable/baseline_add_24"
-                android:visibility="invisible"
-                android:layout_marginTop="5dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.921"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/waveHeader"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-
-                android:id="@+id/constraintLayout4"
-                android:layout_width="385dp"
-                android:layout_height="533dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="15dp"
-                android:background="?attr/customBackgroundCardview"
-                android:outlineProvider="bounds"
+            <LinearLayout
+                android:id="@+id/layoutNavigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.482"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-                app:layout_constraintVertical_bias="0.0">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutNames"
-                    android:layout_width="202dp"
-                    android:layout_height="119dp"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/descriptionPlant"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.934"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.47">
-
-                    <TextView
-                        android:id="@+id/comunName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="28dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="nombreComun"
-                        android:textAlignment="center"
-                        android:textSize="25dp"
-                        app:layout_constraintBottom_toTopOf="@+id/cientificName"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.798"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/cientificName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="0dp"
-                        android:text="nombreCientífico"
-                        android:textAlignment="center"
-                        android:textSize="18dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.762"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="116dp"
-                    android:text="Descripción de la planta:"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.077"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/descriptionPlant"
+                <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/adView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/custom_edittext"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="Descripción"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.473"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textDescription" />
+                    android:layout_gravity="center"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                    />
 
-                <TextView
-                    android:id="@+id/textEspecificCare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Cuidados específicos:"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.07"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionPlant" />
-
-                <TextView
-                    android:id="@+id/specificCare"
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottomNavigationView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/custom_edittext"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="cuidadosEspecificos"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.473"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textEspecificCare" />
+                    android:background="@color/backgroundMenu"
+                    app:itemIconTint="@color/selector_icon_color"
+                    app:itemTextColor="@color/selector_text_color"
+                    app:menu="@menu/menu_navigation" />
+            </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:background="?attr/customBackgroundCardview"
-                    android:padding="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonAddGuide" />
 
-                <ImageButton
-                    android:id="@+id/buttonAddGuide"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="12dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/boton_anadir"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/baseline_add_24"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.911"
-                    app:layout_constraintStart_toEndOf="@+id/textView"
-                    app:layout_constraintTop_toBottomOf="@+id/specificCare" />
-
-                <ImageButton
-                    android:id="@+id/mButtonDropdownMenu"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/boton_mas_opciones"
-                    android:saveEnabled="false"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/baseline_more_24"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/buttonAddGuide"
-                    app:layout_constraintEnd_toEndOf="@+id/buttonAddGuide"
-                    app:layout_constraintStart_toStartOf="@+id/buttonAddGuide"
-                    app:layout_constraintTop_toTopOf="@+id/buttonAddGuide" />
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Guias"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificCare" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <ImageView
-                android:id="@+id/imagePlant"
-                android:layout_width="144dp"
-                android:layout_height="135dp"
-                android:background="@drawable/imagen_planta"
-                android:elevation="8dp"
-                android:padding="0dp"
-                android:scaleType="centerCrop"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/layoutNavigation"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.108"
-
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/waveHeader"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toBottomOf="@+id/waveHeader">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="10dp"
+                        android:background="?attr/customBackgroundCardview"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutNames"
+                            android:layout_width="186dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="76dp"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.507"
+                            app:layout_constraintStart_toEndOf="@+id/textDescription"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/comunName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="14dp"
+                                android:layout_marginBottom="10dp"
+                                android:text="nombreComun"
+                                android:textAlignment="center"
+                                android:textSize="25dp"
+                                app:layout_constraintBottom_toTopOf="@+id/cientificName"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.798"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/cientificName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp"
+                                android:text="nombreCientífico"
+                                android:textAlignment="center"
+                                android:textSize="18dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.762"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textDescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Descripción de la planta:"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.057"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayoutNames" />
+
+                        <TextView
+                            android:id="@+id/descriptionPlant"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/custom_edittext"
+                            android:padding="10dp"
+                            android:text="Descripción"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.47"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textDescription" />
+
+                        <TextView
+                            android:id="@+id/textEspecificCare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Cuidados específicos:"
+                            app:layout_constraintEnd_toEndOf="@+id/textDescription"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/textDescription"
+                            app:layout_constraintTop_toBottomOf="@+id/descriptionPlant" />
+
+                        <TextView
+                            android:id="@+id/specificCare"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/custom_edittext"
+                            android:padding="10dp"
+                            android:text="cuidadosEspecificos"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.47"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textEspecificCare" />
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="24dp"
+                            android:text="Guias"
+                            app:layout_constraintStart_toStartOf="@+id/textEspecificCare"
+                            app:layout_constraintTop_toBottomOf="@+id/specificCare" />
+
+
+                        <LinearLayout
+                            android:id="@+id/recyclerViewPlants"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_margin="15dp"
+                            android:background="?attr/backgroundRecyclerViewCard"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_default="wrap"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView"
+                            app:layout_constraintVertical_bias="0.0">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="?attr/backgroundRecyclerViewCard"
+                                android:scrollbars="vertical" />
+
+                            <TextView
+                                android:id="@+id/emptyTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Aún no has añadido ninguna planta"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/buttonAddGuide"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/boton_anadir"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/baseline_add_24"
+                            app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlants"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.962"
+                            app:layout_constraintStart_toEndOf="@+id/textView"
+                            app:layout_constraintTop_toBottomOf="@+id/specificCare"
+                            app:layout_constraintVertical_bias="0.464" />
+
+                        <ImageButton
+                            android:id="@+id/mButtonDropdownMenu"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/boton_mas_opciones"
+                            android:saveEnabled="false"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/baseline_more_24"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="@+id/buttonAddGuide"
+                            app:layout_constraintEnd_toEndOf="@+id/buttonAddGuide"
+                            app:layout_constraintStart_toStartOf="@+id/buttonAddGuide"
+                            app:layout_constraintTop_toTopOf="@+id/buttonAddGuide" />
+
+                        <ImageView
+                            android:id="@+id/imagePlant"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/imagen_planta"
+                            android:elevation="8dp"
+                            android:padding="0dp"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintBottom_toTopOf="@+id/textDescription"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayoutNames"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/textDescription"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.652" />
+
+                        <ImageButton
+                            android:id="@+id/buttonAdd"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="end"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/boton_anadir"
+                            android:enabled="false"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/baseline_add_24"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="@+id/imagePlant"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.851"
+                            app:layout_constraintStart_toEndOf="@+id/imagePlant"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.142" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:layout_gravity="bottom">
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/menu_navigation" />
-    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -14,7 +14,7 @@
                 android:top="4dp" /> <!-- Espacio para la sombra -->
             <size android:height="1dp" /> <!-- Altura de la sombra -->
             <gradient
-                android:endColor="#44000000"
+                android:endColor="@color/customBackground"
                 android:startColor="#00000000"
                 android:angle="-60" /> <!-- Gradiente de la sombra -->
         </shape>
@@ -29,3 +29,4 @@
         </shape>
     </item>
 </layer-list>
+

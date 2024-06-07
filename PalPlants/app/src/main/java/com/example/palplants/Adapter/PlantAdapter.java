@@ -1,6 +1,8 @@
 package com.example.palplants.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,13 +93,28 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        Planta planta = plantas.get(position);
-                        new DeletePlantTask(PlantAdapter.this, position).execute(usuario, planta);
-                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("¿Estás seguro de que quieres eliminar esta planta?")
+                            .setCancelable(false)
+                            .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    int position = getAdapterPosition();
+                                    if (position != RecyclerView.NO_POSITION) {
+                                        Planta planta = plantas.get(position);
+                                        new DeletePlantTask(PlantAdapter.this, position).execute(usuario, planta);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
             });
+
         }
 
         public void bind(Planta planta) {

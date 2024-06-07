@@ -16,15 +16,15 @@
             <gradient
                 android:endColor="#44000000"
                 android:startColor="#00000000"
-                android:angle="-60" /> <!-- Gradiente de la sombra -->
+                android:angle="-60" />
         </shape>
     </item>
 
     <item android:left="-2dp" android:right="0.25dp" android:top="-2dp" android:bottom="0.25dp">
         <shape
             android:shape="rectangle">
-            <solid android:color="@color/cyan" /> <!-- Color de fondo del botón -->
-            <corners android:radius="20dp" /> <!-- Radio de las esquinas del borde -->
+            <solid android:color="@color/cyan" />
+            <corners android:radius="20dp" />
             <stroke
 
                 android:color="@android:color/black" />
