@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +73,8 @@ public class PlantsActivity extends AppCompatActivity {
         buttonAddGuide = findViewById(R.id.buttonAddGuide);
         mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
         recyclerView = findViewById(R.id.recyclerView);
-        ImageButton mButtonDropdownMenu = findViewById(R.id.mButtonDropdownMenu);
+
+
         mButtonDropdownMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

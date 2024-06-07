@@ -53,13 +53,20 @@ public class ReadGuidesPlantTask extends AsyncTask<Void, Void, ArrayList<Guia>> 
             ArrayList<Guia> userGuides = new ArrayList<>();
             ArrayList<Guia> otherGuides = new ArrayList<>();
 
+
             for (Guia guia : listaGuias) {
                 if (guia.getUsuarioId().getUsuarioID() == userIdToCheck) {
-                    userGuides.add(guia);
+                    for(int i = 0; i < 10; i++) {
+                        userGuides.add(guia);
+                    }
                 } else {
-                    otherGuides.add(guia);
+                    for(int i = 0; i < 10; i++) {
+                        otherGuides.add(guia);
+                    }
                 }
             }
+
+
 
             if (!userGuides.isEmpty()) {
                 mButtonAddGuide.setVisibility(View.INVISIBLE);

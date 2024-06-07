@@ -36,7 +36,7 @@ public class GuideAdapter extends RecyclerView.Adapter<GuideAdapter.GuideViewHol
     @Override
     public void onBindViewHolder(@NonNull GuideViewHolder holder, int position) {
         Guia guia = guiasList.get(position);
-        holder.textTitulo.setText(guia.getTitulo());
+        holder.textTitulo.setText(guia.getTitulo() + position);
         Usuario usuario = guia.getUsuarioId();
         holder.textUserName.setText(usuario.getNombreUsuario());
         // Convertir el valor Double a float y establecerlo en el RatingBar

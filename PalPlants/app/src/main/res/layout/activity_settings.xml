@@ -38,42 +38,69 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
+            android:layout_marginTop="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/waveHeader"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="1.0">
 
-        <Button
-            android:id="@+id/btn_edit_user_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Editar datos de usuario" />
+            <Button
+                android:id="@+id/btn_edit_user_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="20dp"
+                android:text="Editar datos de usuario"
+                android:textColor="?attr/textViewTextColor"
+                android:textSize="20dp" />
 
 
-        <Button
-            android:id="@+id/btn_change_theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cambiar Tema: " />
+            <Button
+                android:id="@+id/btn_change_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="20dp"
+                android:text="Cambiar Tema: "
+                android:textColor="?attr/textViewTextColor"
+                android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/btn_poweroff_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Apagar notificaciones" />
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cerrar Sesión" />
+            <Button
+                android:id="@+id/btn_poweroff_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="20dp"
+                android:text="Apagar notificaciones"
+                android:textColor="?attr/textViewTextColor"
+                android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/btn_delete_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Borrar cuenta" />
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="20dp"
+                android:text="Cerrar Sesión"
+                android:textColor="?attr/textViewTextColor"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/btn_delete_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="20dp"
+                android:text="Borrar cuenta"
+                android:textColor="?attr/textViewTextColor"
+                android:textSize="20dp" />
         </LinearLayout>
 
         <ImageButton
@@ -97,19 +124,14 @@
         android:gravity="bottom"
         android:layout_gravity="bottom">
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/menu_navigation" />
+            android:background="@color/backgroundMenu"
+            app:menu="@menu/menu_navigation"
+            app:itemIconTint="@color/selector_icon_color"
+            app:itemTextColor="@color/selector_text_color"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
