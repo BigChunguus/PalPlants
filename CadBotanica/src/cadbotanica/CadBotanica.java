@@ -377,6 +377,8 @@ public int modificarUsuario(String nombreUsuario, Usuario usuario) throws Excepc
    
    
     public int insertarResena(Resena resena) throws ExcepcionBotanica {
+        
+        System.out.println(resena);
         conectar();
         int filasAfectadas = 0;
         String dml = "INSERT INTO RESEÑA (CALIFICACION, COMENTARIO, USUARIOUSUARIOID, GUIAGUIAID) " +

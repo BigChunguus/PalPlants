@@ -206,6 +206,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         } 
     }
+    
     private void eliminarUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -227,6 +228,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void modificarUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -251,6 +253,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerUsuario(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -272,6 +275,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerUsuarios(Peticion p){
         ObjectOutputStream oos = null;
         try { 
@@ -291,7 +295,6 @@ public class ManejadorPeticion extends Thread{
         } 
     } 
     
-
     private void insertarResena(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -333,7 +336,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
-
+    
     private void modificarResena(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -356,6 +359,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerResenas(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -375,6 +379,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerInsectos(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -394,6 +399,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerPlanta(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -413,6 +419,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerPlantas(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -431,6 +438,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void insertarGuia(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -517,6 +525,7 @@ public class ManejadorPeticion extends Thread{
             manejadorExcepcionBotanica(ex);
         }
     }
+    
     private void leerIntereses(Peticion p) {
         ObjectOutputStream oos = null;
         try {
@@ -536,108 +545,71 @@ public class ManejadorPeticion extends Thread{
         }
     }
 
-private void insertarUsuarioPlanta(Peticion p) {
-    ObjectOutputStream oos = null;
-    try {
-        Object[] entidadArray = (Object[]) p.getEntidad();
-        Integer usuarioId = (Integer) entidadArray[0];
-        Integer plantaId = (Integer) entidadArray[1];
-        System.out.println(usuarioId + "" + plantaId);
-        CadBotanica cad = new CadBotanica();
-        Respuesta r = new Respuesta();
-        r.setIdOperacion(p.getIdOperacion());
+    private void insertarUsuarioPlanta(Peticion p) {
+        ObjectOutputStream oos = null;
+        try {
+            Object[] entidadArray = (Object[]) p.getEntidad();
+            Integer usuarioId = (Integer) entidadArray[0];
+            Integer plantaId = (Integer) entidadArray[1];
+            System.out.println(usuarioId + "" + plantaId);
+            CadBotanica cad = new CadBotanica();
+            Respuesta r = new Respuesta();
+            r.setIdOperacion(p.getIdOperacion());
 
-        int cantidad = cad.insertarUsuarioPlanta(usuarioId, plantaId);
-        r.setCantidad(cantidad);
-        oos = new ObjectOutputStream(clienteConectado.getOutputStream());
-        oos.writeObject(r);
+            int cantidad = cad.insertarUsuarioPlanta(usuarioId, plantaId);
+            r.setCantidad(cantidad);
+            oos = new ObjectOutputStream(clienteConectado.getOutputStream());
+            oos.writeObject(r);
 
-        oos.close();
-    } catch (IOException ex) {
-        manejadorIOExceptionOOS(ex, oos);
-    } catch (ExcepcionBotanica ex) {
-        manejadorExcepcionBotanica(ex);
+            oos.close();
+        } catch (IOException ex) {
+            manejadorIOExceptionOOS(ex, oos);
+        } catch (ExcepcionBotanica ex) {
+            manejadorExcepcionBotanica(ex);
+        }
     }
-}
 
-private void eliminarUsuarioPlanta(Peticion p) {
-    ObjectOutputStream oos = null;
-    try {
-        Object[] entidadArray = (Object[]) p.getEntidad();
-        Integer usuarioId = (Integer) entidadArray[0];
-        Integer plantaId = (Integer) entidadArray[1];
+    private void eliminarUsuarioPlanta(Peticion p) {
+        ObjectOutputStream oos = null;
+        try {
+            Object[] entidadArray = (Object[]) p.getEntidad();
+            Integer usuarioId = (Integer) entidadArray[0];
+            Integer plantaId = (Integer) entidadArray[1];
 
-        System.out.println(usuarioId + "" + plantaId);
-        CadBotanica cad = new CadBotanica();
-        Respuesta r = new Respuesta();
-        r.setIdOperacion(p.getIdOperacion());
+            System.out.println(usuarioId + "" + plantaId);
+            CadBotanica cad = new CadBotanica();
+            Respuesta r = new Respuesta();
+            r.setIdOperacion(p.getIdOperacion());
 
-        int cantidad = cad.eliminarUsuarioPlanta(usuarioId, plantaId);
-        r.setCantidad(cantidad);
-        oos = new ObjectOutputStream(clienteConectado.getOutputStream());
-        oos.writeObject(r);
+            int cantidad = cad.eliminarUsuarioPlanta(usuarioId, plantaId);
+            r.setCantidad(cantidad);
+            oos = new ObjectOutputStream(clienteConectado.getOutputStream());
+            oos.writeObject(r);
 
-        oos.close();
-    } catch (IOException ex) {
-        manejadorIOExceptionOOS(ex, oos);
-    } catch (ExcepcionBotanica ex) {
-        manejadorExcepcionBotanica(ex);
+            oos.close();
+        } catch (IOException ex) {
+            manejadorIOExceptionOOS(ex, oos);
+        } catch (ExcepcionBotanica ex) {
+            manejadorExcepcionBotanica(ex);
+        }
     }
-}
-private void leerUsuariosPlantas(Peticion p) {
-    ObjectOutputStream oos = null;
-    try {
-        String nombreUsuario = (String) p.getEntidad();
-        CadBotanica cad = new CadBotanica();
-        Respuesta r = new Respuesta();
-        r.setIdOperacion(p.getIdOperacion());
-        r.setEntidad(cad.leerUsuariosPlantas(nombreUsuario));
-        oos = new ObjectOutputStream(clienteConectado.getOutputStream());
-        oos.writeObject(r);
+    
+    private void leerUsuariosPlantas(Peticion p) {
+        ObjectOutputStream oos = null;
+        try {
+            String nombreUsuario = (String) p.getEntidad();
+            CadBotanica cad = new CadBotanica();
+            Respuesta r = new Respuesta();
+            r.setIdOperacion(p.getIdOperacion());
+            r.setEntidad(cad.leerUsuariosPlantas(nombreUsuario));
+            oos = new ObjectOutputStream(clienteConectado.getOutputStream());
+            oos.writeObject(r);
 
-        oos.close();
-    } catch (IOException ex) {
-        manejadorIOExceptionOOS(ex, oos);
-    } catch (ExcepcionBotanica ex) {
-        manejadorExcepcionBotanica(ex);
+            oos.close();
+        } catch (IOException ex) {
+            manejadorIOExceptionOOS(ex, oos);
+        } catch (ExcepcionBotanica ex) {
+            manejadorExcepcionBotanica(ex);
+        }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public void gestionarDialogo(Socket clienteSocket){
-//        try{
-//            System.out.println("Servidor.Consola - El servidor recibe un objeto Coche del cliente");
-//            ObjectInputStream ois = new ObjectInputStream(clienteConectado.getInputStream());
-//            String nombre = (String) ois.readObject();
-//            System.out.println("Nombre recibido del cliente" + nombre);
-//            
-//            System.out.println("El servidor responde al cliente");
-//            ObjectOutputStream oos = new ObjectOutputStream(clienteConectado.getOutputStream());
-//            oos.writeObject("Hola Don " + nombre);
-//            Thread.sleep(5000);
-//            oos = new ObjectOutputStream(clienteConectado.getOutputStream());
-//            oos.writeObject("Adios Don " + nombre);
-//            ois.close();
-//            oos.close();
-//        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-//        } catch (ClassNotFoundException ex) {
-//            System.out.println(ex.getMessage());
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(BotanicaSC.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
 }
